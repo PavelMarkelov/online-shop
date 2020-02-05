@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/onlineshop?useUnicode=yes&characterEncoding=UTF8&useSSL=false&serverTimezone=Europe/Samara
+    username: prospring5
+    password: prospring5
+
+
+rest_http_port: 8080
+
+max_name_length: 50
+min_password_length: 8
+
+server:
+  port: ${rest_http_port}
+
+
+
