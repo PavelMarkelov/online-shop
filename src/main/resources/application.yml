@@ -3,6 +3,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/onlineshop?useUnicode=yes&characterEncoding=UTF8&useSSL=false&serverTimezone=Europe/Samara
     username: prospring5
@@ -16,6 +17,9 @@ min_password_length: 8
 
 server:
   port: ${rest_http_port}
-
+  servlet:
+    session:
+      cookie:
+        name: JAVASESSIONID
 
 
