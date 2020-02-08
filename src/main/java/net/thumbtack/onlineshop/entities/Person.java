@@ -51,9 +51,8 @@ public class Person implements Serializable {
     @Column(name = "role")
     private Role role;
 
-
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
-    @JoinColumn(name="passport_id")
+    @JoinColumn(name="person_id")
     private Basket basket;
 
     public Person() {

@@ -3,8 +3,6 @@ package net.thumbtack.onlineshop.utils.parsercl;
 import org.apache.commons.cli.*;
 import org.springframework.stereotype.Component;
 
-
-@Component
 public class ParserOfCommandLine {
 
     public static String  parseCommandLine(String... args) throws ParserException {
