@@ -2,13 +2,6 @@ DROP DATABASE IF EXISTS onlineshop;
 CREATE DATABASE `onlineshop`;
 USE `onlineshop`;
 
-CREATE TABLE token_rest (
-    id BIGINT NOT NULL AUTO_INCREMENT,
-    token VARCHAR(36) NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY token (token)
-) ENGINE=INNODB DEFAULT CHARSET=utf8;
-
 CREATE TABLE person (
     id BIGINT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,

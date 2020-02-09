@@ -6,5 +6,4 @@ public interface CommonService {
 
     Person findByLoginAndPassword(String login, String password);
     Person findByLogin(String login);
-    void clearDatabase();
 }
