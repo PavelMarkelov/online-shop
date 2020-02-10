@@ -21,5 +21,6 @@ server:
     session:
       cookie:
         name: JAVASESSIONID
+    context-path: /api
 
 is_clear_database: true

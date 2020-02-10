@@ -1,18 +1,16 @@
 package net.thumbtack.onlineshop.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "basket")
-public class Basket implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Basket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @OneToOne

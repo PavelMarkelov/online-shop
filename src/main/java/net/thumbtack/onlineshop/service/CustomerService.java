@@ -2,10 +2,18 @@ package net.thumbtack.onlineshop.service;
 
 import net.thumbtack.onlineshop.entities.Person;
 
-public interface CustomerService {
+public class CustomerService {
 
-    Person createCustomer(Person customer);
-    Person updateCustomerProfile(Person customer);
-    Person addMoney(String login, Integer amount);
 
+    public Person createCustomer(Person customer) {
+        return null;
+    }
+
+    public Person updateCustomerProfile(Person customer) {
+        return null;
+    }
+
+    public Person addMoney(String login, Integer amount) {
+        return null;
+    }
 }

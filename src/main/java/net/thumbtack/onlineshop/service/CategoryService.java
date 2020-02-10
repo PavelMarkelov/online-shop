@@ -4,11 +4,26 @@ import net.thumbtack.onlineshop.entities.Category;
 
 import java.util.List;
 
-public interface CategoryService {
+public class CategoryService {
 
-    Category addCategory(Category category);
-    Category findCategoryById(Long id);
-    Category updateCategory(Long id);
-    void deleteCategory(Long id);
-    List<Category> findAllCategories();
+
+    public Category addCategory(Category category) {
+        return null;
+    }
+
+    public Category findCategoryById(Long id) {
+        return null;
+    }
+
+    public Category updateCategory(Long id) {
+        return null;
+    }
+
+    public void deleteCategory(Long id) {
+
+    }
+
+    public List<Category> findAllCategories() {
+        return null;
+    }
 }

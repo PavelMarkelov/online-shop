@@ -1,14 +1,11 @@
-package net.thumbtack.onlineshop.service.serviceimpl;
+package net.thumbtack.onlineshop.service;
 
-import net.thumbtack.onlineshop.service.ClearDatabaseService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
-class ClearDatabaseServiceImplTest {
+class ClearDatabaseServiceTest {
 
     @Autowired
     private ClearDatabaseService clearDb;

@@ -1,7 +1,7 @@
-package net.thumbtack.onlineshop.dao;
+package net.thumbtack.onlineshop.repos;
 
 import net.thumbtack.onlineshop.entities.Basket;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BasketDao extends JpaRepository<Basket, Long> {
+public interface BasketRepository extends JpaRepository<Basket, Long> {
 }

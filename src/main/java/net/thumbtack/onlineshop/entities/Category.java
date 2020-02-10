@@ -1,18 +1,16 @@
 package net.thumbtack.onlineshop.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "category")
-public class Category implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -21,9 +19,8 @@ public class Category implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
-    private List<Category> childrenCategories;
+    private List<Category> childrenCategories = new ArrayList<>();
 
-    @Column(name = "name")
     private String name;
 
     @ManyToMany

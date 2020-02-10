@@ -1,14 +1,11 @@
 package net.thumbtack.onlineshop.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "basket_item")
-public class BasketItem implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class BasketItem {
 
     @EmbeddedId
     private BasketItemId basketItemId = new BasketItemId();
@@ -23,8 +20,7 @@ public class BasketItem implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Product product;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    private int quantity;
 
     public BasketItem() {
     }
@@ -66,7 +62,7 @@ public class BasketItem implements Serializable {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

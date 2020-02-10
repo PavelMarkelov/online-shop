@@ -1,30 +1,23 @@
 package net.thumbtack.onlineshop.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "product")
-public class Product implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "price")
-    private Integer price;
+    private int price;
 
-    @Column(name = "count")
-    private Integer count;
+    private int count;
 
     @ManyToMany
     @JoinTable(
@@ -37,7 +30,7 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(String name, Integer price, Integer count) {
+    public Product(String name, int price, int count) {
         this.name = name;
         this.price = price;
         this.count = count;
@@ -63,15 +56,15 @@ public class Product implements Serializable {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(int count) {
         this.count = count;
     }
     public List<Category> getCategories() {

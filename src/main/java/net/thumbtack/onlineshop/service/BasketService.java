@@ -4,11 +4,26 @@ import net.thumbtack.onlineshop.dto.BasketDto;
 import net.thumbtack.onlineshop.entities.Basket;
 import net.thumbtack.onlineshop.entities.Product;
 
-public interface BasketService {
+public class BasketService {
 
-    Basket addToBasket(Product product);
-    void deleteProductFromBasket(Long productId);
-    Basket changingQuantity(Product product);
-    Basket findBasketByPersonLogin(String login);
-    BasketDto buyingFromBasket(Basket basket);
+
+    public Basket addToBasket(Product product) {
+        return null;
+    }
+
+    public void deleteProductFromBasket(Long productId) {
+
+    }
+
+   public Basket changingQuantity(Product product) {
+        return null;
+    }
+
+    public Basket findBasketByPersonLogin(String login) {
+        return null;
+    }
+
+    public BasketDto buyingFromBasket(Basket basket) {
+        return null;
+    }
 }

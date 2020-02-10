@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static net.thumbtack.onlineshop.utils.propfilecheck.PropertiesFileChecker.check;
+import static net.thumbtack.onlineshop.utils.propfilecheck.PropertiesFileChecker.getAppProperties;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,6 +28,8 @@ class PropertiesFileCheckerTest {
         return rootDir + fileSep + "src" + fileSep + "main" + fileSep + "resources" + fileSep + fileName;
     }
 
+    private Map<String, Object> testData = new HashMap<>();
+
     @BeforeEach
     void createTestFile() throws IOException {
         try {
@@ -34,7 +37,6 @@ class PropertiesFileCheckerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Map<String, Object> testData = new HashMap<>();
         testData.put("rest_http_port", 8888);
         testData.put("max_name_length", 50);
         testData.put("min_password_length", 8);
@@ -45,11 +47,14 @@ class PropertiesFileCheckerTest {
     @AfterEach
     void deleteTestFile() {
         TEST_FILE.delete();
+        testData.clear();
     }
 
     @Test
     void checkTest() throws CheckerException, IOException {
         check(FILE_NAME);
+        Map<String, Integer> prop = getAppProperties();
+        assertEquals(testData, prop);
     }
 
     @Test
@@ -62,7 +67,6 @@ class PropertiesFileCheckerTest {
     @Test
     void checkFailEmptyOptTest() throws IOException {
         deleteTestFile();
-        Map<String, Object> testData = new HashMap<>();
         testData.put("rest_http_port", 8888);
         testData.put("max_name_length", 50);
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
@@ -74,7 +78,6 @@ class PropertiesFileCheckerTest {
     @Test
     void checkFailWrongPropKeyTest() throws IOException {
         deleteTestFile();
-        Map<String, Object> testData = new HashMap<>();
         testData.put("rest_http_port", 8888);
         testData.put("max_name_length", 50);
         testData.put("min_NoCorrect_length", 8);

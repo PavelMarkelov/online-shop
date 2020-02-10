@@ -10,7 +10,6 @@ CREATE TABLE person (
     login VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
     email VARCHAR(50) NOT NULL DEFAULT 'none',
-    address VARCHAR(50) NOT NULL DEFAULT 'none',
     phone VARCHAR(20) NOT NULL DEFAULT 'none',
     deposit INT DEFAULT 0,
     position VARCHAR(100) NOT NULL DEFAULT 'none',
@@ -19,6 +18,13 @@ CREATE TABLE person (
     PRIMARY KEY (id),
     UNIQUE KEY uniq_login (login),
     CONSTRAINT min_deposit CHECK (deposit > 0)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE TABLE person_address (
+    id BIGINT(20) NOT NULL,
+    address VARCHAR(50) NOT NULL DEFAULT 'none',
+    PRIMARY KEY (id),
+    FOREIGN KEY (id) REFERENCES person (id) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 CREATE TABLE category (

@@ -1,54 +1,41 @@
 package net.thumbtack.onlineshop.entities;
 
 
+import net.thumbtack.onlineshop.dto.AdminDto;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "person")
-public class Person implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "patronymic")
     private String patronymic;
 
-    @Column(name = "login")
     private String login;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "address")
-    private String address;
+    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
+    private Address address;
 
-    @Column(name = "phone")
     private String phone;
 
-    @Column(name = "deposit")
-    private Integer deposit;
+    private int deposit;
 
-    @Column(name = "position")
     private String position;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
     private Role role;
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
@@ -56,6 +43,15 @@ public class Person implements Serializable {
     private Basket basket;
 
     public Person() {
+    }
+
+    public Person(AdminDto adminDto) {
+        this.firstName = adminDto.getFirstName();
+        this.lastName = adminDto.getLastName();
+        this.patronymic = adminDto.getPatronymic();
+        this.login = adminDto.getLogin();
+        this.position = adminDto.getPosition();
+        this.role = Role.ADMIN;
     }
 
     public Long getId() {
@@ -114,11 +110,11 @@ public class Person implements Serializable {
         this.email = email;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
@@ -134,7 +130,7 @@ public class Person implements Serializable {
         return deposit;
     }
 
-    public void setDeposit(Integer deposit) {
+    public void setDeposit(int deposit) {
         this.deposit = deposit;
     }
 
