@@ -1,69 +1,109 @@
 package net.thumbtack.onlineshop.config;
 
+import net.thumbtack.onlineshop.entities.Role;
+import net.thumbtack.onlineshop.securiry.CustomAuthenticationEntryPoint;
+import net.thumbtack.onlineshop.securiry.CustomFilter;
+import net.thumbtack.onlineshop.service.PersonService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-
-import javax.sql.DataSource;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final static String USER_QUERY = "select login, password from person where login=?";
-    private final static String ROLE_QUERY = "select role from person where login=?";
+    private final static String USER_ROLE = Role.USER.getAuthority();
+    private final static String ADMIN_ROLE = Role.ADMIN.getAuthority();
 
-    private final PasswordEncoder PasswordEncoder;
-    private final DataSource dataSource;
+    private final PersonService personService;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomFilter customFilter;
 
-    public WebSecurityConfig(PasswordEncoder PasswordEncoder, DataSource dataSource) {
-        this.PasswordEncoder = PasswordEncoder;
-        this.dataSource = dataSource;
+    private final PasswordEncoder passwordEncoder;
+
+    public WebSecurityConfig(PersonService personService, CustomAuthenticationEntryPoint authenticationEntryPoint, CustomFilter customFilter, PasswordEncoder passwordEncoder) {
+        this.personService = personService;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.customFilter = customFilter;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.
-                jdbcAuthentication()
-                .usersByUsernameQuery(USER_QUERY)
-                .authoritiesByUsernameQuery(ROLE_QUERY)
-                .dataSource(dataSource)
-                .passwordEncoder(PasswordEncoder);
+        auth
+                .userDetailsService(personService)
+                .passwordEncoder(passwordEncoder);
     }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                    .authorizeRequests()
-                    .antMatchers(HttpMethod.POST,"/api/admins", "/api/clients", "/api/session").permitAll()
-                    .anyRequest().authenticated()
+        .cors().and().csrf().disable()
+                .formLogin().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.DELETE, "/api/session").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/accounts").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/clients").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.PUT, "/api/admins").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.PUT, "/api/clients").hasRole(USER_ROLE)
+                .antMatchers("/api/categories/*").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.POST, "/api/products/").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.PUT, "/api/products/*").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.DELETE, "/api/products/*").hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.GET, "/api/products/*").authenticated()
+                .antMatchers("/api/deposits").hasRole(USER_ROLE)
+                .antMatchers(HttpMethod.POST, "/api/purchases").hasRole(USER_ROLE)
+                .antMatchers("/api/baskets").hasRole(USER_ROLE)
+                .antMatchers(HttpMethod.GET, "/api/purchases/*").hasRole(ADMIN_ROLE)
+                .anyRequest().permitAll()
                 .and()
-                    .formLogin()
-                    .usernameParameter("login")
-                    .passwordParameter("password")
-                    .loginProcessingUrl("/api/session")
-                    .permitAll()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
                 .and()
-                    .logout()
-                    .logoutUrl("/api/session")
-                    .invalidateHttpSession(true)
-                    .deleteCookies()
-                    .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-                .and()
-                .csrf().disable();
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        web
-                .ignoring()
-                .antMatchers( "/static/**", "/css/**", "/js/**", "/images/**");
-    }
+//    @Override
+//    public void configure(WebSecurity web) {
+//        web
+//                .ignoring()
+//                    .antMatchers( "/static/**", "/css/**", "/js/**", "/images/**");
+//                    .antMatchers(HttpMethod.POST, "/api/admins")
+//                    .antMatchers(HttpMethod.POST, "/api/clients")
+//                    .antMatchers(HttpMethod.POST, "/api/sessions")
+//                    .antMatchers("/api/settings")
+//                    .antMatchers("/api/debug/clear");
+//    }
+//
+//    @Bean
+//    DaoAuthenticationProvider authenticationProvider(){
+//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+//        daoAuthenticationProvider.setUserDetailsService(personService);
+//        return  daoAuthenticationProvider;
+//    }
+//
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder authManagerBuilder) {
+//        authManagerBuilder.authenticationProvider( authenticationProvider() );
+//    }
+//
+//    @Bean
+//    public AuthenticationService authenticationService(AuthenticationManager authenticationManager) {
+//        return new AuthenticationService(authenticationManager);
+//    }
+//
+//    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+//    @Override
+//    public AuthenticationManager authenticationManagerBean() throws Exception {
+//        return super.authenticationManagerBean();
+//    }
 }

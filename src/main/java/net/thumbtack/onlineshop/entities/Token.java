@@ -7,8 +7,8 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "address")
-public class Address {
+@Table(name = "token")
+public class Token {
 
     @Id
     @Column(name = "id", unique = true, nullable = false)
@@ -17,17 +17,17 @@ public class Address {
     private Long id;
 
     @Column(nullable = false)
-    private String address;
+    private String token;
 
     @OneToOne
     @PrimaryKeyJoinColumn
     private Person person;
 
-    public Address() {
+    public Token() {
     }
 
-    public Address(String address) {
-        this.address = address;
+    public Token(String token) {
+        this.token = token;
     }
 
     public Long getId() {
@@ -38,12 +38,12 @@ public class Address {
         this.id = id;
     }
 
-    public String getAddress() {
-        return address;
+    public String getToken() {
+        return token;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Person getPerson() {
@@ -57,18 +57,13 @@ public class Address {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Address)) return false;
-        Address address = (Address) o;
-        return Objects.equals(getId(), address.getId());
+        if (!(o instanceof Token)) return false;
+        Token token = (Token) o;
+        return Objects.equals(getId(), token.getId());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getId());
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Address: [id=%s personId=%s address=%s]", id, person.getId(), address);
     }
 }

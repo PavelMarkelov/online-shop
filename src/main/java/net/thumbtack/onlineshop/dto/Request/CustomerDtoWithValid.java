@@ -1,17 +1,17 @@
-package net.thumbtack.onlineshop.dto;
+package net.thumbtack.onlineshop.dto.Request;
 
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.AssertTrue;
 
-public class UserDto extends PersonDTO {
+public class CustomerDtoWithValid extends PersonDtoWithValid {
 
     private String email;
     private String address;
     private String phone;
 
-    public UserDto(String firstName, String lastName, String patronymic,
-                   String login, String password, String email, String address, String phone
+    public CustomerDtoWithValid(String firstName, String lastName, String patronymic,
+                                String login, String password, String email, String address, String phone
     ) {
         super(firstName, lastName, patronymic, login, password);
         this.email = email;
@@ -50,18 +50,18 @@ public class UserDto extends PersonDTO {
     }
 
     @AssertTrue(message = "Invalid format e-mail")
-    public boolean isEmailTrue() {
+    public boolean isEmail() {
         return !StringUtils.isEmpty(email) &&
                 email.matches("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]+$");
     }
 
     @AssertTrue(message = "Address can't be empty")
-    public boolean isAddressTrue() {
+    public boolean isAddress() {
         return !StringUtils.isEmpty(address);
     }
 
     @AssertTrue(message = "Invalid format number of phone")
-    public boolean isPhoneTrue() {
+    public boolean isPhone() {
         String phoneToCheck = getClearPhone();
         if (phone.matches("^8.*"))
             return phoneToCheck.matches("[0-9]{11}");

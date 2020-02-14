@@ -18,9 +18,14 @@ min_password_length: 8
 server:
   port: ${rest_http_port}
   servlet:
-    session:
-      cookie:
-        name: JAVASESSIONID
     context-path: /api
 
 is_clear_database: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
+
+cookie_name: JAVASESSIONID

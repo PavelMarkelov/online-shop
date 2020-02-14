@@ -1,14 +1,17 @@
 package net.thumbtack.onlineshop.entities;
 
 
-import net.thumbtack.onlineshop.dto.AdminDto;
+import net.thumbtack.onlineshop.dto.Request.AdminDtoWithValid;
+import net.thumbtack.onlineshop.dto.Request.CustomerDtoWithValid;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "person")
-public class Person {
+public class Person implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,29 +32,54 @@ public class Person {
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     private Address address;
 
+    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
+    private Token token;
+
     private String phone;
 
     private int deposit;
 
     private String position;
 
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "role", joinColumns = @JoinColumn(name = "person_id"))
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(name = "roles")
+    private Set<Role> roles = new HashSet<>();
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     @JoinColumn(name="person_id")
     private Basket basket;
 
+    private boolean active;
+    @Column(columnDefinition="BIT NOT NULL DEFAULT true")
+    private boolean accountNonExpired;
+    @Column(columnDefinition="BIT NOT NULL DEFAULT true")
+    private boolean accountNonLocked;
+    @Column(columnDefinition="BIT NOT NULL DEFAULT true")
+    private boolean credentialsNonExpired;
+
     public Person() {
     }
 
-    public Person(AdminDto adminDto) {
-        this.firstName = adminDto.getFirstName();
-        this.lastName = adminDto.getLastName();
-        this.patronymic = adminDto.getPatronymic();
-        this.login = adminDto.getLogin();
-        this.position = adminDto.getPosition();
-        this.role = Role.ADMIN;
+    public Person(AdminDtoWithValid adminDtoWithValid) {
+        this.firstName = adminDtoWithValid.getFirstName();
+        this.lastName = adminDtoWithValid.getLastName();
+        this.patronymic = adminDtoWithValid.getPatronymic();
+        this.login = adminDtoWithValid.getLogin();
+        this.position = adminDtoWithValid.getPosition();
+        this.active = true;
+    }
+
+    public Person(CustomerDtoWithValid customer) {
+        this.firstName = customer.getFirstName();
+        this.lastName = customer.getLastName();
+        this.patronymic = customer.getPatronymic();
+        this.login = customer.getLogin();
+        this.email = customer.getEmail();
+        this.phone = customer.getPhone();
+        this.deposit = 0;
+        this.active = true;
     }
 
     public Long getId() {
@@ -94,8 +122,39 @@ public class Person {
         this.login = login;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isActive();
     }
 
     public void setPassword(String password) {
@@ -142,12 +201,16 @@ public class Person {
         this.position = position;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
     }
 
     public Basket getBasket() {
@@ -156,6 +219,22 @@ public class Person {
 
     public void setBasket(Basket basket) {
         this.basket = basket;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
     }
 
     @Override
@@ -175,6 +254,6 @@ public class Person {
     public String toString() {
         return String.format("Person: [id=%s firstName=%s lastName=%s patronymic=%s login=%s " +
                 "email=%s deposit=%s position=%s role=%s]", id, firstName, lastName,
-                patronymic, login, email, deposit, position, role);
+                patronymic, login, email, deposit, position, roles.stream().findFirst());
     }
 }

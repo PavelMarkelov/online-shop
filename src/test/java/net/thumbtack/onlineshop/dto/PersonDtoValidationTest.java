@@ -1,5 +1,7 @@
 package net.thumbtack.onlineshop.dto;
 
+import net.thumbtack.onlineshop.dto.Request.AdminDtoWithValid;
+import net.thumbtack.onlineshop.dto.Request.CustomerDtoWithValid;
 import net.thumbtack.onlineshop.utils.propfilecheck.CheckerException;
 import net.thumbtack.onlineshop.utils.propfilecheck.PropertiesFileChecker;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,11 +12,11 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PersonDtoTest {
+class PersonDtoValidationTest {
 
-    private AdminDto admin = new AdminDto("Васи-лий", "Ива нов", "Иванович",
+    private AdminDtoWithValid admin = new AdminDtoWithValid("Васи-лий", "Ива нов", "Иванович",
             "Иvanoв35", "sddsvwe34s", "Работник магазина");
-    private UserDto user = new UserDto("Васи-лий", "Ива нов", "Иванович",
+    private CustomerDtoWithValid user = new CustomerDtoWithValid("Васи-лий", "Ива нов", "Иванович",
             "Иvanoв35", "sddsvwe34s", "sads@csdcq.ru", "4100008",
             "+7 (874) 756-56-38");
 
@@ -23,38 +25,38 @@ class PersonDtoTest {
         PropertiesFileChecker.check("application.yml");
     }
     @Test
-    void adminDtoTrueTest() {
-        assertTrue(admin.isFistNameTrue());
-        assertTrue(admin.isLastNameTrue());
-        assertTrue(admin.isPatronymicTrue());
-        assertTrue(admin.isLoginTrue());
-        assertTrue(admin.isPasswordTrue());
-        assertTrue(admin.isPositionTrue());
+    void testAdminHasValidFields() {
+        assertTrue(admin.isFistName());
+        assertTrue(admin.isLastName());
+        assertTrue(admin.isPatronymic());
+        assertTrue(admin.isLogin());
+        assertTrue(admin.isPassword());
+        assertTrue(admin.isPosition());
     }
 
     @Test
-    void userDtoTrueTest() {
-        assertTrue(user.isAddressTrue());
-        assertTrue(user.isEmailTrue());
-        assertTrue(user.isPhoneTrue());
+    void testCustomerHasValidFields() {
+        assertTrue(user.isAddress());
+        assertTrue(user.isEmail());
+        assertTrue(user.isPhone());
     }
 
     @Test
-    void userDtoFalseTest() {
+    void testPersonHasFailValidFields() {
         user.setFirstName("Василiй");
-        assertFalse(user.isFistNameTrue());
+        assertFalse(user.isFistName());
         user.setPatronymic("Васильевич Васильевич Васильевич Васильевич Васильевич");
-        assertFalse(user.isPatronymicTrue());
+        assertFalse(user.isPatronymic());
         user.setLogin("Ива-нов");
-        assertFalse(user.isLoginTrue());
+        assertFalse(user.isLogin());
         user.setPassword("adFvdf3");
-        assertFalse(user.isPasswordTrue());
+        assertFalse(user.isPassword());
         user.setEmail("sads@csdcqru");
-        assertFalse(user.isEmailTrue());
+        assertFalse(user.isEmail());
         user.setAddress("");
-        assertFalse(user.isAddressTrue());
+        assertFalse(user.isAddress());
         user.setPhone("956 788 98923");
-        assertFalse(user.isPhoneTrue());
+        assertFalse(user.isPhone());
     }
 
 }

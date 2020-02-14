@@ -18,7 +18,7 @@ public class Basket {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "basket_id")
-    private List<BasketItem> basketItems = new ArrayList<>();
+    private List<ProductInBasket> productInBaskets = new ArrayList<>();
 
     public Basket() {
     }
@@ -39,12 +39,12 @@ public class Basket {
         this.person = person;
     }
 
-    public List<BasketItem> getBasketItems() {
-        return basketItems;
+    public List<ProductInBasket> getProductInBaskets() {
+        return productInBaskets;
     }
 
-    public void setBasketItems(List<BasketItem> basketItems) {
-        this.basketItems = basketItems;
+    public void setProductInBaskets(List<ProductInBasket> productInBaskets) {
+        this.productInBaskets = productInBaskets;
     }
 
     @Override
@@ -62,6 +62,6 @@ public class Basket {
 
     @Override
     public String toString() {
-        return String.format("Basket: [id=%s person=%s basketItems=%s]", id, person, basketItems);
+        return String.format("Basket: [id=%s person=%s basketItems=%s]", id, person, productInBaskets);
     }
 }
