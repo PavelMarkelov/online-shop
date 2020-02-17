@@ -69,6 +69,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return String.format("Address: [id=%s personId=%s address=%s]", id, person.getId(), address);
+        return String.format("Address: [id=%s address=%s]", id, address);
     }
 }

@@ -45,11 +45,12 @@ create table role (
 
 CREATE TABLE category (
     id BIGINT NOT NULL AUTO_INCREMENT,
-    parent_id BIGINT NOT NULL DEFAULT 0,
+    parent_id BIGINT,
     name VARCHAR(50) NOT NULL,
     UNIQUE KEY uniq_name (name),
     KEY parent_id_key (parent_id),
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    FOREIGN KEY (parent_id) REFERENCES category (id) ON DELETE CASCADE
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 CREATE TABLE product (

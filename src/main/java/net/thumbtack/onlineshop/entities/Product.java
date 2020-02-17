@@ -1,5 +1,7 @@
 package net.thumbtack.onlineshop.entities;
 
+import net.thumbtack.onlineshop.dto.Request.ProductDtoRequest;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,10 @@ public class Product {
         this.name = name;
         this.price = price;
         this.count = count;
+    }
+
+    public Product(ProductDtoRequest response) {
+        this(response.getName(), response.getPrice(), response.getCount());
     }
 
     public Long getId() {

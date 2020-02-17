@@ -29,7 +29,6 @@ import java.security.Principal;
 import java.util.Optional;
 
 @RestController
-@RequestMapping()
 public class SignUpAndLogoutController {
 
     private final PersonService personService;

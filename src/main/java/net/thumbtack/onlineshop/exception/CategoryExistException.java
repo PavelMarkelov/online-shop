@@ -1,14 +1,15 @@
 package net.thumbtack.onlineshop.exception;
 
-public class FailAuthenticationException  extends RuntimeException {
+public class CategoryExistException extends RuntimeException {
 
     private GlobalExceptionErrorCode globalExceptionErrorCode;
 
-    public FailAuthenticationException(GlobalExceptionErrorCode globalExceptionErrorCode) {
+    public CategoryExistException(GlobalExceptionErrorCode globalExceptionErrorCode) {
         this.globalExceptionErrorCode = globalExceptionErrorCode;
     }
 
     public GlobalExceptionErrorCode getGlobalExceptionErrorCode() {
         return globalExceptionErrorCode;
     }
+
 }

@@ -13,12 +13,12 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "parent_id")
+//    @NotFound(action = NotFoundAction.IGNORE)
     private Category parentCategory;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentCategory")
     private List<Category> childrenCategories = new ArrayList<>();
 
     private String name;
@@ -32,6 +32,10 @@ public class Category {
     private List<Product> products = new ArrayList<>();
 
     public Category() {
+    }
+
+    public Category(String name) {
+        this.name = name;
     }
 
     public Long getId() {
@@ -56,6 +60,22 @@ public class Category {
 
     public void setChildrenCategories(List<Category> childrenCategories) {
         this.childrenCategories = childrenCategories;
+    }
+
+    public void addChildrenCategory(Category childrenCategory) {
+        childrenCategories.add(childrenCategory);
+    }
+
+    public Category getChildrenCategory(String name) {
+        for (Category item : childrenCategories) {
+            if (item.getName().equals(name))
+                return item;
+        }
+        return null;
+    }
+
+    public void delChildrenCategory(Category childrenCategory) {
+        childrenCategories.remove(childrenCategory);
     }
 
     public String getName() {
@@ -89,7 +109,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return String.format("Category: [id=%s mame=%s idParentCategory=%s]", id,
-                name, parentCategory.getId());
+        return String.format("Category: [id=%s mame=%s]", id,
+                name);
     }
 }

@@ -20,12 +20,9 @@ public class ClearDatabaseService {
     private final static String DELETE_PRODUCT_TABLE = "delete from Product";
 
     private final EntityManager em;
-//    Зкоментированно, чтобы тест этого класса проходил на сервере, т.к. в его среде
-//    почему-то не инжектится значение в переменную isClearDatabase
-//    private final boolean isClearDatabase;
-    private boolean isClearDatabase = true;
-    public ClearDatabaseService(/*@Value("${is_clear_database}") boolean isClearDatabase,*/EntityManager em) {
-//        this.isClearDatabase = isClearDatabase;
+    private final boolean isClearDatabase;
+    public ClearDatabaseService(@Value("${is_clear_database}") boolean isClearDatabase,EntityManager em) {
+        this.isClearDatabase = isClearDatabase;
         this.em = em;
     }
 

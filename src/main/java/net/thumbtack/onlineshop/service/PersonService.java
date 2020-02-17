@@ -3,10 +3,14 @@ package net.thumbtack.onlineshop.service;
 import net.thumbtack.onlineshop.dto.Request.AdminDtoWithValid;
 import net.thumbtack.onlineshop.dto.Request.CustomerDtoWithValid;
 import net.thumbtack.onlineshop.dto.Request.LoginDtoRequest;
+import net.thumbtack.onlineshop.dto.Request.editDto.AdminEditDtoWithValid;
+import net.thumbtack.onlineshop.dto.Request.editDto.CustomerDtoEditWithValid;
 import net.thumbtack.onlineshop.dto.Response.AdminDtoResponse;
 import net.thumbtack.onlineshop.dto.Response.CustomerDtoResponse;
+import net.thumbtack.onlineshop.dto.Response.GetAllCustomerDtoResponse;
 import net.thumbtack.onlineshop.dto.Response.PersonDtoResponse;
 import net.thumbtack.onlineshop.entities.*;
+import net.thumbtack.onlineshop.exception.FailPasswordException;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 import net.thumbtack.onlineshop.exception.LoginExistException;
 import net.thumbtack.onlineshop.repos.PersonRepository;
@@ -21,9 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -56,16 +58,31 @@ public class PersonService implements UserDetailsService {
         return null;
     }
 
+    @Transactional(readOnly = true)
     public Person findByLogin(String login) {
         return personRepository.findByLogin(login);
     }
 
-    public List<Person> findAllCustomers() {
-        return null;
+    @Transactional(readOnly = true)
+    public List<GetAllCustomerDtoResponse> findAllCustomers() {
+        List<GetAllCustomerDtoResponse> customers = new ArrayList<>();
+        personRepository.findAllByEmailIsNotNull().forEach(person ->
+                customers.add(new GetAllCustomerDtoResponse(person)));
+        customers.sort(Comparator
+                .comparing(GetAllCustomerDtoResponse::getFirstName)
+                .thenComparing(GetAllCustomerDtoResponse::getLastName));
+        return customers;
     }
 
-    public Person updateAdminProfile(Person admin) {
-        return null;
+    public AdminDtoResponse updateAdminProfile(Person admin, AdminEditDtoWithValid adminDto) {
+        if (!passwordEncoder.matches(adminDto.getOldPassword(), admin.getPassword()))
+            throw new FailPasswordException(GlobalExceptionErrorCode.BAD_PASSWORD);
+        admin.setFirstName(adminDto.getFirstName());
+        admin.setLastName(adminDto.getLastName());
+        admin.setPatronymic(adminDto.getPatronymic());
+        admin.setPosition(adminDto.getPosition());
+        admin.setPassword(passwordEncoder.encode(adminDto.getNewPassword()));
+        return new AdminDtoResponse(personRepository.save(admin));
     }
 
     public Person createCustomer(CustomerDtoWithValid customerDto) {
@@ -84,8 +101,22 @@ public class PersonService implements UserDetailsService {
         return personRepository.save(customer);
     }
 
-    public Person updateCustomerProfile(Person customer) {
-        return null;
+    public CustomerDtoResponse updateCustomerProfile(Person customer,
+                                                     CustomerDtoEditWithValid customerDto
+                                                     ) {
+        if (!passwordEncoder.matches(customerDto.getOldPassword(), customer.getPassword()))
+            throw new IllegalArgumentException();
+        customer.setFirstName(customerDto.getFirstName());
+        customer.setLastName(customerDto.getLastName());
+        customer.setPatronymic(customerDto.getPatronymic());
+        customer.setEmail(customerDto.getEmail());
+        Address address = new Address(customerDto.getAddress());
+        address.setId(customer.getId());
+        address.setPerson(customer);
+        customer.setAddress(address);
+        customer.setPhone(customerDto.getPhone());
+        customer.setPassword(passwordEncoder.encode(customerDto.getNewPassword()));
+        return new CustomerDtoResponse(personRepository.save(customer));
     }
 
     public Person addMoney(String login, Integer amount) {
@@ -93,6 +124,7 @@ public class PersonService implements UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         return personRepository.findByLogin(login);
 
@@ -104,10 +136,10 @@ public class PersonService implements UserDetailsService {
         boolean matches = false;
         if (personOpt.isPresent()) {
             String password = personOpt.get().getPassword();
-            matches = passwordEncoder.matches(password, loginDto.getPassword());
+            matches = passwordEncoder.matches(loginDto.getPassword(), password);
         }
         if (!matches)
-            personOpt.orElseThrow(() -> new BadCredentialsException("Invalid login or password"));
+            throw new BadCredentialsException("Invalid login or password");
         Token token = new Token(UUID.randomUUID().toString());
         Person person = personOpt.get();
         token.setId(person.getId());

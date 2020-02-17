@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
 public class TokenService {
 
     private final TokenRepository tokenRepository;
@@ -19,12 +18,12 @@ public class TokenService {
         this.tokenRepository = tokenRepository;
     }
 
-    @Transactional(readOnly = true)
     public Optional<Token> findUserByToken(String tokenName) {
         Token token = tokenRepository.findByToken(tokenName);
         return Optional.ofNullable(token);
     }
 
+    @Transactional
     public String updateToken(Token token) {
         token.setToken(UUID.randomUUID().toString());
         return tokenRepository.save(token).getToken();

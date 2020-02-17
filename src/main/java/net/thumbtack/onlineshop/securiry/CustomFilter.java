@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -47,7 +48,8 @@ public class CustomFilter extends OncePerRequestFilter {
             String token = cookie.getValue();
             Optional<Token> tokenOpt = tokenService.findUserByToken(token);
             if (tokenOpt.isPresent()) {
-                String login = tokenOpt.get().getPerson().getUsername();
+                Person person = tokenOpt.get().getPerson();
+                String login = person.getUsername();
                 String role = tokenOpt.get().getPerson().getRoles().stream().findFirst().get().getAuthority();
                 try {
                     SimpleGrantedAuthority sga = new SimpleGrantedAuthority(role);

@@ -69,6 +69,9 @@ public class Person implements UserDetails {
         this.login = adminDtoWithValid.getLogin();
         this.position = adminDtoWithValid.getPosition();
         this.active = true;
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
     }
 
     public Person(CustomerDtoWithValid customer) {
@@ -77,9 +80,12 @@ public class Person implements UserDetails {
         this.patronymic = customer.getPatronymic();
         this.login = customer.getLogin();
         this.email = customer.getEmail();
-        this.phone = customer.getPhone();
+        this.phone = customer.getClearPhone();
         this.deposit = 0;
         this.active = true;
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
     }
 
     public Long getId() {
