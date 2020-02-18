@@ -7,6 +7,9 @@ public abstract class PersonDtoResponse {
     private String lastName;
     private String patronymic;
 
+    public PersonDtoResponse() {
+    }
+
     public PersonDtoResponse(long id, String firstName, String lastName, String patronymic) {
         this.id = id;
         this.firstName = firstName;

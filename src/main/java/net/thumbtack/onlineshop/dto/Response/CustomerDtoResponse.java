@@ -9,6 +9,9 @@ public class CustomerDtoResponse extends PersonDtoResponse {
     private String phone;
     private int deposit;
 
+    public CustomerDtoResponse() {
+    }
+
     public CustomerDtoResponse(Person customer) {
         super(customer.getId(), customer.getFirstName(), customer.getLastName(),
                 customer.getPatronymic()

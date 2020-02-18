@@ -12,6 +12,9 @@ public class GetAllCustomerDtoResponse {
     private String phone;
     private String userType;
 
+    public GetAllCustomerDtoResponse() {
+    }
+
     public GetAllCustomerDtoResponse(Person customer) {
         this.id = customer.getId();
         this.firstName = customer.getFirstName();

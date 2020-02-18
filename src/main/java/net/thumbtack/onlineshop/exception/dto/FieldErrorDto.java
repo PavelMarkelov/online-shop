@@ -5,9 +5,12 @@ import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 
 public class FieldErrorDto {
 
-	private final String errorCode;
-	private final String field;
-	private final String message;
+	private String errorCode;
+	private String field;
+	private String message;
+
+	public FieldErrorDto() {
+	}
 
 	public FieldErrorDto(GlobalExceptionErrorCode errorCode, String field, String message) {
 		this.errorCode = String.format("%s", errorCode);
@@ -25,5 +28,14 @@ public class FieldErrorDto {
 
 	public String getMessage() {
 		return message;
+	}
+
+	@Override
+	public String toString() {
+		return "FieldErrorDto{" +
+				"errorCode='" + errorCode + '\'' +
+				", field='" + field + '\'' +
+				", message='" + message + '\'' +
+				'}';
 	}
 }
