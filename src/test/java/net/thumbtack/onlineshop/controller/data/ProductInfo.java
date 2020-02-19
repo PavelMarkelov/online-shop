@@ -1,32 +1,26 @@
-package net.thumbtack.onlineshop.dto.Response;
+package net.thumbtack.onlineshop.controller.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.thumbtack.onlineshop.entities.Product;
 
-import java.util.Collections;
 import java.util.List;
 
-public class ProductDtoResponse {
-
+public class ProductInfo {
+    @JsonIgnore
     private long id;
     private String name;
     private int price;
     private int count;
-    private List<Long> categories;
+    private List<String> categories;
 
-    public ProductDtoResponse() {
+    public ProductInfo() {
     }
 
-    public ProductDtoResponse(long id, String name, int price, int count, List<Long> categories) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.count = count;
-        this.categories = categories;
-    }
-
-    public ProductDtoResponse(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getCount(),
-                Collections.emptyList());
+    public ProductInfo(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.count = product.getCount();
     }
 
     public long getId() {
@@ -61,11 +55,12 @@ public class ProductDtoResponse {
         this.count = count;
     }
 
-    public List<Long> getCategories() {
+    public List<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Long> categories) {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
     }
+
 }

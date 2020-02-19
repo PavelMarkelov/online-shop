@@ -7,7 +7,7 @@ import javax.validation.constraints.AssertTrue;
 public class CategoryDtoRequest {
 
     private String name;
-    private long parentId;
+    private Long parentId;
 
     public CategoryDtoRequest(String name, long parentId) {
         this.name = name;
@@ -22,11 +22,11 @@ public class CategoryDtoRequest {
         this.name = name;
     }
 
-    public long getParentId() {
+    public Long getParentId() {
         return parentId;
     }
 
-    public void setParentId(long parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 

@@ -1,6 +1,6 @@
 DROP DATABASE IF EXISTS onlineshop;
-CREATE DATABASE `onlineshop`;
-USE `onlineshop`;
+CREATE DATABASE onlineshop;
+USE onlineshop;
 
 CREATE TABLE person (
     id BIGINT NOT NULL AUTO_INCREMENT,

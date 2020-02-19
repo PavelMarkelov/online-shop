@@ -13,9 +13,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
-//    @NotFound(action = NotFoundAction.IGNORE)
     private Category parentCategory;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentCategory")

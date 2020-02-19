@@ -4,6 +4,9 @@ public class CategoryParentDtoResponse {
     private long id;
     private String name;
 
+    public CategoryParentDtoResponse() {
+    }
+
     public CategoryParentDtoResponse(long id, String name) {
         this.id = id;
         this.name = name;

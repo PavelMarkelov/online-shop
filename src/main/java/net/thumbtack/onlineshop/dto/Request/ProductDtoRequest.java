@@ -8,9 +8,12 @@ import java.util.Set;
 public class ProductDtoRequest {
 
     private String name;
-    private int price;
+    private Integer price;
     private int count;
     private Set<Long> categories;
+
+    public ProductDtoRequest() {
+    }
 
     public ProductDtoRequest(String name, int price, int count, Set<Long> categories) {
         this.name = name;

@@ -13,6 +13,8 @@ public class ProductInfoDtoResponse {
     private int count;
     private List<String> categories;
 
+    public ProductInfoDtoResponse() {
+    }
 
     public ProductInfoDtoResponse(Product product) {
         this.id = product.getId();

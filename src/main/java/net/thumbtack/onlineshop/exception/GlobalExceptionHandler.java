@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity handlerProductNotFoundException(IncorrectOrderException ex) {
 		FieldErrorDto field = new FieldErrorDto(ex.getGlobalExceptionErrorCode(), "order",
 				ex.getGlobalExceptionErrorCode().getErrorString());
-		return new ResponseEntity<>(field, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(field, HttpStatus.NOT_ACCEPTABLE);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

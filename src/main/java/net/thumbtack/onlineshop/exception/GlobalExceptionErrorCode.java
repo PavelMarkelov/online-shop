@@ -15,6 +15,7 @@ public enum GlobalExceptionErrorCode {
         CATEGORY_NOT_FOUND("Category with the specified id not exists"),
         PARENT_CATEGORY("Forbidden to move a category to a subcategory"),
         CHILD_CATEGORY("Forbidden add child category to a subcategory"),
+        ERROR_CHILD("Forbidden to move a subcategory to a category"),
         PARENT_CATEGORY_NOT_EXIST("Parent category does not exist"),
         PRODUCT_NOT_FOUND("Product with the specified id not exists"),
         BAD_ORDER("Incorrect sort order. Possible value: \"product\" or \"category\"");

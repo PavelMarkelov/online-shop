@@ -7,6 +7,9 @@ public class CategoryChildrenDtoResponse extends CategoryParentDtoResponse {
     private long parentId;
     private String parentName;
 
+    public CategoryChildrenDtoResponse() {
+    }
+
     public CategoryChildrenDtoResponse(long id, String name, long parentId, String parentName) {
         super(id, name);
         this.parentId = parentId;

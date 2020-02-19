@@ -61,9 +61,9 @@ public class ProductService {
         Product product = productOpt.get();
         if (request.getName() != null)
             product.setName(request.getName());
-        if (request.getPrice() != 0)
+        if (request.getPrice() != null)
             product.setPrice(request.getPrice());
-        if (request.getCount() != 0)
+        if (request.getCount() != null)
             product.setCount(request.getCount());
         if (request.getCategories() != null) {
             if (request.getCategories().isEmpty()) {

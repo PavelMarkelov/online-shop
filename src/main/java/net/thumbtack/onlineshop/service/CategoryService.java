@@ -87,7 +87,8 @@ public class CategoryService {
             return new CategoryChildrenDtoResponse(category.getId(), category.getName(),
                     category.getParentCategory().getId(),
                     category.getParentCategory().getName());
-        }
+        }   else if (category.getParentCategory() != null)
+            throw new ParentCategoryException(GlobalExceptionErrorCode.ERROR_CHILD);
         categoryRepository.save(category);
         return new CategoryParentDtoResponse(category.getId(), category.getName());
     }
