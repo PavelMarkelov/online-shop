@@ -11,14 +11,12 @@ public class ProductInBasket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @MapsId("basketId")
-    @JoinColumn(name = "basket_id", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "basket_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Basket basket;
 
-    @MapsId("productId")
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
 
     private String name;
@@ -26,6 +24,14 @@ public class ProductInBasket {
     private int count;
 
     public ProductInBasket() {
+    }
+
+    public ProductInBasket(Basket basket, Product product, String name, int price, int count) {
+        this.basket = basket;
+        this.product = product;
+        this.name = name;
+        this.price = price;
+        this.count = count;
     }
 
     public Basket getBasket() {

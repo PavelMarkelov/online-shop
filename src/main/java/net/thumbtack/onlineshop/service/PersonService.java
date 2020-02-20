@@ -2,13 +2,13 @@ package net.thumbtack.onlineshop.service;
 
 import net.thumbtack.onlineshop.dto.Request.AdminDtoWithValid;
 import net.thumbtack.onlineshop.dto.Request.CustomerDtoWithValid;
+import net.thumbtack.onlineshop.dto.Request.DepositDtoRequest;
 import net.thumbtack.onlineshop.dto.Request.LoginDtoRequest;
 import net.thumbtack.onlineshop.dto.Request.editDto.AdminEditDtoWithValid;
 import net.thumbtack.onlineshop.dto.Request.editDto.CustomerDtoEditWithValid;
 import net.thumbtack.onlineshop.dto.Response.AdminDtoResponse;
 import net.thumbtack.onlineshop.dto.Response.CustomerDtoResponse;
 import net.thumbtack.onlineshop.dto.Response.GetAllCustomerDtoResponse;
-import net.thumbtack.onlineshop.dto.Response.PersonDtoResponse;
 import net.thumbtack.onlineshop.entities.*;
 import net.thumbtack.onlineshop.exception.FailPasswordException;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
@@ -23,7 +23,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -98,6 +97,9 @@ public class PersonService implements UserDetailsService {
         Address address = new Address(customerDto.getAddress());
         address.setPerson(customer);
         customer.setAddress(address);
+        Basket basket = new Basket();
+        basket.setPerson(customer);
+        customer.setBasket(basket);
         return personRepository.save(customer);
     }
 
@@ -119,8 +121,10 @@ public class PersonService implements UserDetailsService {
         return new CustomerDtoResponse(personRepository.save(customer));
     }
 
-    public Person addMoney(String login, Integer amount) {
-        return null;
+    public CustomerDtoResponse addMoney(DepositDtoRequest depositDto, String login) {
+        Person customer = personRepository.findByLogin(login);
+        customer.setDeposit(depositDto.getDeposit());
+        return new CustomerDtoResponse(personRepository.save(customer));
     }
 
     @Override

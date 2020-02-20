@@ -1,8 +1,10 @@
 package net.thumbtack.onlineshop.exception.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class FieldErrorDto {
 
 	private String errorCode;

@@ -91,6 +91,13 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(field, HttpStatus.NOT_ACCEPTABLE);
 	}
 
+	@ExceptionHandler(NoMoneyException.class)
+	public ResponseEntity handlerNoMoneyException(NoMoneyException ex) {
+		FieldErrorDto field = new FieldErrorDto(ex.getGlobalExceptionErrorCode(), null,
+				ex.getGlobalExceptionErrorCode().getErrorString());
+		return new ResponseEntity<>(field, HttpStatus.NOT_ACCEPTABLE);
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ValidationErrorDto> processValidationError(MethodArgumentNotValidException ex) {
 		BindingResult result = ex.getBindingResult();

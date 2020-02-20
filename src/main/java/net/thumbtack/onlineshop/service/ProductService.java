@@ -1,16 +1,17 @@
 package net.thumbtack.onlineshop.service;
 
+import net.thumbtack.onlineshop.dto.Request.BuyProductDtoRequest;
 import net.thumbtack.onlineshop.dto.Request.ProductDtoRequest;
 import net.thumbtack.onlineshop.dto.Request.ProductEditDtoRequest;
+import net.thumbtack.onlineshop.dto.Response.BuyProductDtoResponse;
 import net.thumbtack.onlineshop.dto.Response.ProductDtoResponse;
 import net.thumbtack.onlineshop.dto.Response.ProductInfoDtoResponse;
 import net.thumbtack.onlineshop.entities.Category;
+import net.thumbtack.onlineshop.entities.Person;
 import net.thumbtack.onlineshop.entities.Product;
-import net.thumbtack.onlineshop.exception.CategoryNotFoundException;
-import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
-import net.thumbtack.onlineshop.exception.IncorrectOrderException;
-import net.thumbtack.onlineshop.exception.ProductNotFoundException;
+import net.thumbtack.onlineshop.exception.*;
 import net.thumbtack.onlineshop.repos.CategoryRepository;
+import net.thumbtack.onlineshop.repos.PersonRepository;
 import net.thumbtack.onlineshop.repos.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +26,12 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final PersonRepository personRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, PersonRepository personRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.personRepository = personRepository;
     }
 
     public ProductDtoResponse addProduct(@Valid ProductDtoRequest request) {
@@ -210,7 +213,25 @@ public class ProductService {
         return response;
     }
 
-    public Product buyProduct(Product product) {
-        return null;
+    public BuyProductDtoResponse buyProduct(String login, BuyProductDtoRequest request) {
+        Optional<Product> productOpt = productRepository.findById(request.getId());
+        if (!productOpt.isPresent())
+            throw new ProductNotFoundException(GlobalExceptionErrorCode.PRODUCT_NOT_FOUND);
+        Product product = productOpt.get();
+        if (!request.getName().equals(product.getName()) || request.getPrice() != product.getPrice())
+            throw new ProductNotFoundException(GlobalExceptionErrorCode.BUY_ERROR);
+        int count = request.getCount();
+        if (count <= 0)
+            count = 1;
+        if (product.getCount() < count)
+            throw new ProductNotFoundException(GlobalExceptionErrorCode.ERROR_COUNT);
+        Person customer = personRepository.findByLogin(login);
+        if (count * customer.getDeposit() < count * product.getPrice())
+            throw new NoMoneyException(GlobalExceptionErrorCode.NO_MONEY);
+        product.setCount(product.getCount() - count);
+        productRepository.save(product);
+        customer.setDeposit(customer.getDeposit() - count * request.getPrice());
+        return new BuyProductDtoResponse(request.getId(), request.getName(),
+                request.getPrice(), count);
     }
 }

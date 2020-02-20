@@ -16,8 +16,7 @@ public class Basket {
     @OneToOne
     private Person person;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "basket_id")
+    @OneToMany(mappedBy = "basket", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ProductInBasket> productInBaskets = new ArrayList<>();
 
     public Basket() {
@@ -45,6 +44,14 @@ public class Basket {
 
     public void setProductInBaskets(List<ProductInBasket> productInBaskets) {
         this.productInBaskets = productInBaskets;
+    }
+
+    public void addProduct(ProductInBasket product) {
+        productInBaskets.add(product);
+    }
+
+    public void delProduct(ProductInBasket product) {
+        productInBaskets.remove(product);
     }
 
     @Override

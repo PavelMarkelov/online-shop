@@ -8,20 +8,22 @@ import net.thumbtack.onlineshop.dto.Response.GetAllCustomerDtoResponse;
 import net.thumbtack.onlineshop.dto.Response.PersonDtoResponse;
 import net.thumbtack.onlineshop.entities.Person;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
+import net.thumbtack.onlineshop.securiry.CheckAccessPerson;
 import net.thumbtack.onlineshop.service.PersonService;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+
+import static net.thumbtack.onlineshop.securiry.CheckAccessPerson.checkAccessCustomer;
 
 @RestController
 public class PersonInfoController {
@@ -44,37 +46,25 @@ public class PersonInfoController {
 
     @GetMapping("/clients")
     public List<GetAllCustomerDtoResponse> getAllCustomer(Authentication auth) {
-        if (auth == null)
-            throw new UsernameNotFoundException(GlobalExceptionErrorCode.NOT_LOGIN.getErrorString());
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))
-            return personService.findAllCustomers();
-        throw new AccessDeniedException("");
+        CheckAccessPerson.checkAccessAdmin(auth);
+        return personService.findAllCustomers();
     }
 
     @PutMapping("/admins")
     public AdminDtoResponse editAdmin(@Valid @RequestBody AdminEditDtoWithValid editDto,
                                            Authentication auth
     ) {
-        if (auth == null)
-            throw new UsernameNotFoundException(GlobalExceptionErrorCode.NOT_LOGIN.getErrorString());
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
-            Person admin = personService.findByLogin(auth.getPrincipal().toString());
-            return personService.updateAdminProfile(admin, editDto);
-        }
-        throw new AccessDeniedException("");
+        CheckAccessPerson.checkAccessAdmin(auth);
+        Person admin = personService.findByLogin(auth.getPrincipal().toString());
+        return personService.updateAdminProfile(admin, editDto);
     }
 
     @PutMapping("/clients")
     public CustomerDtoResponse editCustomer(@Valid @RequestBody CustomerDtoEditWithValid editDto,
                                             Authentication auth
     ) {
-        if (auth == null)
-            throw new UsernameNotFoundException(GlobalExceptionErrorCode.NOT_LOGIN.getErrorString());
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("USER"))) {
-            Person customer = personService.findByLogin(auth.getPrincipal().toString());
-            return personService.updateCustomerProfile(customer, editDto);
-        }
-        throw new AccessDeniedException("");
-
+        checkAccessCustomer(auth);
+        Person customer = personService.findByLogin(auth.getPrincipal().toString());
+        return personService.updateCustomerProfile(customer, editDto);
     }
 }

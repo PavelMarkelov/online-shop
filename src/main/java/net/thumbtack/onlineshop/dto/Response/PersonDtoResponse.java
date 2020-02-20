@@ -1,5 +1,8 @@
 package net.thumbtack.onlineshop.dto.Response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class PersonDtoResponse {
 
     private long id;

@@ -1,6 +1,5 @@
 package net.thumbtack.onlineshop;
 
-import net.thumbtack.onlineshop.entities.Role;
 import net.thumbtack.onlineshop.utils.parsercl.ParserException;
 import net.thumbtack.onlineshop.utils.parsercl.ParserOfCommandLine;
 import net.thumbtack.onlineshop.utils.propfilecheck.CheckerException;

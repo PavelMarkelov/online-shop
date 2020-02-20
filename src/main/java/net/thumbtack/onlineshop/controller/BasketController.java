@@ -1,0 +1,57 @@
+package net.thumbtack.onlineshop.controller;
+
+import net.thumbtack.onlineshop.dto.Request.BuyProductDtoRequest;
+import net.thumbtack.onlineshop.dto.Response.BuyProductDtoResponse;
+import net.thumbtack.onlineshop.service.BasketService;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static net.thumbtack.onlineshop.securiry.CheckAccessPerson.checkAccessCustomer;
+
+@RestController
+@RequestMapping("/baskets")
+public class BasketController {
+
+    private final BasketService basketService;
+
+    public BasketController(BasketService basketService) {
+        this.basketService = basketService;
+    }
+
+    @PostMapping
+    private List<BuyProductDtoResponse> addItemToBasket(
+            @RequestBody BuyProductDtoRequest request,
+            Authentication auth
+    ) {
+        checkAccessCustomer(auth);
+        String login = auth.getPrincipal().toString();
+        return basketService.addToBasketOrChangingQuantity(login, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public String delItemFromBasket(@PathVariable("id") Long id, Authentication auth) {
+        checkAccessCustomer(auth);
+        String login = auth.getPrincipal().toString();
+        basketService.deleteProductFromBasket(login, id);
+        return "{}";
+    }
+
+    @PutMapping
+    public List<BuyProductDtoResponse> changeQuantity(
+            @RequestBody BuyProductDtoRequest request,
+            Authentication auth
+    ) {
+        checkAccessCustomer(auth);
+        String login = auth.getPrincipal().toString();
+        return basketService.addToBasketOrChangingQuantity(login, request);
+    }
+
+    @GetMapping
+    public List<BuyProductDtoResponse> getBasket(Authentication auth) {
+        checkAccessCustomer(auth);
+        String login = auth.getPrincipal().toString();
+        return basketService.findBasketByPersonLogin(login);
+    }
+}
