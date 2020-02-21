@@ -23,21 +23,21 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(BadCredentialsException.class)
 	public ResponseEntity handlerNotAuthenticatedException(BadCredentialsException ex) {
-		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.NOT_LOGIN, "",
+		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.NOT_LOGIN, null,
 				ex.getMessage());
 		return new ResponseEntity<>(field, HttpStatus.UNAUTHORIZED);
 	}
 
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public ResponseEntity handlerNotAuthenticatedException(UsernameNotFoundException ex) {
-		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.NOT_LOGIN, "",
+		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.NOT_LOGIN, null,
 				ex.getMessage());
 		return new ResponseEntity<>(field, HttpStatus.UNAUTHORIZED);
 	}
 
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity handlerForbiddenException() {
-		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.FORBIDDEN, "",
+		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.FORBIDDEN, null,
 				GlobalExceptionErrorCode.FORBIDDEN.getErrorString());
 		return new ResponseEntity<>(field, HttpStatus.FORBIDDEN);
 	}
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(ProductNotFoundException.class)
 	public ResponseEntity handlerProductNotFoundException(ProductNotFoundException ex) {
-		FieldErrorDto field = new FieldErrorDto(ex.getGlobalExceptionErrorCode(), "",
+		FieldErrorDto field = new FieldErrorDto(ex.getGlobalExceptionErrorCode(), null,
 				ex.getGlobalExceptionErrorCode().getErrorString());
 		return new ResponseEntity<>(field, HttpStatus.NOT_FOUND);
 	}
@@ -120,7 +120,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResponseEntity handlerNotSupportedException(HttpRequestMethodNotSupportedException ex) {
-		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.NOT_SUPPORTED, "",
+		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.NOT_SUPPORTED, null,
 				ex.getMessage());
 		return new ResponseEntity<>(field, HttpStatus.METHOD_NOT_ALLOWED);
 	}

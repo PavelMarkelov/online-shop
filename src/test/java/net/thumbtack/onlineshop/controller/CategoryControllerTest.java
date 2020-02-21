@@ -93,7 +93,7 @@ class CategoryControllerTest {
     }
 
     @AfterEach
-    void initAfterPersons() {
+    void clearDatabase() {
         clearDb.clear();
     }
 

@@ -21,7 +21,8 @@ public enum GlobalExceptionErrorCode {
         BAD_ORDER("Incorrect sort order. Possible value: \"product\" or \"category\""),
         ERROR_COUNT("The required quantity of the product is not in stock"),
         NO_MONEY("Not enough money in the account to buy the product in the specified quantity"),
-        BUY_ERROR("Incorrectly stated the name or price of the product");
+        BUY_ERROR("Incorrectly stated the name or price of the product"),
+        ERROR_BASKET("Not enough money in the account to buy the products in the specified quantity");
 
 
         private String errorString;

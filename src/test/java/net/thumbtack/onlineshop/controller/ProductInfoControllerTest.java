@@ -61,7 +61,7 @@ class ProductInfoControllerTest {
     }
 
     @AfterEach
-    void initAfterPersons() {
+    void clearDatabase() {
         clearDb.clear();
     }
 

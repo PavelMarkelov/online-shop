@@ -3,7 +3,6 @@ package net.thumbtack.onlineshop.dto.Request.editDto;
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.AssertTrue;
-import java.util.Objects;
 
 import static net.thumbtack.onlineshop.utils.propfilecheck.PropertiesFileChecker.getAppProperties;
 

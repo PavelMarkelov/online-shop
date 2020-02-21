@@ -224,8 +224,6 @@ class SignUpAndLogoutControllerTest {
                 .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.errorCode", is(GlobalExceptionErrorCode.FORBIDDEN.name())))
-                .andExpect(jsonPath("$.field", is("")))
                 .andExpect(jsonPath("$.message", is(GlobalExceptionErrorCode.FORBIDDEN.getErrorString())));
-
     }
 }

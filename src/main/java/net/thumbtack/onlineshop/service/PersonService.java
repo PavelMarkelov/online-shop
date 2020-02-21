@@ -53,10 +53,6 @@ public class PersonService implements UserDetailsService {
         return personRepository.save(personForAdd);
     }
 
-    public Person findByLoginAndPassword(String login, String password) {
-        return null;
-    }
-
     @Transactional(readOnly = true)
     public Person findByLogin(String login) {
         return personRepository.findByLogin(login);
@@ -123,7 +119,7 @@ public class PersonService implements UserDetailsService {
 
     public CustomerDtoResponse addMoney(DepositDtoRequest depositDto, String login) {
         Person customer = personRepository.findByLogin(login);
-        customer.setDeposit(depositDto.getDeposit());
+        customer.setDeposit(depositDto.getDeposit() + customer.getDeposit());
         return new CustomerDtoResponse(personRepository.save(customer));
     }
 

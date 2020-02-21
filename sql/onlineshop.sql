@@ -84,6 +84,7 @@ CREATE TABLE product_in_basket (
     id BIGINT NOT NULL AUTO_INCREMENT,
     basket_id BIGINT NOT NULL,
     product_id BIGINT,
+    product_id_info BIGINT NOT NULL,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
     count INT NOT NULL DEFAULT 1,

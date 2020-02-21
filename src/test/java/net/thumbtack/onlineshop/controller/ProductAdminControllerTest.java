@@ -63,7 +63,7 @@ class ProductAdminControllerTest {
     }
 
     @AfterEach
-    void initAfterPersons() {
+    void clearDatabase() {
         clearDb.clear();
     }
 

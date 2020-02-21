@@ -7,7 +7,6 @@ import net.thumbtack.onlineshop.service.PersonService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -70,40 +69,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
-//    @Override
-//    public void configure(WebSecurity web) {
-//        web
-//                .ignoring()
-//                    .antMatchers( "/static/**", "/css/**", "/js/**", "/images/**");
-//                    .antMatchers(HttpMethod.POST, "/api/admins")
-//                    .antMatchers(HttpMethod.POST, "/api/clients")
-//                    .antMatchers(HttpMethod.POST, "/api/sessions")
-//                    .antMatchers("/api/settings")
-//                    .antMatchers("/api/debug/clear");
-//    }
-//
-//    @Bean
-//    DaoAuthenticationProvider authenticationProvider(){
-//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-//        daoAuthenticationProvider.setUserDetailsService(personService);
-//        return  daoAuthenticationProvider;
-//    }
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder authManagerBuilder) {
-//        authManagerBuilder.authenticationProvider( authenticationProvider() );
-//    }
-//
-//    @Bean
-//    public AuthenticationService authenticationService(AuthenticationManager authenticationManager) {
-//        return new AuthenticationService(authenticationManager);
-//    }
-//
-//    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
 }

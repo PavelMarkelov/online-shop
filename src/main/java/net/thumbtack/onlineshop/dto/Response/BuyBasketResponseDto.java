@@ -2,15 +2,15 @@ package net.thumbtack.onlineshop.dto.Response;
 
 import java.util.List;
 
-public class BasketResponseDto {
+public class BuyBasketResponseDto {
 
     private List<BuyProductDtoResponse> bought;
     private List<BuyProductDtoResponse> remaining;
 
-    public BasketResponseDto() {
+    public BuyBasketResponseDto() {
     }
 
-    public BasketResponseDto(List<BuyProductDtoResponse> bought, List<BuyProductDtoResponse> remaining) {
+    public BuyBasketResponseDto(List<BuyProductDtoResponse> bought, List<BuyProductDtoResponse> remaining) {
         this.bought = bought;
         this.remaining = remaining;
     }

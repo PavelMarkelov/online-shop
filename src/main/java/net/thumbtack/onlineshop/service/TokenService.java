@@ -1,6 +1,5 @@
 package net.thumbtack.onlineshop.service;
 
-import net.thumbtack.onlineshop.entities.Person;
 import net.thumbtack.onlineshop.entities.Token;
 import net.thumbtack.onlineshop.repos.TokenRepository;
 import org.springframework.stereotype.Service;

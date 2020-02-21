@@ -19,6 +19,7 @@ public class ProductInBasket {
     @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
 
+    private long productIdInfo;
     private String name;
     private int price;
     private int count;
@@ -26,9 +27,12 @@ public class ProductInBasket {
     public ProductInBasket() {
     }
 
-    public ProductInBasket(Basket basket, Product product, String name, int price, int count) {
+    public ProductInBasket(Basket basket, Product product, long productIdInfo,
+                           String name, int price, int count
+    ) {
         this.basket = basket;
         this.product = product;
+        this.productIdInfo = productIdInfo;
         this.name = name;
         this.price = price;
         this.count = count;
@@ -80,6 +84,14 @@ public class ProductInBasket {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public long getProductIdInfo() {
+        return productIdInfo;
+    }
+
+    public void setProductIdInfo(long productIdInfo) {
+        this.productIdInfo = productIdInfo;
     }
 
     @Override

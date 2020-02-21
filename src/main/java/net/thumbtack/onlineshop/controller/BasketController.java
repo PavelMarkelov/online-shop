@@ -27,11 +27,11 @@ public class BasketController {
     ) {
         checkAccessCustomer(auth);
         String login = auth.getPrincipal().toString();
-        return basketService.addToBasketOrChangingQuantity(login, request);
+        return basketService.addToBasket(login, request);
     }
 
     @DeleteMapping("/{id}")
-    public String delItemFromBasket(@PathVariable("id") Long id, Authentication auth) {
+    public String delItemFromBasket(@PathVariable("id") long id, Authentication auth) {
         checkAccessCustomer(auth);
         String login = auth.getPrincipal().toString();
         basketService.deleteProductFromBasket(login, id);
@@ -45,7 +45,7 @@ public class BasketController {
     ) {
         checkAccessCustomer(auth);
         String login = auth.getPrincipal().toString();
-        return basketService.addToBasketOrChangingQuantity(login, request);
+        return basketService.changingQuantity(login, request);
     }
 
     @GetMapping
