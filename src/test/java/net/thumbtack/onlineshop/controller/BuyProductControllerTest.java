@@ -2,13 +2,12 @@ package net.thumbtack.onlineshop.controller;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.thumbtack.onlineshop.controller.data.BuyBasket;
+import net.thumbtack.onlineshop.controller.data.ListOfProductsWithCookie;
+import net.thumbtack.onlineshop.controller.data.ProductInfo;
 import net.thumbtack.onlineshop.dto.Request.*;
-import net.thumbtack.onlineshop.dto.Response.CategoryChildrenDtoResponse;
-import net.thumbtack.onlineshop.dto.Response.CategoryParentDtoResponse;
 import net.thumbtack.onlineshop.dto.Response.ProductDtoResponse;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
-import net.thumbtack.onlineshop.exception.dto.FieldErrorDto;
-import net.thumbtack.onlineshop.exception.dto.ValidationErrorDto;
 import net.thumbtack.onlineshop.service.ClearDatabaseService;
 import net.thumbtack.onlineshop.utils.propfilecheck.CheckerException;
 import net.thumbtack.onlineshop.utils.propfilecheck.PropertiesFileChecker;
@@ -25,20 +24,18 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.Cookie;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest()
+@SpringBootTest
 @AutoConfigureMockMvc
-
 class BuyProductControllerTest {
 
     @Autowired
@@ -84,7 +81,7 @@ class BuyProductControllerTest {
                 .andReturn()
                 .getResponse();
         Cookie cookie = response.getCookie(cookieName);
-        DepositDtoRequest request = new DepositDtoRequest(50000);
+        DepositDtoRequest request = new DepositDtoRequest(500);
         response = mvc.perform(put("/deposits")
                 .content(asJsonString(request))
                 .cookie(cookie)
@@ -106,10 +103,110 @@ class BuyProductControllerTest {
         return response.getCookie(cookieName);
     }
 
+    private ListOfProductsWithCookie initBasket() throws Exception {
+        Cookie cookie = regAdmin();
+        ProductDtoRequest product = new ProductDtoRequest("Сыр", 500, 5, null);
+        MockHttpServletResponse response = mvc.perform(post("/products")
+                .cookie(cookie)
+                .content(asJsonString(product))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        cookie = response.getCookie(cookieName);
+        ProductDtoResponse productResp = mapper.readValue(response.getContentAsString(), ProductDtoResponse.class);
+        product = new ProductDtoRequest("Масло", 500, 5, null);
+        response = mvc.perform(post("/products")
+                .cookie(cookie)
+                .content(asJsonString(product))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        cookie = response.getCookie(cookieName);
+        ProductDtoResponse productResp1 = mapper.readValue(response.getContentAsString(), ProductDtoResponse.class);
+        product = new ProductDtoRequest("Молоко", 50, 5, null);
+        response = mvc.perform(post("/products")
+                .cookie(cookie)
+                .content(asJsonString(product))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        cookie = response.getCookie(cookieName);
+        ProductDtoResponse productResp2 = mapper.readValue(response.getContentAsString(), ProductDtoResponse.class);
+        product = new ProductDtoRequest("Кефир", 60, 5, null);
+        response = mvc.perform(post("/products")
+                .cookie(cookie)
+                .content(asJsonString(product))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        cookie = response.getCookie(cookieName);
+        ProductDtoResponse productResp3 = mapper.readValue(response.getContentAsString(), ProductDtoResponse.class);
+        Cookie cookieCustomer = regCustomer();
+        BuyProductDtoRequest productBasket = new BuyProductDtoRequest(productResp.getId(), productResp.getName(),
+                productResp.getPrice(), productResp.getCount());
+        response = mvc.perform(post("/baskets")
+                .cookie(cookieCustomer)
+                .content(asJsonString(productBasket))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        cookieCustomer = response.getCookie(cookieName);
+        BuyProductDtoRequest productBasket1 = new BuyProductDtoRequest(productResp1.getId(), productResp1.getName(),
+                productResp1.getPrice(), 2);
+        response = mvc.perform(post("/baskets")
+                .cookie(cookieCustomer)
+                .content(asJsonString(productBasket1))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        cookieCustomer = response.getCookie(cookieName);
+        BuyProductDtoRequest productBasket2 = new BuyProductDtoRequest(productResp2.getId(), productResp2.getName(),
+                productResp2.getPrice(), 3);
+        response = mvc.perform(post("/baskets")
+                .cookie(cookieCustomer)
+                .content(asJsonString(productBasket2))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        cookieCustomer = response.getCookie(cookieName);
+        BuyProductDtoRequest productBasket3 = new BuyProductDtoRequest(productResp3.getId(), productResp3.getName(),
+                productResp3.getPrice(), 10);
+        response = mvc.perform(post("/baskets")
+                .cookie(cookieCustomer)
+                .content(asJsonString(productBasket3))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        cookieCustomer = response.getCookie(cookieName);
+        mvc.perform(delete("/products/{id}", productResp1.getId())
+                .cookie(cookie)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        List<BuyProductDtoRequest> request = Arrays.asList(productBasket, productBasket1,
+                productBasket2, productBasket3);
+        return new ListOfProductsWithCookie(request, cookieCustomer);
+    }
+
     @Test
     void failBuyProduct() throws Exception {
         Cookie cookie = regAdmin();
-        ProductDtoRequest product = new ProductDtoRequest("Сыр", 60000, 1, null);
+        ProductDtoRequest product = new ProductDtoRequest("Сыр", 600, 1, null);
         MockHttpServletResponse response = mvc.perform(post("/products")
                 .cookie(cookie)
                 .content(asJsonString(product))
@@ -135,7 +232,7 @@ class BuyProductControllerTest {
                 .getResponse();
         cookie = response.getCookie(cookieName);
         request.setName("Сыр");
-        request.setPrice(60000);
+        request.setPrice(600);
         request.setCount(2);
         response = mvc.perform(post("/purchases")
                 .cookie(cookie)
@@ -164,7 +261,7 @@ class BuyProductControllerTest {
     @Test
     void buyProduct() throws Exception {
         Cookie cookie = regAdmin();
-        ProductDtoRequest product = new ProductDtoRequest("Сыр", 800, 1, null);
+        ProductDtoRequest product = new ProductDtoRequest("Сыр", 400, 1, null);
         MockHttpServletResponse response = mvc.perform(post("/products")
                 .cookie(cookie)
                 .content(asJsonString(product))
@@ -190,6 +287,77 @@ class BuyProductControllerTest {
     }
 
     @Test
-    void buyBasket() {
+    void buyBasket() throws Exception {
+        ListOfProductsWithCookie initBasket = initBasket();
+        Cookie cookie = initBasket.getCookie();
+        List<BuyProductDtoRequest> request = initBasket.getResponse();
+        mvc.perform(post("/purchases/baskets")
+                .cookie(cookie)
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.message", is(
+                        GlobalExceptionErrorCode.ERROR_BASKET.getErrorString()
+                )));
+        MockHttpServletResponse response = mvc.perform(get("/products")
+                .cookie(cookie)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        JavaType listType = mapper
+                .getTypeFactory()
+                .constructCollectionType(List.class, ProductInfo.class);
+        List<ProductInfo> productsList = mapper
+                .readValue(response.getContentAsString(), listType);
+        String serialize = mapper.writeValueAsString(productsList);
+        assertEquals("[{\"name\":\"Кефир\",\"price\":60,\"count\":5,\"categories\":[]}," +
+                "{\"name\":\"Молоко\",\"price\":50,\"count\":5,\"categories\":[]}," +
+                "{\"name\":\"Сыр\",\"price\":500,\"count\":5,\"categories\":[]}]", serialize);
+        DepositDtoRequest deposit = new DepositDtoRequest(4500);
+        mvc.perform(put("/deposits")
+                .content(asJsonString(deposit))
+                .cookie(cookie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        request.get(2).setCount(5); // молоко
+        response = mvc.perform(post("/purchases/baskets")
+                .cookie(cookie)
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        BuyBasket buyBasket = mapper.readValue(response.getContentAsString(), BuyBasket.class);
+        serialize = mapper.writeValueAsString(buyBasket);
+        assertEquals("{\"bought\":" +
+                "[{\"name\":\"Сыр\",\"price\":500,\"count\":5}," +
+                "{\"name\":\"Молоко\",\"price\":50,\"count\":3}]," +
+                "\"remaining\":" +
+                "[{\"name\":\"Кефир\",\"price\":60,\"count\":10}," +
+                "{\"name\":\"Масло\",\"price\":500,\"count\":2}]}", serialize);
+        int total = 5000 - 500 * 5 - 50 * 3;
+        mvc.perform(get("/deposits")
+                .cookie(cookie)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.deposit", is(total)));
+        response = mvc.perform(get("/products")
+                .cookie(cookie)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        productsList = mapper.readValue(response.getContentAsString(), listType);
+        serialize = mapper.writeValueAsString(productsList);
+        assertEquals("[{\"name\":\"Кефир\",\"price\":60,\"count\":5,\"categories\":[]}," +
+                "{\"name\":\"Молоко\",\"price\":50,\"count\":2,\"categories\":[]}," +
+                "{\"name\":\"Сыр\",\"price\":500,\"count\":0,\"categories\":[]}]", serialize);
     }
 }

@@ -1,10 +1,13 @@
 package net.thumbtack.onlineshop.controller.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import net.thumbtack.onlineshop.entities.Product;
 
 import java.util.List;
+import java.util.Objects;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductInfo {
     @JsonIgnore
     private long id;
@@ -63,4 +66,17 @@ public class ProductInfo {
         this.categories = categories;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductInfo that = (ProductInfo) o;
+        return price == that.price &&
+                Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price);
+    }
 }

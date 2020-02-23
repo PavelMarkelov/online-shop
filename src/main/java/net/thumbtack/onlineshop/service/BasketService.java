@@ -45,7 +45,14 @@ public class BasketService {
             String login,
             BuyProductDtoRequest request
     ) {
-        Product product = getProductWithCheck(request);
+        Optional<Product> productOpt = productRepository.findById(request.getId());
+        if (!productOpt.isPresent())
+            throw new ProductNotFoundException(GlobalExceptionErrorCode.PRODUCT_NOT_FOUND);
+        Product product = productOpt.get();
+        if (!request.getName().equals(product.getName()) || request.getPrice() != product.getPrice())
+            throw new ProductNotFoundException(GlobalExceptionErrorCode.BUY_ERROR);
+        if (request.getCount() <= 0)
+            request.setCount(1);
         Person person = personRepository.findByLogin(login);
         Basket basket = person.getBasket();
         Optional<ProductInBasket> productExist = basket.getProductInBaskets()
@@ -69,7 +76,6 @@ public class BasketService {
             String login,
             BuyProductDtoRequest request
     ) {
-        getProductWithCheck(request);
         Person person = personRepository.findByLogin(login);
         Basket basket = person.getBasket();
         Optional<ProductInBasket> productExist = basket.getProductInBaskets()
@@ -77,26 +83,22 @@ public class BasketService {
                 .filter(item -> item.getProductIdInfo() == request.getId())
                 .findFirst();
         if (productExist.isPresent() && request.getCount() != productExist.get().getCount()) {
+            ProductInBasket product = productExist.get();
+            if (!product.getName().equals(request.getName()) ||
+                    product.getPrice() != request.getPrice())
+                throw new ProductNotFoundException(GlobalExceptionErrorCode.BUY_ERROR);
+            if (request.getCount() <= 0)
+                request.setCount(1);
             productExist.get().setCount(request.getCount());
             productInBasketRepository.save(productExist.get());
         }
+        else if (!productExist.isPresent())
+            throw new ProductNotFoundException(GlobalExceptionErrorCode.PRODUCT_NOT_FOUND);
         return basket.getProductInBaskets()
                 .stream()
                 .map(item -> new BuyProductDtoResponse(item.getProductIdInfo(),
                         item.getName(), item.getPrice(), item.getCount()))
                 .collect(Collectors.toList());
-    }
-
-    private Product getProductWithCheck(BuyProductDtoRequest request) {
-        Optional<Product> productOpt = productRepository.findById(request.getId());
-        if (!productOpt.isPresent())
-            throw new ProductNotFoundException(GlobalExceptionErrorCode.PRODUCT_NOT_FOUND);
-        Product product = productOpt.get();
-        if (!request.getName().equals(product.getName()) || request.getPrice() != product.getPrice())
-            throw new ProductNotFoundException(GlobalExceptionErrorCode.BUY_ERROR);
-        if (request.getCount() <= 0)
-            request.setCount(1);
-        return product;
     }
 
     public void deleteProductFromBasket(String login, Long productId) {
@@ -141,7 +143,7 @@ public class BasketService {
                     item.setCount(1);
                 ProductInBasket productInBasket = productInBasketOpt.get();
                 Product product = productInBasket.getProduct();
-                if (product.getCount() >= item.getCount()) {
+                if (product.getCount() >= productInBasket.getCount()) {
                     if (item.getCount() > productInBasket.getCount())
                         item.setCount(productInBasket.getCount());
                     int countToBuy = item.getCount();

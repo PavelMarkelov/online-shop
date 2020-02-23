@@ -18,7 +18,7 @@ public enum GlobalExceptionErrorCode {
         ERROR_CHILD("Forbidden to move a subcategory to a category"),
         PARENT_CATEGORY_NOT_EXIST("Parent category does not exist"),
         PRODUCT_NOT_FOUND("Product with the specified id not exists"),
-        BAD_ORDER("Incorrect sort order. Possible value: \"product\" or \"category\""),
+        BAD_ORDER("Incorrect sort order. Possible value: 'product' or 'category'"),
         ERROR_COUNT("The required quantity of the product is not in stock"),
         NO_MONEY("Not enough money in the account to buy the product in the specified quantity"),
         BUY_ERROR("Incorrectly stated the name or price of the product"),

@@ -131,18 +131,11 @@ public class ProductService {
                 response.add(item);
             });
         else if (categoriesId.isEmpty())
-            products.forEach(product -> {
-                if (product.getCategories().isEmpty()) {
-                    ProductInfoDtoResponse item = new ProductInfoDtoResponse(product);
-                    List<String> categoryList = product.getCategories()
-                            .stream()
-                            .map(Category::getName)
-                            .sorted(String::compareTo)
-                            .collect(Collectors.toList());
-                    item.setCategories(categoryList);
-                    response.add(item);
-                }});
-        else {
+            products
+                    .stream()
+                    .filter(product -> product.getCategories().isEmpty())
+                    .forEach(product -> response.add(new ProductInfoDtoResponse(product)));
+        else
             products.forEach(product -> {
                 List<Long> categories = product.getCategories()
                         .stream()
@@ -161,17 +154,16 @@ public class ProductService {
                     }
                 });
             });
-        }
         if (order == null || order.equals("product")) {
             Iterator<ProductInfoDtoResponse> iterator = response.listIterator();
             while (iterator.hasNext()) {
                 ProductInfoDtoResponse item = iterator.next();
                 int count = (int) response.stream()
-                        .filter(elem -> elem.getName().equals(item.getName())).count();
+                        .filter(elem -> elem.getId() == (item.getId())).count();
                 if (count > 1)
                     iterator.remove();
             }
-        } else if (categoriesId != null && order.equals("category")) {
+        } else if (categoriesId != null && !categoriesId.isEmpty() && order.equals("category")) {
             response.clear();
             categoriesId.forEach(id -> products
                     .forEach(product -> product.getCategories()
@@ -208,7 +200,8 @@ public class ProductService {
                                 }
                             })));
             return responseList;
-        }   else
+        }
+        if (order!= null && !order.equals("product") && !order.equals("category"))
             throw new IncorrectOrderException(GlobalExceptionErrorCode.BAD_ORDER);
         return response;
     }

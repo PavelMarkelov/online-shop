@@ -330,7 +330,7 @@ class ProductInfoControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotAcceptable())
                 .andExpect(jsonPath("$.message",
-                        is("Incorrect sort order. Possible value: \"product\" or \"category\"")));
+                        is("Incorrect sort order. Possible value: 'product' or 'category'")));
     }
 }
 
