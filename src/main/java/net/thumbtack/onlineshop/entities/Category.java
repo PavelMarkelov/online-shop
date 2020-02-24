@@ -1,5 +1,8 @@
 package net.thumbtack.onlineshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import net.thumbtack.onlineshop.utils.Views;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ public class Category {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentCategory")
     private List<Category> childrenCategories = new ArrayList<>();
 
+    @JsonView(Views.Name.class)
     private String name;
 
     @ManyToMany

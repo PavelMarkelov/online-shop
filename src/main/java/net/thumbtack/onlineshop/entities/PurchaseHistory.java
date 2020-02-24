@@ -1,0 +1,129 @@
+package net.thumbtack.onlineshop.entities;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
+import net.thumbtack.onlineshop.utils.Views;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name = "purchase_history")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class PurchaseHistory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToMany
+    @JoinTable(
+            name = "purchase_category",
+            joinColumns = {@JoinColumn(name = "purchase_history_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
+    )
+    @JsonView(Views.Name.class)
+    private List<Category> categories = new ArrayList<>();
+
+    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonView(Views.Id.class)
+    private Product product;
+
+    @JoinColumn(name = "person_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonView(Views.Id.class)
+    private Person person;
+
+    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private Date purchaseDate;
+
+    private String name;
+    private int price;
+    private int count;
+
+    @Transient
+    private int total;
+
+    public PurchaseHistory() {
+    }
+
+    public PurchaseHistory(List<Category> categories, Product product, Person person,
+                           Date purchaseDate, String name, int price, int count) {
+        this.categories = categories;
+        this.product = product;
+        this.person = person;
+        this.purchaseDate = purchaseDate;
+        this.name = name;
+        this.price = price;
+        this.count = count;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public Date getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+}

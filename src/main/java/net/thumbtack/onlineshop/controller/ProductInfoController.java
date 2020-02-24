@@ -1,11 +1,13 @@
 package net.thumbtack.onlineshop.controller;
 
+import net.thumbtack.onlineshop.dto.Request.GetAllProductDtoRequest;
 import net.thumbtack.onlineshop.dto.Response.ProductInfoDtoResponse;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 import net.thumbtack.onlineshop.service.ProductService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -30,13 +32,12 @@ public class ProductInfoController {
 
     @GetMapping()
     public List<ProductInfoDtoResponse> getAllProductsByOrder(
-            @RequestParam(required = false) List<Long> category,
-            @RequestParam(required = false) String order,
+            GetAllProductDtoRequest request,
             Principal principal
             ) {
         Optional<Principal> name = Optional.ofNullable(principal);
         if (!name.isPresent())
             throw new UsernameNotFoundException(GlobalExceptionErrorCode.NOT_LOGIN.getErrorString());
-        return productService.findAllProducts(category, order);
+        return productService.findAllProducts(request.getCategory(), request.getOrder());
     }
 }

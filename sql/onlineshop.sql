@@ -95,3 +95,30 @@ CREATE TABLE product_in_basket (
     CONSTRAINT min_quantity CHECK (count > 0),
     CONSTRAINT min_price CHECK (price > 0)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE TABLE purchase_history (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    product_id BIGINT,
+    person_id BIGINT,
+    purchase_date DATE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    price INT NOT NULL,
+    count INT NOT NULL,
+    PRIMARY KEY (id),
+    KEY product_id_key (product_id),
+    KEY person_id_key (person_id),
+    KEY purchase_date_key (purchase_date),
+    KEY name_key (name),
+    KEY price_key (price),
+    KEY count_key (count),
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE SET NULL,
+    FOREIGN KEY (person_id) REFERENCES person (id) ON DELETE SET NULL
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+CREATE TABLE purchase_category (
+    purchase_history_id BIGINT NOT NULL,
+    category_id BIGINT NOT NULL,
+    PRIMARY KEY (purchase_history_id, category_id),
+    FOREIGN KEY (purchase_history_id) REFERENCES purchase_history (id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE CASCADE
+) ENGINE=INNODB DEFAULT CHARSET=utf8;

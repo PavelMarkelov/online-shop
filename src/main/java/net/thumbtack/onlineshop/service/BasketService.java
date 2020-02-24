@@ -3,21 +3,16 @@ package net.thumbtack.onlineshop.service;
 import net.thumbtack.onlineshop.dto.Request.BuyProductDtoRequest;
 import net.thumbtack.onlineshop.dto.Response.BuyBasketResponseDto;
 import net.thumbtack.onlineshop.dto.Response.BuyProductDtoResponse;
-import net.thumbtack.onlineshop.entities.Basket;
-import net.thumbtack.onlineshop.entities.Person;
-import net.thumbtack.onlineshop.entities.Product;
-import net.thumbtack.onlineshop.entities.ProductInBasket;
+import net.thumbtack.onlineshop.entities.*;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 import net.thumbtack.onlineshop.exception.NoMoneyException;
 import net.thumbtack.onlineshop.exception.ProductNotFoundException;
-import net.thumbtack.onlineshop.repos.BasketRepository;
-import net.thumbtack.onlineshop.repos.PersonRepository;
-import net.thumbtack.onlineshop.repos.ProductInBasketRepository;
-import net.thumbtack.onlineshop.repos.ProductRepository;
+import net.thumbtack.onlineshop.repos.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,15 +25,17 @@ public class BasketService {
     private final PersonRepository personRepository;
     private final ProductRepository productRepository;
     private final ProductInBasketRepository productInBasketRepository;
+    private final PurchaseHistoryRepository historyRepository;
 
     public BasketService(BasketRepository basketRepository,
                          PersonRepository personRepository,
                          ProductRepository productRepository,
-                         ProductInBasketRepository productInBasketRepository) {
+                         ProductInBasketRepository productInBasketRepository, PurchaseHistoryRepository historyRepository) {
         this.basketRepository = basketRepository;
         this.personRepository = personRepository;
         this.productRepository = productRepository;
         this.productInBasketRepository = productInBasketRepository;
+        this.historyRepository = historyRepository;
     }
 
     public List<BuyProductDtoResponse> addToBasket(
@@ -65,10 +62,21 @@ public class BasketService {
             basket.addProduct(productInBasket);
             productInBasketRepository.save(productInBasket);
         }
+        return getPersonBasket(basket);
+    }
+
+    private List<BuyProductDtoResponse> getPersonBasket(Basket basket) {
         return basket.getProductInBaskets()
                 .stream()
-                .map(item -> new BuyProductDtoResponse(item.getProductIdInfo(),
-                        item.getName(), item.getPrice(), item.getCount()))
+                .map(item -> {
+                    if (item.getProduct() == null)
+                        return new BuyProductDtoResponse(item.getProductIdInfo(),
+                                item.getName(), item.getPrice(), item.getCount());
+                    else
+                        return new BuyProductDtoResponse(item.getProduct().getId(),
+                                item.getProduct().getName(), item.getProduct().getPrice(),
+                                item.getCount());
+                })
                 .collect(Collectors.toList());
     }
 
@@ -94,11 +102,7 @@ public class BasketService {
         }
         else if (!productExist.isPresent())
             throw new ProductNotFoundException(GlobalExceptionErrorCode.PRODUCT_NOT_FOUND);
-        return basket.getProductInBaskets()
-                .stream()
-                .map(item -> new BuyProductDtoResponse(item.getProductIdInfo(),
-                        item.getName(), item.getPrice(), item.getCount()))
-                .collect(Collectors.toList());
+        return getPersonBasket(basket);
     }
 
     public void deleteProductFromBasket(String login, Long productId) {
@@ -118,11 +122,7 @@ public class BasketService {
     @Transactional(readOnly = true)
     public List<BuyProductDtoResponse> findBasketByPersonLogin(String login) {
         Person person = personRepository.findByLogin(login);
-        return person.getBasket().getProductInBaskets()
-                .stream()
-                .map(item -> new BuyProductDtoResponse(item.getProductIdInfo(),
-                        item.getName(), item.getPrice(), item.getCount()))
-                .collect(Collectors.toList());
+        return getPersonBasket(person.getBasket());
     }
 
     public BuyBasketResponseDto buyingFromBasket(String login,
@@ -134,9 +134,10 @@ public class BasketService {
         request.forEach(item -> {
             Optional<ProductInBasket> productInBasketOpt = personBasket.getProductInBaskets()
                     .stream()
-                    .filter(productInBasket1 -> productInBasket1.getProduct() != null &&
-                            productInBasket1.getProduct().getName().equals(item.getName())
-                            && productInBasket1.getProduct().getPrice() == item.getPrice())
+                    .filter(productInBasket -> productInBasket.getProduct() != null &&
+                            productInBasket.getProduct().getId().equals(item.getId()) &&
+                            productInBasket.getProduct().getName().equals(item.getName()) &&
+                            productInBasket.getProduct().getPrice() == item.getPrice())
                     .findFirst();
             if (productInBasketOpt.isPresent()) {
                 if (item.getCount() <= 0)
@@ -152,14 +153,15 @@ public class BasketService {
                     if (productInBasket.getCount() == 0)
                         personBasket.delProduct(productInBasket);
                     productInBasketRepository.deleteById(productInBasket.getId());
+                    List<Category> categories = new ArrayList<>(product.getCategories());
+                    PurchaseHistory history = new PurchaseHistory(categories, product,
+                            person, new Date(), product.getName(), product.getPrice(), countToBuy);
+                    historyRepository.save(history);
                     bought.add(new BuyProductDtoResponse(item.getId(), item.getName(),
                             item.getPrice(), item.getCount()));
                 }
             }
         });
-        personBasket.getProductInBaskets().forEach(product ->
-                remaining.add(new BuyProductDtoResponse(product.getProductIdInfo(),
-                        product.getName(), product.getPrice(), product.getCount())));
         Optional<Integer> totalPriseOpt = bought
                 .stream()
                 .map(buyProduct -> buyProduct.getCount() * buyProduct.getPrice())
@@ -169,6 +171,9 @@ public class BasketService {
                 throw new NoMoneyException(GlobalExceptionErrorCode.ERROR_BASKET);
             person.setDeposit(person.getDeposit() - totalPrise);
         });
+        personBasket.getProductInBaskets().forEach(product ->
+            remaining.add(new BuyProductDtoResponse(product.getProductIdInfo(),
+                    product.getName(), product.getPrice(), product.getCount())));
         personRepository.save(person);
         return new BuyBasketResponseDto(bought, remaining);
     }

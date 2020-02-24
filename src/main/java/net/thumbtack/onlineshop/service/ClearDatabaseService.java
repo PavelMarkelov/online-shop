@@ -18,6 +18,7 @@ public class ClearDatabaseService {
     private final static String DELETE_PERSON_TABLE = "delete from Person";
     private final static String DELETE_CATEGORY_TABLE = "delete from Category";
     private final static String DELETE_PRODUCT_TABLE = "delete from Product";
+    private final static String DELETE_HISTORY_TABLE = "delete from PurchaseHistory";
 
     private final EntityManager em;
     private final boolean isClearDatabase;
@@ -32,6 +33,7 @@ public class ClearDatabaseService {
             em.createQuery(DELETE_PERSON_TABLE).executeUpdate();
             em.createQuery(DELETE_CATEGORY_TABLE).executeUpdate();
             em.createQuery(DELETE_PRODUCT_TABLE).executeUpdate();
+            em.createQuery(DELETE_HISTORY_TABLE).executeUpdate();
         }
     }
 }

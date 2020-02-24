@@ -9,14 +9,15 @@ import net.thumbtack.onlineshop.dto.Response.ProductInfoDtoResponse;
 import net.thumbtack.onlineshop.entities.Category;
 import net.thumbtack.onlineshop.entities.Person;
 import net.thumbtack.onlineshop.entities.Product;
+import net.thumbtack.onlineshop.entities.PurchaseHistory;
 import net.thumbtack.onlineshop.exception.*;
 import net.thumbtack.onlineshop.repos.CategoryRepository;
 import net.thumbtack.onlineshop.repos.PersonRepository;
 import net.thumbtack.onlineshop.repos.ProductRepository;
+import net.thumbtack.onlineshop.repos.PurchaseHistoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,14 +28,16 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final PersonRepository personRepository;
+    private final PurchaseHistoryRepository purchaseHistoryRepository;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, PersonRepository personRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, PersonRepository personRepository, PurchaseHistoryRepository purchaseHistoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.personRepository = personRepository;
+        this.purchaseHistoryRepository = purchaseHistoryRepository;
     }
 
-    public ProductDtoResponse addProduct(@Valid ProductDtoRequest request) {
+    public ProductDtoResponse addProduct(ProductDtoRequest request) {
         Product product = new Product(request);
         if (request.getCategories() == null || request.getCategories().size() == 0)
             return new ProductDtoResponse(productRepository.save(product));
@@ -222,6 +225,10 @@ public class ProductService {
         if (count * customer.getDeposit() < count * product.getPrice())
             throw new NoMoneyException(GlobalExceptionErrorCode.NO_MONEY);
         product.setCount(product.getCount() - count);
+        List<Category> categories = new ArrayList<>(product.getCategories());
+        PurchaseHistory history = new PurchaseHistory(categories, product,
+                customer, new Date(), product.getName(), product.getPrice(), count);
+        purchaseHistoryRepository.save(history);
         productRepository.save(product);
         customer.setDeposit(customer.getDeposit() - count * request.getPrice());
         return new BuyProductDtoResponse(request.getId(), request.getName(),

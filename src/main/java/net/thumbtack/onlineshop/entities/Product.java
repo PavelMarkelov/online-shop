@@ -1,6 +1,8 @@
 package net.thumbtack.onlineshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import net.thumbtack.onlineshop.dto.Request.ProductDtoRequest;
+import net.thumbtack.onlineshop.utils.Views;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.Id.class)
     private Long id;
 
     private String name;
