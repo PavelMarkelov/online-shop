@@ -1,7 +1,9 @@
 package net.thumbtack.onlineshop.controller;
 
-import net.thumbtack.onlineshop.dto.Request.GetAllProductDtoRequest;
+import com.fasterxml.jackson.annotation.JsonView;
+import net.thumbtack.onlineshop.dto.Request.HistoryListDtoRequest;
 import net.thumbtack.onlineshop.dto.Response.HistoryListDtoResponse;
+import net.thumbtack.onlineshop.entities.View;
 import net.thumbtack.onlineshop.service.PurchaseHistoryService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static net.thumbtack.onlineshop.securiry.CheckAccessPerson.checkAccessAdmin;
+
 
 @RestController
 @RequestMapping("/purchases")
@@ -20,10 +23,11 @@ public class SummaryListController {
         this.historyService = historyService;
     }
 
+    @JsonView(View.Data.class)
     @GetMapping()
-    private HistoryListDtoResponse summaryList(GetAllProductDtoRequest request,
+    private HistoryListDtoResponse summaryList(HistoryListDtoRequest request,
                                                Authentication auth) {
         checkAccessAdmin(auth);
-        return null;
+        return historyService.getSummaryList(request);
     }
 }

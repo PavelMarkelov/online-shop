@@ -5,10 +5,10 @@ import java.util.List;
 
 public class HistoryListDtoRequest {
 
-    private int offset;
-    private int size;
-    private long limit;
+    private long offset;
+    private int limit;
     private String order;
+    private String sort;
     private String time;
     private List<Long> category;
     private List<Long> product;
@@ -24,7 +24,7 @@ public class HistoryListDtoRequest {
     public HistoryListDtoRequest() {
     }
 
-    public int getOffset() {
+    public long getOffset() {
         return offset;
     }
 
@@ -32,19 +32,11 @@ public class HistoryListDtoRequest {
         this.offset = offset;
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public long getLimit() {
+    public int getLimit() {
         return limit;
     }
 
-    public void setLimit(long limit) {
+    public void setLimit(int limit) {
         this.limit = limit;
     }
 
@@ -54,6 +46,14 @@ public class HistoryListDtoRequest {
 
     public void setOrder(String order) {
         this.order = order;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
     }
 
     public String getTime() {

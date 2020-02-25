@@ -19,7 +19,7 @@ public class Address {
     @Column(nullable = false)
     private String address;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private Person person;
 

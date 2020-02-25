@@ -4,7 +4,6 @@ package net.thumbtack.onlineshop.entities;
 import com.fasterxml.jackson.annotation.JsonView;
 import net.thumbtack.onlineshop.dto.Request.AdminDtoWithValid;
 import net.thumbtack.onlineshop.dto.Request.CustomerDtoWithValid;
-import net.thumbtack.onlineshop.utils.Views;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,7 +19,7 @@ public class Person implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(Views.Id.class)
+    @JsonView(View.Id.class)
     private Long id;
 
     private String firstName;
@@ -35,7 +34,7 @@ public class Person implements UserDetails {
 
     private String email;
 
-    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Address address;
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)

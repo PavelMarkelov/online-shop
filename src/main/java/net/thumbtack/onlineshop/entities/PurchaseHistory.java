@@ -3,7 +3,6 @@ package net.thumbtack.onlineshop.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
-import net.thumbtack.onlineshop.utils.Views;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,29 +24,34 @@ public class PurchaseHistory {
             joinColumns = {@JoinColumn(name = "purchase_history_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
-    @JsonView(Views.Name.class)
+    @JsonView(View.Name.class)
     private List<Category> categories = new ArrayList<>();
 
     @JoinColumn(name = "product_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonView(Views.Id.class)
+    @ManyToOne
+    @JsonView(View.Id.class)
     private Product product;
 
     @JoinColumn(name = "person_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonView(Views.Id.class)
+    @JsonView(View.Id.class)
     private Person person;
 
     @Temporal(TemporalType.DATE)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonView(View.Data.class)
     private Date purchaseDate;
 
+    @JsonView(View.Data.class)
     private String name;
+    @JsonView(View.Data.class)
     private int price;
+    @JsonView(View.Data.class)
     private int count;
 
     @Transient
-    private int total;
+    @JsonView(View.Data.class)
+    private long total;
 
     public PurchaseHistory() {
     }
@@ -125,5 +129,13 @@ public class PurchaseHistory {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public long getTotal() {
+        return total;
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
     }
 }
