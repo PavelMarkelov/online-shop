@@ -14,7 +14,7 @@ import static net.thumbtack.onlineshop.securiry.CheckAccessPerson.checkAccessAdm
 
 
 @RestController
-@RequestMapping("/purchases")
+@RequestMapping("/purchases/")
 public class SummaryListController {
 
     private final PurchaseHistoryService historyService;
@@ -24,7 +24,7 @@ public class SummaryListController {
     }
 
     @JsonView(View.Data.class)
-    @GetMapping()
+    @GetMapping
     private HistoryListDtoResponse summaryList(HistoryListDtoRequest request,
                                                Authentication auth) {
         checkAccessAdmin(auth);

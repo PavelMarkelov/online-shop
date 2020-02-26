@@ -17,9 +17,9 @@ public class HistoryListDtoResponse {
     @JsonView(View.Data.class)
     private int limit;
     @JsonView(View.Data.class)
-    private List<PurchaseHistory> data;
-    @JsonView(View.Data.class)
     private long totalSum;
+    @JsonView(View.Data.class)
+    private List<PurchaseHistory> data;
 
     public HistoryListDtoResponse() {
     }

@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "purchase_history")
@@ -38,7 +39,7 @@ public class PurchaseHistory {
     private Person person;
 
     @Temporal(TemporalType.DATE)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "Europe/Samara")
     @JsonView(View.Data.class)
     private Date purchaseDate;
 
@@ -137,5 +138,18 @@ public class PurchaseHistory {
 
     public void setTotal(long total) {
         this.total = total;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PurchaseHistory)) return false;
+        PurchaseHistory history = (PurchaseHistory) o;
+        return Objects.equals(getId(), history.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

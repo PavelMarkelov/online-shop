@@ -17,8 +17,9 @@ public class Sorter {
     private static final Sort.Direction ORDER_DEFAULT = Sort.Direction.ASC;
     private static final int LIMIT = 10;
     private static final String TIME = "all";
+    private static final String SORT_OPT = "product";
 
-    private final Map<String, String> sortFieldOptions = new HashMap<>();
+    private final Map<String, String[]> sortFieldOptions = new HashMap<>();
     private final List<String> timeOptions = new ArrayList<>();
     private long offset;
     private int limit;
@@ -26,8 +27,8 @@ public class Sorter {
     private String time;
 
     {
-        sortFieldOptions.put("category", "category.name");
-        sortFieldOptions.put("product", "product.name");
+        sortFieldOptions.put("count", new String[]{"count", "price"});
+        sortFieldOptions.put("product", new String[]{"product.name"});
 
         timeOptions.add("all");
         timeOptions.add("1");
@@ -36,10 +37,10 @@ public class Sorter {
     }
 
     private Sort parseSort(String order, String sortBy) {
-        Sort.Direction dir = order == null || order.equals("asc") ?
+        Sort.Direction dir = order == null || !order.equals("desc") ?
                 ORDER_DEFAULT : Sort.Direction.DESC;
-        String sortField = sortBy == null || sortBy.equals("product") ?
-                sortFieldOptions.get("product") : sortFieldOptions.get("category");
+        String[] sortField = sortBy == null || !sortFieldOptions.containsKey(sortBy) ?
+                sortFieldOptions.get(SORT_OPT) : sortFieldOptions.get(sortBy);
         return Sort.by(dir, sortField);
     }
 

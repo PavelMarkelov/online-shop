@@ -222,7 +222,7 @@ public class ProductService {
         if (product.getCount() < count)
             throw new ProductNotFoundException(GlobalExceptionErrorCode.ERROR_COUNT);
         Person customer = personRepository.findByLogin(login);
-        if (count * customer.getDeposit() < count * product.getPrice())
+        if (customer.getDeposit() < count * product.getPrice())
             throw new NoMoneyException(GlobalExceptionErrorCode.NO_MONEY);
         product.setCount(product.getCount() - count);
         List<Category> categories = new ArrayList<>(product.getCategories());
