@@ -1,19 +1,19 @@
 package net.thumbtack.onlineshop.service;
 
-import net.thumbtack.onlineshop.dto.Request.HistoryListDtoRequest;
-import net.thumbtack.onlineshop.dto.Response.HistoryListDtoResponse;
+import net.thumbtack.onlineshop.dto.Request.SummaryDtoRequest;
+import net.thumbtack.onlineshop.dto.Response.SummaryDtoResponse;
+import net.thumbtack.onlineshop.dto.Response.SummaryListDtoResponse;
 import net.thumbtack.onlineshop.entities.PurchaseHistory;
 import net.thumbtack.onlineshop.repos.PurchaseHistoryRepository;
 import net.thumbtack.onlineshop.sorting.Sorter;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,9 +27,10 @@ public class PurchaseHistoryService {
         this.sorter = sorter;
     }
 
-    public HistoryListDtoResponse getSummaryList(HistoryListDtoRequest request) {
+    public SummaryDtoResponse getSummaryList(SummaryDtoRequest request) {
         Pageable pageable = sorter.updateSorting(request);
-        HistoryListDtoResponse response = new HistoryListDtoResponse();
+        SummaryDtoResponse response = new SummaryDtoResponse();
+        Page<PurchaseHistory> purchaseHistory;
         Date dateCreated = new Date(0);
         if (!sorter.getTime().equals("all")) {
             int days = Integer.parseInt(sorter.getTime());
@@ -39,33 +40,35 @@ public class PurchaseHistoryService {
             dateCreated = time.getTime();
         }
         if (!request.getCategory().isEmpty())
-            response.setData(historyRepository
+            purchaseHistory = historyRepository
                     .findByPurchaseDateGreaterThanAndCategoriesIdIsIn(dateCreated,
-                            request.getCategory(), pageable));
+                            request.getCategory(), pageable);
         else if (!request.getProduct().isEmpty())
-            response.setData(historyRepository
+            purchaseHistory = historyRepository
                     .findByPurchaseDateGreaterThanAndProductIdIn(dateCreated,
-                            request.getProduct(), pageable));
+                            request.getProduct(), pageable);
         else if (!request.getCustomer().isEmpty())
-            response.setData(historyRepository
+            purchaseHistory = historyRepository
                     .findByPurchaseDateGreaterThanAndPersonIdIn(dateCreated,
-                            request.getCustomer(), pageable));
+                            request.getCustomer(), pageable);
         else
-            response.setData(historyRepository
-                    .findByPurchaseDateGreaterThan(dateCreated, pageable));
-        List<PurchaseHistory> data = response.getData();
+            purchaseHistory = historyRepository
+                    .findByPurchaseDateGreaterThan(dateCreated, pageable);
+        List<PurchaseHistory> data = purchaseHistory.getContent();
         data.forEach(item -> item.setTotal(item.getCount() * item.getPrice()));
         data
                 .stream()
                 .map(PurchaseHistory::getTotal)
                 .reduce(Long::sum)
                 .ifPresent(response::setTotalSum);
-        response.setPageNumber(pageable.getPageNumber() + 1);
-        response.setOffset(pageable.getOffset());
-        response.setLimit(pageable.getPageSize());
-        if (request.isTotal()) {
-            response.setData(null);
-        }
-        return response;
+        if (request.isTotal())
+            return response;
+        SummaryListDtoResponse responseData = new SummaryListDtoResponse();
+        responseData.setTotalSum(response.getTotalSum());
+        responseData.setData(data);
+        responseData.setTotalPages(purchaseHistory.getTotalPages());
+        responseData.setCurrentPage(purchaseHistory.getNumber() + 1);
+        responseData.setTotalRecords(purchaseHistory.getTotalElements());
+        return responseData;
     }
 }

@@ -1,6 +1,6 @@
 package net.thumbtack.onlineshop.sorting;
 
-import net.thumbtack.onlineshop.dto.Request.HistoryListDtoRequest;
+import net.thumbtack.onlineshop.dto.Request.SummaryDtoRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -27,8 +27,8 @@ public class Sorter {
     private String time;
 
     {
-        sortFieldOptions.put("count", new String[]{"count", "price"});
-        sortFieldOptions.put("product", new String[]{"product.name"});
+        sortFieldOptions.put("count", new String[]{"count", "price", "name", "person.id"});
+        sortFieldOptions.put("product", new String[]{"name", "count", "price", "person.id"});
 
         timeOptions.add("all");
         timeOptions.add("1");
@@ -44,7 +44,7 @@ public class Sorter {
         return Sort.by(dir, sortField);
     }
 
-    public Pageable updateSorting(HistoryListDtoRequest values) {
+    public Pageable updateSorting(SummaryDtoRequest values) {
         this.offset = values.getOffset() < 0 ? OFFSET : values.getOffset();
         this.sort = parseSort(values.getOrder(), values.getSort());
         this.limit = values.getLimit() < 1 ? LIMIT : values.getLimit();
@@ -67,5 +67,9 @@ public class Sorter {
 
     public String getTime() {
         return time;
+    }
+
+    public static int getLIMIT() {
+        return LIMIT;
     }
 }

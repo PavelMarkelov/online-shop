@@ -93,6 +93,18 @@ public class Person implements UserDetails {
         this.credentialsNonExpired = true;
     }
 
+    public Person(String firstName, String lastName, String login, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.login = login;
+        this.password = password;
+        this.deposit = 0;
+        this.active = true;
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
+    }
+
     public Long getId() {
         return id;
     }

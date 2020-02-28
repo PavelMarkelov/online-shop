@@ -3,7 +3,7 @@ package net.thumbtack.onlineshop.dto.Request;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryListDtoRequest {
+public class SummaryDtoRequest {
 
     private long offset;
     private int limit;
@@ -21,7 +21,7 @@ public class HistoryListDtoRequest {
         customer = new ArrayList<>();
     }
 
-    public HistoryListDtoRequest() {
+    public SummaryDtoRequest() {
     }
 
     public long getOffset() {

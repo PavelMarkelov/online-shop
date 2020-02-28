@@ -1,8 +1,8 @@
 package net.thumbtack.onlineshop.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import net.thumbtack.onlineshop.dto.Request.HistoryListDtoRequest;
-import net.thumbtack.onlineshop.dto.Response.HistoryListDtoResponse;
+import net.thumbtack.onlineshop.dto.Request.SummaryDtoRequest;
+import net.thumbtack.onlineshop.dto.Response.SummaryDtoResponse;
 import net.thumbtack.onlineshop.entities.View;
 import net.thumbtack.onlineshop.service.PurchaseHistoryService;
 import org.springframework.security.core.Authentication;
@@ -25,8 +25,8 @@ public class SummaryListController {
 
     @JsonView(View.Data.class)
     @GetMapping
-    private HistoryListDtoResponse summaryList(HistoryListDtoRequest request,
-                                               Authentication auth) {
+    private SummaryDtoResponse summaryList(SummaryDtoRequest request,
+                                           Authentication auth) {
         checkAccessAdmin(auth);
         return historyService.getSummaryList(request);
     }
