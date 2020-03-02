@@ -15,6 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 
@@ -123,5 +124,12 @@ public class GlobalExceptionHandler {
 		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.NOT_SUPPORTED, null,
 				ex.getMessage());
 		return new ResponseEntity<>(field, HttpStatus.METHOD_NOT_ALLOWED);
+	}
+
+	@ExceptionHandler(MessagingException.class)
+	public ResponseEntity handlerNotSupportedException(MessagingException ex) {
+		FieldErrorDto field = new FieldErrorDto(GlobalExceptionErrorCode.MAIL_SENDER_ERROR, null,
+				ex.getMessage());
+		return new ResponseEntity<>(field, HttpStatus.SERVICE_UNAVAILABLE);
 	}
 }
