@@ -8,7 +8,14 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/onlineshop_test?useUnicode=yes&characterEncoding=UTF8&useSSL=false&serverTimezone=Europe/Samara
     username: prospring5
     password: prospring5
-
+  mail:
+    host: smtp.yandex.ru
+    username: testmailpl@yandex.ru
+    password: 67Dfjh7rgG
+    port: 465
+    protocol: smtps
+mail:
+  debug: true
 
 rest_http_port: 8080
 

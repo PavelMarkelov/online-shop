@@ -3,7 +3,6 @@ package net.thumbtack.onlineshop.dto.Response;
 import net.thumbtack.onlineshop.entities.Product;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ProductInfoDtoResponse {

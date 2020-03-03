@@ -1,7 +1,6 @@
 package net.thumbtack.onlineshop.config;
 
 import net.thumbtack.onlineshop.entities.Role;
-import net.thumbtack.onlineshop.securiry.CustomAuthenticationEntryPoint;
 import net.thumbtack.onlineshop.securiry.CustomFilter;
 import net.thumbtack.onlineshop.service.PersonService;
 import org.springframework.context.annotation.Configuration;
@@ -22,14 +21,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final static String ADMIN_ROLE = Role.ADMIN.getAuthority();
 
     private final PersonService personService;
-    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomFilter customFilter;
 
     private final PasswordEncoder passwordEncoder;
 
-    public WebSecurityConfig(PersonService personService, CustomAuthenticationEntryPoint authenticationEntryPoint, CustomFilter customFilter, PasswordEncoder passwordEncoder) {
+    public WebSecurityConfig(PersonService personService, CustomFilter customFilter, PasswordEncoder passwordEncoder) {
         this.personService = personService;
-        this.authenticationEntryPoint = authenticationEntryPoint;
         this.customFilter = customFilter;
         this.passwordEncoder = passwordEncoder;
     }
@@ -63,8 +60,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/baskets").hasRole(USER_ROLE)
                 .antMatchers(HttpMethod.GET, "/api/purchases/*").hasRole(ADMIN_ROLE)
                 .anyRequest().permitAll()
-                .and()
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);

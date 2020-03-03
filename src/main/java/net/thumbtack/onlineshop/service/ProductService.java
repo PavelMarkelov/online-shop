@@ -234,4 +234,8 @@ public class ProductService {
         return new BuyProductDtoResponse(request.getId(), request.getName(),
                 request.getPrice(), count);
     }
+
+    public List<Product> getProductReport(int count) {
+        return productRepository.findByCountIsLessThanEqualOrderByNameAsc(count);
+    }
 }

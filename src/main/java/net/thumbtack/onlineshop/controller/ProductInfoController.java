@@ -4,6 +4,7 @@ import net.thumbtack.onlineshop.dto.Request.GetAllProductDtoRequest;
 import net.thumbtack.onlineshop.dto.Request.GetReportDtoWithValid;
 import net.thumbtack.onlineshop.dto.Response.ProductInfoDtoResponse;
 import net.thumbtack.onlineshop.entities.Person;
+import net.thumbtack.onlineshop.entities.Product;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 import net.thumbtack.onlineshop.service.EmailService;
 import net.thumbtack.onlineshop.service.PersonService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -59,10 +61,11 @@ public class ProductInfoController {
     @PostMapping("/report")
     public String getReportInExcelToEmail(@Valid @RequestBody GetReportDtoWithValid request,
                                           Authentication auth
-    ) throws MessagingException {
+    ) throws MessagingException, IOException {
         checkAccessAdmin(auth);
         Person admin = personService.findByLogin(auth.getPrincipal().toString());
-        emailService.sendMessage(admin, request);
+        List<Product> products = productService.getProductReport(request.getCount());
+        emailService.sendMessage(admin, request.getEmail(), products);
         return "{}";
     }
 }

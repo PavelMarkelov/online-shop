@@ -1,7 +1,8 @@
 package net.thumbtack.onlineshop.service;
 
-import net.thumbtack.onlineshop.dto.Request.GetReportDtoWithValid;
 import net.thumbtack.onlineshop.entities.Person;
+import net.thumbtack.onlineshop.entities.Product;
+import net.thumbtack.onlineshop.utils.ReportInExcelGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +16,10 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Service
 @PropertySource("classpath:/email-requisites.yml")
@@ -43,8 +47,8 @@ public class EmailService {
         this.templateEngine = templateEngine;
     }
 
-    public void sendMessage(Person person, GetReportDtoWithValid request) throws MessagingException {
-        String emailAddress = request.getEmail();
+    public void sendMessage(Person person, String emailAddress, List<Product> products
+    ) throws MessagingException, IOException {
         logger.info("Sending message to email {}", emailAddress);
 
         MimeMessage message = mailSender.createMimeMessage();
@@ -57,7 +61,9 @@ public class EmailService {
         context.setVariable("from", from);
         context.setVariable("location", location);
         String html = templateEngine.process("email-message", context);
+        File excelFile = ReportInExcelGenerator.productsToExcel(products);
 
+        helper.addAttachment(excelFile.getName(), excelFile);
         helper.setTo(emailAddress);
         helper.setText(html, true);
         helper.setFrom(from);
