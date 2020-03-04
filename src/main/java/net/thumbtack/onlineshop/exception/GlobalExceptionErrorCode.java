@@ -22,9 +22,7 @@ public enum GlobalExceptionErrorCode {
         ERROR_COUNT("The required quantity of the product is not in stock"),
         NO_MONEY("Not enough money in the account to buy the product in the specified quantity"),
         BUY_ERROR("Incorrectly stated the name or price of the product"),
-        ERROR_BASKET("Not enough money in the account to buy the products in the specified quantity"),
-        MAIL_SENDER_ERROR("An error occurred while sending the email");
-
+        ERROR_BASKET("Not enough money in the account to buy the products in the specified quantity");
 
         private String errorString;
 

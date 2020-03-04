@@ -61,7 +61,7 @@ public class ProductInfoController {
     @PostMapping("/report")
     public String getReportInExcelToEmail(@Valid @RequestBody GetReportDtoWithValid request,
                                           Authentication auth
-    ) throws MessagingException, IOException {
+    ) {
         checkAccessAdmin(auth);
         Person admin = personService.findByLogin(auth.getPrincipal().toString());
         List<Product> products = productService.getProductReport(request.getCount());

@@ -11,14 +11,13 @@ import net.thumbtack.onlineshop.entities.Token;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 import net.thumbtack.onlineshop.service.PersonService;
 import net.thumbtack.onlineshop.service.TokenService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.Cookie;
@@ -35,8 +34,6 @@ public class SignUpAndLogoutController {
     private final String cookieName;
     private final TokenService tokenService;
 
-    private static Logger logger = LoggerFactory.getLogger(SignUpAndLogoutController.class);
-
     public SignUpAndLogoutController(PersonService personService,
                                      @Value("${cookie_name}") String cookieName,
                                      TokenService tokenService) {
@@ -50,7 +47,7 @@ public class SignUpAndLogoutController {
                                                      HttpServletResponse response
     ) {
         Person admin = personService.createAdmin(adminDtoWithValid);
-        Cookie cookie = new Cookie(cookieName, admin.getToken().getToken());
+        Cookie cookie = new Cookie(cookieName, admin.getTokenWithoutEncoding());
         response.addCookie(cookie);
         return new AdminDtoResponse(admin);
     }
@@ -60,7 +57,7 @@ public class SignUpAndLogoutController {
                                            HttpServletResponse response
     ) {
         Person customer = personService.createCustomer(customerDtoWithValid);
-        Cookie cookie = new Cookie(cookieName, customer.getToken().getToken());
+        Cookie cookie = new Cookie(cookieName, customer.getTokenWithoutEncoding());
         response.addCookie(cookie);
         return new CustomerDtoResponse(customer);
     }
@@ -70,7 +67,7 @@ public class SignUpAndLogoutController {
                                    HttpServletResponse response
     ) {
         Person person = personService.getPersonForLogin(loginDto);
-        Cookie cookie = new Cookie(cookieName, person.getToken().getToken());
+        Cookie cookie = new Cookie(cookieName, person.getTokenWithoutEncoding());
         response.addCookie(cookie);
         return StringUtils.isEmpty(person.getEmail()) ?
                 new AdminDtoResponse(person) : new CustomerDtoResponse(person);

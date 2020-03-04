@@ -1,9 +1,6 @@
 package net.thumbtack.onlineshop.service;
 
-import net.thumbtack.onlineshop.dto.Request.AdminDtoWithValid;
-import net.thumbtack.onlineshop.dto.Request.CustomerDtoWithValid;
-import net.thumbtack.onlineshop.dto.Request.DepositDtoRequest;
-import net.thumbtack.onlineshop.dto.Request.LoginDtoRequest;
+import net.thumbtack.onlineshop.dto.Request.*;
 import net.thumbtack.onlineshop.dto.Request.editDto.AdminEditDtoWithValid;
 import net.thumbtack.onlineshop.dto.Request.editDto.CustomerDtoEditWithValid;
 import net.thumbtack.onlineshop.dto.Response.AdminDtoResponse;
@@ -14,8 +11,6 @@ import net.thumbtack.onlineshop.exception.FailPasswordException;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 import net.thumbtack.onlineshop.exception.LoginExistException;
 import net.thumbtack.onlineshop.repos.PersonRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,8 +25,6 @@ import java.util.*;
 @Transactional
 public class PersonService implements UserDetailsService {
 
-    private static Logger logger = LoggerFactory.getLogger(PersonService.class);
-
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -40,17 +33,8 @@ public class PersonService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Person createAdmin(AdminDtoWithValid admin) {
-        Person person = personRepository.findByLogin(admin.getLogin());
-        if (person != null)
-            throw new LoginExistException(GlobalExceptionErrorCode.LOGIN_EXIST);
-        Person personForAdd = new Person(admin);
-        personForAdd.addRole(Role.ADMIN);
-        personForAdd.setPassword(passwordEncoder.encode(admin.getPassword()));
-        Token token = new Token(UUID.randomUUID().toString());
-        token.setPerson(personForAdd);
-        personForAdd.setToken(token);
-        return personRepository.save(personForAdd);
+    public Person createAdmin(AdminDtoWithValid adminDto) {
+        return personRepository.save(createPerson(adminDto));
     }
 
     @Transactional(readOnly = true)
@@ -81,15 +65,7 @@ public class PersonService implements UserDetailsService {
     }
 
     public Person createCustomer(CustomerDtoWithValid customerDto) {
-        Person person = personRepository.findByLogin(customerDto.getLogin());
-        if (person != null)
-            throw new LoginExistException(GlobalExceptionErrorCode.LOGIN_EXIST);
-        Person customer = new Person(customerDto);
-        customer.addRole(Role.USER);
-        customer.setPassword(passwordEncoder.encode(customerDto.getPassword()));
-        Token token = new Token(UUID.randomUUID().toString());
-        token.setPerson(customer);
-        customer.setToken(token);
+        Person customer = createPerson(customerDto);
         Address address = new Address(customerDto.getAddress());
         address.setPerson(customer);
         customer.setAddress(address);
@@ -97,6 +73,27 @@ public class PersonService implements UserDetailsService {
         basket.setPerson(customer);
         customer.setBasket(basket);
         return personRepository.save(customer);
+    }
+
+    private Person createPerson(PersonDtoWithValid personDto) {
+        Person personFromDb = personRepository.findByLogin(personDto.getLogin());
+        if (personFromDb != null)
+            throw new LoginExistException(GlobalExceptionErrorCode.LOGIN_EXIST);
+        Person person;
+        if (personDto instanceof AdminDtoWithValid) {
+            person = new Person((AdminDtoWithValid) personDto);
+            person.addRole(Role.ADMIN);
+        } else {
+            person = new Person((CustomerDtoWithValid) personDto);
+            person.addRole(Role.USER);
+        }
+        person.setPassword(passwordEncoder.encode(personDto.getPassword()));
+        String tokenWithoutEncoding = UUID.randomUUID().toString();
+        Token token = new Token(passwordEncoder.encode(tokenWithoutEncoding));
+        person.setTokenWithoutEncoding(tokenWithoutEncoding);
+        token.setPerson(person);
+        person.setToken(token);
+        return person;
     }
 
     public CustomerDtoResponse updateCustomerProfile(Person customer,
@@ -140,8 +137,10 @@ public class PersonService implements UserDetailsService {
         }
         if (!matches)
             throw new BadCredentialsException("Invalid login or password");
-        Token token = new Token(UUID.randomUUID().toString());
+        String tokenWithoutEncoding = UUID.randomUUID().toString();
+        Token token = new Token(passwordEncoder.encode(tokenWithoutEncoding));
         Person person = personOpt.get();
+        person.setTokenWithoutEncoding(tokenWithoutEncoding);
         token.setId(person.getId());
         token.setPerson(person);
         person.setToken(token);

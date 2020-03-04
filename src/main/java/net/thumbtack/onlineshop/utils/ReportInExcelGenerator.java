@@ -4,10 +4,10 @@ import net.thumbtack.onlineshop.entities.Category;
 import net.thumbtack.onlineshop.entities.Product;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,13 +16,11 @@ public class ReportInExcelGenerator {
 
     private final static String[] COLUMNs = {"Count", "Id", "Name", "Price", "Categories"};
     private final static String SHEET = "Product report";
-    private final static String FILE = "Report.xlsx";
 
-    public static File productsToExcel(List<Product> products)
+    public static InputStreamSource productsToExcel(List<Product> products)
             throws IOException {
-        File excelFile = new File(FILE);
         try (Workbook workbook = new XSSFWorkbook();
-            FileOutputStream fos = new FileOutputStream(excelFile)
+             ByteArrayOutputStream out = new ByteArrayOutputStream()
         ) {
             Sheet sheet = workbook.createSheet(SHEET);
 
@@ -75,9 +73,8 @@ public class ReportInExcelGenerator {
 
             for (int col = 0; col < COLUMNs.length; col++)
                 sheet.autoSizeColumn(col);
-
-            workbook.write(fos);
-            return excelFile;
+            workbook.write(out);
+            return new ByteArrayResource(out.toByteArray());
         }
     }
 }

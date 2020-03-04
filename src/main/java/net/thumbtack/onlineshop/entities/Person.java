@@ -64,6 +64,9 @@ public class Person implements UserDetails {
     @Column(columnDefinition="BIT NOT NULL DEFAULT true")
     private boolean credentialsNonExpired;
 
+    @Transient
+    private String tokenWithoutEncoding;
+
     public Person() {
     }
 
@@ -258,6 +261,14 @@ public class Person implements UserDetails {
 
     public void setToken(Token token) {
         this.token = token;
+    }
+
+    public String getTokenWithoutEncoding() {
+        return tokenWithoutEncoding;
+    }
+
+    public void setTokenWithoutEncoding(String tokenWithoutEncoding) {
+        this.tokenWithoutEncoding = tokenWithoutEncoding;
     }
 
     @Override
