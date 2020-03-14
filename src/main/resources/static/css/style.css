@@ -1,0 +1,20 @@
+nav {
+    background-color: #c2ddfd;
+}
+
+.login-container, .account-edit-container {
+    width:40%;
+    margin: 25px auto;
+}
+
+h1 {
+    text-align: center;
+}
+
+.dark-font .breadcrumb-item + .breadcrumb-item::before {
+    color: #000;
+}
+
+.dark-font .breadcrumb-item.active {
+    color: #455a64;
+}
