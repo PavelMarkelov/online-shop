@@ -18,3 +18,21 @@ h1 {
 .dark-font .breadcrumb-item.active {
     color: #455a64;
 }
+
+#sampleLogin {
+    width: 100%;
+}
+
+.sidebar-card {
+    background-color: wheat !important;
+    width: 100%;
+}
+
+.categories-list {
+    padding-left: 8%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
