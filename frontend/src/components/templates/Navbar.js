@@ -6,10 +6,14 @@ import arrowLeft from '../../images/icons/box-arrow-left.svg';
 import arrowRight from '../../images/icons/box-arrow-right.svg';
 import cart from '../../images/icons/cart-svgrepo-com.svg';
 import person from '../../images/icons/person.svg';
+import {connect} from "react-redux";
 
 class Navbar extends Component {
 
     render() {
+
+        // let customer = this.props.user ?
+
         return (
             <nav className="navbar navbar-expand-lg navbar-light">
                 <a className="navbar-brand" href="#">
@@ -23,32 +27,54 @@ class Navbar extends Component {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <div className="navbar-nav ml-auto">
-                        <a className="nav-item nav-link" href="#">
-                            <img src={ book } alt="catalog" width="32"/>
+                        {
+                            this.props.user &&
+                            <a className="nav-item nav-link" href="#">
+                                <img src={ book } alt="catalog" width="32"/>
                                 Catalog
-                        </a>
-                        <a className="nav-item nav-link" href="">
-                            <img src={ cart } alt="cart" width="30"/>
+                            </a>
+                        }
+                        {
+                            this.props.user &&
+                            <a className="nav-item nav-link" href="">
+                                <img src={ cart } alt="cart" width="30" className="p-1"/>
                                 Cart
-                        </a>
-                        <a className="nav-item nav-link" href="">
-                            <img src={ arrowRight } alt="login" width="32"/>
+                            </a>
+                        }
+                        {
+                            !this.props.user &&
+                            <a className="nav-item nav-link" href="">
+                                <img src={ arrowRight } alt="login" width="32"/>
                                 Log In
-                        </a>
-                        <a className="nav-item nav-link" href="">
-                            <img src={ arrowLeft } alt="logout" width="32"
-                                 height="32"/>
+                            </a>
+                        }
+                        {
+                            this.props.user &&
+                            <a className="nav-item nav-link" href="">
+                                <img src={ arrowLeft } alt="logout" width="32"
+                                     height="32"/>
                                 Log Out
-                        </a>
-                        <a className="nav-item nav-link" href="">
-                            <img src={ person } alt="account" width="32" height="32"/>
-                                Account
-                        </a>
+                            </a>
+                        }
+                        {
+                            this.props.user &&
+                            <a className="nav-item nav-link" href="">
+                                <img src={person} alt="account" width="32" height="32"/>
+                                { this.props.user.firstName }
+                            </a>
+                        }
                     </div>
                 </div>
             </nav>
         );
+
     }
 }
 
-export default Navbar;
+const mapStateToProps = (state) => {
+    return {
+        user: state.loginReducer.user
+    };
+};
+
+export default connect(mapStateToProps)(Navbar);

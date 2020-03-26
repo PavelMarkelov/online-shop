@@ -14,10 +14,7 @@ import net.thumbtack.onlineshop.service.TokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.Cookie;
@@ -27,6 +24,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Optional;
 
+@CrossOrigin("http://localhost:3000")
 @RestController
 public class SignUpAndLogoutController {
 

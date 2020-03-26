@@ -12,7 +12,7 @@ class App extends Component {
                 <div className="flex-fill">
                     <Navbar/>
                     <Switch>
-                        <Route path='/' exact={true} component={ Login }/>
+                        <Route exact path="/" component={ Login }/>
                     </Switch>
                     <Footer/>
                 </div>
