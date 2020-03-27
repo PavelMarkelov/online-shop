@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-const BreadCrumbs = (props) => {
+export const BreadCrumbs = (props) => {
 
     let linksArr = [];
     props.links.forEach((val, key) => {
@@ -23,5 +23,3 @@ const BreadCrumbs = (props) => {
             </nav>
         );
     };
-
-export default BreadCrumbs;

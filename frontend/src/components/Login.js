@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import BreadCrumbs from "./templates/BreadCrumbs";
-import {connect} from "react-redux";
-import {loginUser} from '../actions/Actions';
+import { BreadCrumbs } from "./templates/BreadCrumbs";
+import { connect } from "react-redux";
+import { loginUser } from '../actions/Actions';
 import DataService from '../service/DataService'
 
 
@@ -29,9 +29,9 @@ class Login extends Component {
         const login = loginForm.elements["login"].value;
         const password = loginForm.elements["password"].value;
         const response = await DataService.loginRequest({login, password});
+        alert(response.name);
         const user = await response.json();
         this.props.loginUser(user);
-        this.props.history.push('/');
     }
 
     render() {
@@ -50,12 +50,12 @@ class Login extends Component {
                         <input type="password" className="form-control form-control-lg" id="password" autoComplete="on"
                                name="password" placeholder="Enter password" required/>
                     </div>
-                    <div className="form-group">
+                    <div className="form-group mt-4">
                         <button tag={Link} to="/" type="submit" className="btn btn-lg btn-primary btn-block">Log In</button>
                     </div>
                 </form>
                 <div id="sampleLogin">
-                    <a onClick={ this.handleSimpleCustomer } href ="#">customer</a>
+                    <Link onClick={ this.handleSimpleCustomer } to="#">customer</Link>
                 </div>
             </div>
             </div>
@@ -65,7 +65,7 @@ class Login extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        loginUser: (user) => { dispatch(loginUser(user)) }
+        loginUser: (user) => dispatch(loginUser(user))
     }
 };
 

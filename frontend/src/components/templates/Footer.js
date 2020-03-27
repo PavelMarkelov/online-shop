@@ -5,7 +5,7 @@ const Footer = () => {
             <div className="container text-center">
                 <hr/>
                     © 2020 Copyright:
-                    <a href="#navbarNav"> P.V.</a>
+                    <a href="#navbarNav" className="ml-1">P.V.</a>
             </div>
         );
 };
