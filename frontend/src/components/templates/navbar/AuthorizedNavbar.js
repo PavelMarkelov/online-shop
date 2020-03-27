@@ -5,8 +5,9 @@ import arrowLeft from "../../../images/icons/box-arrow-left.svg";
 import person from "../../../images/icons/person.svg";
 import { Link } from "react-router-dom";
 import DataService from '../../../service/DataService';
-import { logoutUser } from '../../../actions/Actions'
+import { logoutUser } from '../../../actions/AccountActions'
 import { connect } from "react-redux";
+import { withRouter } from 'react-router-dom';
 
 class AuthorizedNavbar extends Component {
 
@@ -17,32 +18,31 @@ class AuthorizedNavbar extends Component {
 
     async handleLogout(event) {
         event.preventDefault();
-        const req = await DataService.logoutRequest();
-        const body = await req.text();
-        console.log(body);
+        await DataService.logoutRequest();
         this.props.logoutUser();
+        this.props.history.push('/');
     }
 
     render() {
         return (
             <div className="navbar-nav ml-auto">
-                <a className="nav-item nav-link" href="#">
+                <Link className="nav-item nav-link" to="#">
                     <img src={ book } alt="catalog" width="32"/>
                     Catalog
-                </a>
-                <a className="nav-item nav-link" href="">
+                </Link>
+                <Link className="nav-item nav-link" to="#">
                     <img src={ cart } alt="cart" width="30" className="p-1"/>
                     Cart
-                </a>
+                </Link>
                 <Link className="nav-item nav-link" onClick={ this.handleLogout } to="/">
                     <img src={ arrowLeft } alt="logout" width="32"
                          height="32"/>
                     Log Out
                 </Link>
-                <a className="nav-item nav-link" href="">
+                <Link className="nav-item nav-link" to="/account">
                     <img src={person} alt="account" width="32" height="32"/>
                     { this.props.userFirstName }
-                </a>
+                </Link>
             </div>
         )
     }
@@ -60,4 +60,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthorizedNavbar);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AuthorizedNavbar));

@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Optional;
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 @RestController
 public class SignUpAndLogoutController {
 

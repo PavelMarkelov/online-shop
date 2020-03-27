@@ -20,6 +20,12 @@ const userReducer = (state = initialState, action) => {
                 isAuthenticated: false,
                 user: action.payload
             };
+            
+        case actionType.USER_ACCOUNT:
+            return {
+                ...state,
+                user: action.payload
+            };
 
         default:
             return state

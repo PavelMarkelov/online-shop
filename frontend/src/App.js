@@ -4,6 +4,7 @@ import './components/templates/navbar/Navbar'
 import Navbar from "./components/templates/navbar/Navbar";
 import Footer from "./components/templates/Footer";
 import Login from './components/Login';
+import Account from "./components/Account";
 
 class App extends Component {
     render() {
@@ -13,6 +14,7 @@ class App extends Component {
                     <Navbar/>
                     <Switch>
                         <Route exact path="/" component={ Login }/>
+                        <Route exact path="/account" component={ Account }/>
                     </Switch>
                     <Footer/>
                 </div>

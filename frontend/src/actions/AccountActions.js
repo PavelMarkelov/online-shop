@@ -13,3 +13,11 @@ export const logoutUser = () => {
         payload: {}
     }
 };
+
+export const userAccount = (account) => {
+    debugger;
+    return {
+        type: actionType.USER_ACCOUNT,
+        payload: account
+    }
+};

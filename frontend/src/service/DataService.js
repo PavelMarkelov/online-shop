@@ -5,11 +5,11 @@ class DataService {
     static loginRequest(credentials) {
         const params = {
             method: 'POST',
-            mode: "cors",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
-            body: JSON.stringify(credentials)
+            body: JSON.stringify(credentials),
+            credentials: 'include'
         };
         return fetch(REST_API_URL + '/sessions', params);
     }
@@ -17,12 +17,19 @@ class DataService {
     static logoutRequest() {
         const params = {
             method: 'DELETE',
-            mode: "cors",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
-            }
+            },
+            credentials: 'include'
         };
         return fetch(REST_API_URL + '/sessions', params);
+    }
+
+    static userProfileRequest() {
+        const params = {
+            credentials: 'include'
+        };
+        return fetch(REST_API_URL + '/accounts', params);
     }
 }
 
