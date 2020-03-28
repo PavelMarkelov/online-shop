@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 
 
 class Login extends Component {
-    breadCrumbsLink = new Map([["Log in", ""]]);
+
     simpleCustomer = {login: 'q', password: 'sddsvwe34s'};
 
     constructor(props) {
@@ -38,7 +38,7 @@ class Login extends Component {
     render() {
         return (
             <div>
-                <BreadCrumbs links={ this.breadCrumbsLink }/>
+                <BreadCrumbs location={ this.props.location.pathname }/>
                 <div className="login-container">
                     <form name="login-form" onSubmit={ this.handleSubmit } >
                         <div className="form-group">
@@ -52,7 +52,7 @@ class Login extends Component {
                                    name="password" placeholder="Enter password" required/>
                         </div>
                         <div className="form-group mt-4">
-                            <button tag={Link} to="/" type="submit" className="btn btn-lg btn-primary btn-block">Log In</button>
+                            <button type="submit" className="btn btn-lg btn-primary btn-block">Log In</button>
                         </div>
                     </form>
                     <div id="sampleLogin">

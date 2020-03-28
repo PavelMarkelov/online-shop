@@ -31,6 +31,18 @@ class DataService {
         };
         return fetch(REST_API_URL + '/accounts', params);
     }
+
+    static editAccountDataRequest(newAccountData) {
+        const params = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(newAccountData),
+            credentials: 'include'
+        };
+        return fetch(REST_API_URL + '/clients', params)
+    }
 }
 
 export default DataService;

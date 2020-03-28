@@ -5,10 +5,9 @@ import {connect} from "react-redux";
 import AuthorizedNavbar from './AuthorizedNavbar';
 import { UnauthorizedNavbar } from "./UnauthorizedNavbar";
 
-class Navbar extends Component {
+class NavbarContainer extends Component {
 
     render() {
-
         return (
             <nav className="navbar navbar-expand-lg navbar-light">
                 <Link className="navbar-brand" to="#">
@@ -34,4 +33,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps)(Navbar);
+export default connect(mapStateToProps)(NavbarContainer);

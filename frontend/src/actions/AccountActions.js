@@ -15,7 +15,6 @@ export const logoutUser = () => {
 };
 
 export const userAccount = (account) => {
-    debugger;
     return {
         type: actionType.USER_ACCOUNT,
         payload: account

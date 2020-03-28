@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import './components/templates/navbar/Navbar'
-import Navbar from "./components/templates/navbar/Navbar";
+import './components/templates/navbar/NavbarContainer'
+import NavbarContainer from "./components/templates/navbar/NavbarContainer";
 import Footer from "./components/templates/Footer";
 import Login from './components/Login';
 import Account from "./components/Account";
+import PrivateRoute from "./components/PrivateRoute";
 
 class App extends Component {
     render() {
         return (
             <BrowserRouter>
                 <div className="flex-fill">
-                    <Navbar/>
+                    <NavbarContainer/>
                     <Switch>
                         <Route exact path="/" component={ Login }/>
-                        <Route exact path="/account" component={ Account }/>
+                        <PrivateRoute exact path="/account" component={ Account }/>
                     </Switch>
                     <Footer/>
                 </div>

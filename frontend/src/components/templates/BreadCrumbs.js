@@ -3,23 +3,27 @@ import { Link } from 'react-router-dom';
 
 export const BreadCrumbs = (props) => {
 
-    let linksArr = [];
-    props.links.forEach((val, key) => {
-        if (val)
-            linksArr.push(
-                <li key={ key } className="breadcrumb-item">
-                    <Link to={ val }>{ key }</Link>
-                </li>
-            );
+    const linksArr = props.location.split('/').slice(1);
+    const lastIndex = linksArr.length - 1;
+    linksArr.forEach((value, index) => {
+        if (value && index !== lastIndex)
+            linksArr[index] =
+                <li key={value} className="breadcrumb-item">
+                    <Link to={'/' + value}>{value[0].toUpperCase() + value.slice(1)}</Link>
+                </li>;
+        else if (value && index === lastIndex)
+            linksArr[index] =
+                <li key={ value } className="breadcrumb-item active">
+                    {value[0].toUpperCase() + value.slice(1)}
+                </li>;
         else
-            linksArr.push(<li key={ key } className="breadcrumb-item active">{ key }</li>);
+            linksArr[index] = <li key='login' className="breadcrumb-item active">Log in</li>;
     });
-
-        return (
-            <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                    { linksArr }
-                </ol>
-            </nav>
-        );
-    };
+    return (
+        <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                { linksArr }
+            </ol>
+        </nav>
+    );
+};

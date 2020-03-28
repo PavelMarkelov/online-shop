@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { BreadCrumbs } from "./templates/BreadCrumbs";
-import { connect } from "react-redux";
-import { userAccount } from '../actions/AccountActions';
+import React, {Component} from "react";
+import {BreadCrumbs} from "./templates/BreadCrumbs";
+import {connect} from "react-redux";
+import {userAccount} from '../actions/AccountActions';
 import DataService from '../service/DataService';
 
 
 class Account extends Component {
 
-    breadCrumbsLink = new Map([["Account", ""]]);
+    password = 'sddsvwe34s';
 
     constructor(props) {
         super(props);
+        this.handelSubmit = this.handelSubmit.bind(this);
     }
 
     async componentDidMount() {
@@ -20,14 +20,42 @@ class Account extends Component {
         this.props.userAccount(account);
     }
 
+    async handelSubmit(event) {
+        event.preventDefault();
+        const editForm = document.forms["edit-form"];
+        const firstName = editForm.elements["firstName"].value;
+        const lastName = editForm.elements['lastName'].value;
+        const patronymic = editForm.elements['patronymic'].value;
+        const email = editForm.elements['email'].value;
+        const address = editForm.elements['address'].value;
+        const phone = editForm.elements['phone'].value;
+        const oldPassword = editForm.elements['oldPassword'].value;
+        const newPassword = editForm.elements['newPassword'].value;
+        const newAccountData = {
+            firstName,
+            lastName,
+            patronymic,
+            email,
+            address,
+            phone,
+            oldPassword,
+            newPassword
+        };
+        const response = await DataService.editAccountDataRequest(newAccountData);
+        if (!response.ok)
+            return false;
+        const account = await response.json();
+        this.props.userAccount(account);
+    }
+
     render() {
-        let account = this.props.account || '';
+        let account = this.props.account || {};
         return (
             <div>
-                <BreadCrumbs links={ this.breadCrumbsLink }/>
+                <BreadCrumbs location={ this.props.location.pathname }/>
                 <div className="w-25 account-edit-container">
                     <h1 className="m-4">Account</h1>
-                    <form>
+                    <form name="edit-form" onSubmit={ this.handelSubmit }>
                         <div className="form-group">
                             <label><b>Fist name</b></label>
                             <input type="text" className="form-control form-control-lg " id="fistName"
@@ -67,12 +95,14 @@ class Account extends Component {
                         <div className="form-group">
                             <label><b>Old password</b></label>
                             <input type="password" className="form-control form-control-lg" id="oldPassword"
-                                   name="oldPassword" placeholder="Old password" required/>
+                                   name="oldPassword" placeholder="Old password" required
+                                   defaultValue={this.password}/>
                         </div>
                         <div className="form-group">
                             <label><b>New password</b></label>
                             <input type="password" className="form-control form-control-lg" id="newPassword"
-                                   name="newPassword" placeholder="New password" required minLength="8"/>
+                                   name="newPassword" placeholder="New password" required minLength="8"
+                                   defaultValue={this.password}/>
                         </div>
                         <div className="form-group mt-4">
                             <button type="submit" className="btn btn-lg btn-primary btn-block">Save</button>

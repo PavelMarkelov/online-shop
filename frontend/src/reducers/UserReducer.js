@@ -23,7 +23,7 @@ const userReducer = (state = initialState, action) => {
             
         case actionType.USER_ACCOUNT:
             return {
-                ...state,
+                isAuthenticated: true,
                 user: action.payload
             };
 
