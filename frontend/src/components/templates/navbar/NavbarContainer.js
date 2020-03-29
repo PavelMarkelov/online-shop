@@ -10,7 +10,7 @@ class NavbarContainer extends Component {
     render() {
         return (
             <nav className="navbar navbar-expand-lg navbar-light">
-                <Link className="navbar-brand" to="#">
+                <Link className="navbar-brand" to="/catalog">
                     <img src={ logo } width="32"
                          className="d-inline-block align-top" alt="logo"/>
                         Online-shop

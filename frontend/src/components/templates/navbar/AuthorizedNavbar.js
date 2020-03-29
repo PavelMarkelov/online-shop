@@ -26,7 +26,7 @@ class AuthorizedNavbar extends Component {
     render() {
         return (
             <div className="navbar-nav ml-auto">
-                <Link className="nav-item nav-link" to="#">
+                <Link className="nav-item nav-link" to="/catalog">
                     <img src={ book } alt="catalog" width="32"/>
                     Catalog
                 </Link>

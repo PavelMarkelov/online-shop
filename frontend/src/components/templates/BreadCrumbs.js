@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
-export const BreadCrumbs = (props) => {
-
-    const linksArr = props.location.split('/').slice(1);
+const BreadCrumbs = (props) => {
+    const linksArr = props.location.pathname.split('/').slice(1);
     const lastIndex = linksArr.length - 1;
     linksArr.forEach((value, index) => {
         if (value && index !== lastIndex)
@@ -27,3 +27,5 @@ export const BreadCrumbs = (props) => {
         </nav>
     );
 };
+
+export default withRouter(BreadCrumbs);
