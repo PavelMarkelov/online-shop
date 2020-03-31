@@ -14,3 +14,17 @@ export const productsCategory = products => {
         payload: products
     }
 };
+
+export const enableFilter = filter => {
+    return {
+        type: actionType.ENABLE_FILTER,
+        payload: filter
+    }
+};
+
+export const disableFilter = products => {
+    return {
+        type: actionType.DISABLE_FILTER,
+        payload: products
+    }
+};

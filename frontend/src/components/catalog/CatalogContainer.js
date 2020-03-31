@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import CategorySidebar from './CategorySidebar';
 import { connect } from 'react-redux';
-import { FilterSidebar } from "./FilterSidebar";
+import FilterSidebar from "./FilterSidebar";
 import { Link } from "react-router-dom";
 import { ProductItem } from "./ProductItem";
 import DataService from "../../service/DataService";
 import { categoriesList } from '../../actions/CategoriesActions';
 import { productsList } from "../../actions/ProductActions";
 import { productsCategory } from "../../actions/ProductActions";
+import { enableFilter } from "../../actions/ProductActions";
+import { disableFilter } from "../../actions/ProductActions";
 
 class CatalogContainer extends Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     async componentDidMount() {
         const responses = await Promise.all([
@@ -25,8 +23,23 @@ class CatalogContainer extends Component {
         this.props.productsList(data[1]);
     }
 
+    _filterProducts(products, { isInStock, minPrice, maxPrice}) {
+        return products.filter(item => {
+            if (isInStock && !item.count)
+                return false;
+            if (minPrice && item.price < minPrice)
+                return false;
+            if (maxPrice && item.price > maxPrice)
+                return false;
+            return true;
+        })
+    }
+
     render() {
-        const productsForRender = this.props.products.map(item =>
+        const filters = this.props.filters;
+        const products = filters ?
+            this._filterProducts(this.props.products, filters) : this.props.products;
+        const productsForRender = products.map(item =>
             <ProductItem key={ item.id } product={ item }/>
             );
         return (
@@ -34,7 +47,8 @@ class CatalogContainer extends Component {
                 <div className="col-md-3 ml-4">
                     <CategorySidebar categoriesList={ this.props.categories }
                                      productsCategory={ this.props.productsCategory }/>
-                    <FilterSidebar/>
+                    <FilterSidebar enableFilter={ this.props.enableFilter }
+                            disableFilter={ this.props.disableFilter }/>
                 </div>
                 <div className="col-md-8">
                     <div className="row row-cols-1 row-cols-md-3 text-center">
@@ -49,7 +63,8 @@ class CatalogContainer extends Component {
 const mapStateToProps = (state) => {
     return {
         categories: state.categoriesState.categoriesList,
-        products: state.productState.productsList
+        products: state.productState.productsList,
+        filters: state.productState.filter
     }
 };
 
@@ -57,7 +72,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         categoriesList: categories => dispatch(categoriesList(categories)),
         productsList: products => dispatch(productsList(products)),
-        productsCategory: products => dispatch(productsCategory(products))
+        productsCategory: products => dispatch(productsCategory(products)),
+        enableFilter: filter => dispatch(enableFilter(filter)),
+        disableFilter: products => dispatch(disableFilter(products))
     }
 };
 

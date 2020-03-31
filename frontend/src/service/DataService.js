@@ -1,4 +1,7 @@
 const REST_API_URL = 'http://localhost:8080/api';
+const getRequestParams = {
+    credentials: 'include'
+};
 
 class DataService {
 
@@ -26,10 +29,7 @@ class DataService {
     }
 
     static userProfileRequest() {
-        const params = {
-            credentials: 'include'
-        };
-        return fetch(REST_API_URL + '/accounts', params);
+        return fetch(REST_API_URL + '/accounts', getRequestParams);
     }
 
     static editAccountDataRequest(newAccountData) {
@@ -45,17 +45,15 @@ class DataService {
     }
 
     static categoriesListRequest() {
-        const params = {
-            credentials: 'include'
-        };
-        return fetch(REST_API_URL + '/categories', params);
+        return fetch(REST_API_URL + '/categories', getRequestParams);
     }
 
     static productsListRequest() {
-        const params = {
-            credentials: 'include'
-        };
-        return fetch(REST_API_URL + '/products', params);
+        return fetch(REST_API_URL + '/products', getRequestParams);
+    }
+
+    static productsCategoryRequest(categoryId) {
+        return fetch(REST_API_URL + `/products?category=${categoryId}`, getRequestParams)
     }
 }
 

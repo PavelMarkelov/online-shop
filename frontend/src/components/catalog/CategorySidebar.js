@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { connect } from 'react-redux';
+import DataService from '../../service/DataService'
 
 
 class CategorySidebar extends Component {
@@ -10,8 +10,12 @@ class CategorySidebar extends Component {
         this.handleProductsCategory = this.handleProductsCategory.bind(this);
     }
 
-    handleProductsCategory() {
-
+    async handleProductsCategory(id, event) {
+        event.preventDefault();
+        const response = await DataService.productsCategoryRequest(id);
+        const products = await response.json();
+        document.forms['filters-form'].reset();
+        this.props.productsCategory(products);
     }
 
     render() {
@@ -22,14 +26,14 @@ class CategorySidebar extends Component {
                 childrenCategories = childrenCategories.map(children =>
                     <ul key={children.id} className="categories-list">
                         <li>
-                            <Link to="#" onClick={ () => this.handleProductsCategory(children.id) }
+                            <Link to="#" onClick={ (event) => this.handleProductsCategory(children.id, event) }
                                   className="card-link">{children.name}</Link>
                         </li>
                     </ul>
                 );
                 return (
                     <li key={ value.id } className="mb-2">
-                        <Link to="#" onClick={ () => this.handleProductsCategory(value.id) }
+                        <Link to="#" onClick={ (event) => this.handleProductsCategory(value.id, event) }
                               className="card-link">{ value.name }</Link>
                         { childrenCategories }
                     </li>

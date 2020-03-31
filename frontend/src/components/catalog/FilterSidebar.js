@@ -1,48 +1,91 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react';
+import DataService from "../../service/DataService";
 
 
-export const FilterSidebar = props => {
-    const parser = new DOMParser();
-    const decodedChar = parser.parseFromString('&horbar;' ,'text/html').body.textContent;
-    return (
-        <div className="card sidebar-card my-3">
-            <div className="card-body">
-                <h5 className="card-title">Filters</h5>
-                <div className="d-inline font-weight-bold">In stock:</div>
-                <div className="d-inline"><input className="ml-2 align-middle"
-                                                 type="checkbox" id="inStockCheck"/></div>
-                <hr/>
-                    <p className="font-weight-bold">Price range:</p>
-                    <form>
+class FilterSidebar extends Component {
+
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDisableFilter = this.handleDisableFilter.bind(this);
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        const filtersForm = document.forms['filters-form'];
+        const isInStock = filtersForm.elements['inStockCheck'].checked;
+        const minPrice = +filtersForm.elements['minPrice'].value;
+        const maxPrice = +filtersForm.elements['maxPrice'].value;
+        const filter = {
+            isInStock,
+            minPrice,
+            maxPrice
+        };
+        const isEmptyForm = !filter.isInStock && !filter.minPrice && !filter.maxPrice;
+        const isInvalidRange = filter.minPrice && filter.maxPrice
+            && filter.minPrice > filter.maxPrice;
+    debugger
+        if (isEmptyForm || isInvalidRange)
+            return false;
+        this.props.enableFilter(filter);
+    }
+
+    async handleDisableFilter() {
+        const response = await DataService.productsListRequest();
+        const products = await response.json();
+        this.props.disableFilter(products);
+    }
+
+    render() {
+        const parser = new DOMParser();
+        const decodedChar = parser.parseFromString('&horbar;' ,'text/html').body.textContent;
+        return (
+            <div className="card sidebar-card my-3">
+                <div className="card-body">
+                    <h5 className="card-title">Filters</h5>
+                    <form name="filters-form" onSubmit={ this.handleSubmit }>
+                        <div className="d-inline font-weight-bold">In stock:</div>
+                        <div className="d-inline">
+                            <input className="ml-2 align-middle"
+                                                         type="checkbox" name="inStockCheck"/>
+                        </div>
+                        <hr/>
+                        <p className="font-weight-bold">Price range:</p>
                         <div className="form-row">
                             <div className="col-5">
-                                <input type="number" className="form-control form-control-sm price-range" min="1"/>
+                                <input type="number" className="form-control form-control-sm price-range"
+                                       min="1" name="minPrice"/>
                             </div>
                             <div className="col text-center">
                                 <p>{ decodedChar }</p>
                             </div>
                             <div className="col-5">
-                                <input type="number" className="form-control form-control-sm price-range" min="1"/>
+                                <input type="number" className="form-control form-control-sm price-range"
+                                       min="1" name="maxPrice"/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div className="row">
+                            <div className="col-6">
+                                <button style={ {width: '100%'} } type="submit"
+                                        className="btn btn-primary btn-sm btn-success">Apply
+                                </button>
+                            </div>
+                            <div className="col-6">
+                                <button style={ {width: '100%'} } type="reset"
+                                        className="btn btn-secondary btn-sm"
+                                        onClick={ this.handleDisableFilter }>Reset
+                                </button>
                             </div>
                         </div>
                     </form>
-                <hr/>
-                <div className="row">
-                    <div className="col-6">
-                        <button style={ {width: '100%'} } type="button"
-                                className="btn btn-primary btn-sm btn-success">Apply
-                        </button>
-                    </div>
-                    <div className="col-6">
-                        <button style={ {width: '100%'} } type="button" className="btn btn-secondary btn-sm">Reset
-                        </button>
-                    </div>
                 </div>
             </div>
-        </div>
-    )
-};
+        )
+    }
+}
+
+export default FilterSidebar;
 
 
 

@@ -8,12 +8,13 @@ const images = new Map([
     [22, 'https://63.img.avito.st/640x480/5557976463.jpg'],
     [30, 'https://www.gfxtra31.com/uploads/posts/2017-10/1507902280_2.jpg'],
     [24, 'https://img.moyo.ua/img/gallery/1653/80/303729_main.jpg?1498828241'],
-    [26, 'https://stylus.ua/thumbs/568x568/7c/d6/683779.jpeg'],
+    [26, 'https://skidka-ekb.ru/images/prodacts/sourse/61433/61433000_obyektiv-tamron-sp-af-70-300mm-f-4-0-5-6-di-vc-usd-dlya-canon-ef-a005e-a005-a005e.jpg'],
     [29, 'https://toloka.to/photos/141007202218493983_f0_0.jpg']
 ]);
 
 const initialState = {
-    productsList: []
+    productsList: [],
+    filter: null
 };
 
 const productReducer = (state = initialState, action) => {
@@ -21,12 +22,29 @@ const productReducer = (state = initialState, action) => {
 
         case actionType.PRODUCTS_LIST:
             return {
+                ...state,
                 productsList: action.payload
                     .map(item => Object.assign(item, { image: images.get(item.id) }))
             };
 
         case actionType.PRODUCT_CATEGORY:
             return {
+                ...state,
+                filter: null,
+                productsList: action.payload
+                    .map(item => Object.assign(item, { image: images.get(item.id) }))
+            };
+            
+        case actionType.ENABLE_FILTER:
+            return {
+                ...state,
+                filter: action.payload
+            };
+            
+        case actionType.DISABLE_FILTER:
+            return {
+                ...state,
+                filter: null,
                 productsList: action.payload
                     .map(item => Object.assign(item, { image: images.get(item.id) }))
             };

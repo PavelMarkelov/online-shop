@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 
 export const ProductItem = props => {
 
-    let stockLevel = 'out';
+    let stockLevel = 'none';
     const count = props.product.count;
     if (count)
         stockLevel = count < 10 ? 'few' : 'much';

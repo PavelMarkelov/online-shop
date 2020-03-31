@@ -6,15 +6,12 @@ const initialState = {
 };
 
 const categoriesReducer = (state = initialState, action) => {
-    switch (action.type) {
-
-        case actionType.CATEGORIES_LIST:
-            return {
-                categoriesList: action.payload
-            };
-
-        default:
-            return state
+    if (action.type === actionType.CATEGORIES_LIST) {
+        return {
+            categoriesList: action.payload
+        };
+    } else {
+        return state
     }
 };
 
