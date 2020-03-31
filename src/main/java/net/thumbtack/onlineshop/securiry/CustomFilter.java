@@ -61,8 +61,9 @@ public class CustomFilter extends OncePerRequestFilter {
                 } catch (Exception e) {
                     logger.debug("Set Authentication from cookie failed {}", tokenOpt.get().getPerson());
                 }
-                String newToken = tokenService.updateToken(tokenOpt.get());
-                cookie.setValue(newToken);
+//                Если надо изменять токен каждый запрос
+//                String newToken = tokenService.updateToken(tokenOpt.get());
+//                cookie.setValue(newToken);
                 httpServletResponse.addCookie(cookie);
             }
         }

@@ -1,3 +1,6 @@
 export const LOGIN_USER = 'LOGIN_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const USER_ACCOUNT = 'USER_ACCOUNT';
+export const CATEGORIES_LIST = 'CATEGORIES_LIST';
+export const PRODUCTS_LIST = 'PRODUCT_LIST';
+export const PRODUCT_CATEGORY = 'PRODUCT_CATEGORY';

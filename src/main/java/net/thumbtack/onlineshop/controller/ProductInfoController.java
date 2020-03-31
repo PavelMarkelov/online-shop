@@ -13,9 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +22,7 @@ import static net.thumbtack.onlineshop.securiry.CheckAccessPerson.checkAccessAdm
 
 @RestController
 @RequestMapping("/products")
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 public class ProductInfoController {
 
     private final PersonService personService;

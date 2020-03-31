@@ -43,6 +43,20 @@ class DataService {
         };
         return fetch(REST_API_URL + '/clients', params)
     }
+
+    static categoriesListRequest() {
+        const params = {
+            credentials: 'include'
+        };
+        return fetch(REST_API_URL + '/categories', params);
+    }
+
+    static productsListRequest() {
+        const params = {
+            credentials: 'include'
+        };
+        return fetch(REST_API_URL + '/products', params);
+    }
 }
 
 export default DataService;
