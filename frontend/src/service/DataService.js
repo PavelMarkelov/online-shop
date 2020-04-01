@@ -55,6 +55,10 @@ class DataService {
     static productsCategoryRequest(categoryId) {
         return fetch(REST_API_URL + `/products?category=${categoryId}`, getRequestParams)
     }
+
+    static productRequest(id) {
+        return fetch(REST_API_URL + `/products/${id}`, getRequestParams);
+    }
 }
 
 export default DataService;

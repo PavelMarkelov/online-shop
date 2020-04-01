@@ -20,7 +20,8 @@ export const ProductItem = props => {
                         <p className="card-text"><strong>Stock: </strong>{ stockLevel }</p>
                     </div>
                     <br/>
-                    <Link to="#" className="w-50 ml-5 btn btn-sm btn-primary btn-success btn-block">Description</Link>
+                    <Link to={ '/catalog/' + props.product.id }
+                          className="w-50 ml-5 btn btn-sm btn-primary btn-success btn-block">Description</Link>
                 </div>
             </div>
         </div>

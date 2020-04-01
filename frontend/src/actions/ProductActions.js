@@ -28,3 +28,10 @@ export const disableFilter = products => {
         payload: products
     }
 };
+
+export const productDescription = product => {
+    return {
+        type: actionType.PRODUCT_DESCRIPTION,
+        payload: product
+    }
+};

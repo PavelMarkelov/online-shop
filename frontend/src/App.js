@@ -7,7 +7,8 @@ import Login from './components/Login';
 import Account from "./components/Account";
 import PrivateRoute from "./components/PrivateRoute";
 import BreadCrumbs from "./components/templates/BreadCrumbs";
-import CatalogContainer from './components/catalog/CatalogContainer'
+import CatalogContainer from './components/catalog/CatalogContainer';
+import Product from "./components/Product";
 
 class App extends Component {
     render() {
@@ -19,7 +20,8 @@ class App extends Component {
                     <Switch>
                         <Route exact path="/" component={ Login }/>
                         <PrivateRoute path="/account" component={ Account }/>
-                        <PrivateRoute path="/catalog" component={ CatalogContainer }/>
+                        <PrivateRoute exact path="/catalog" component={ CatalogContainer }/>
+                        <PrivateRoute path="/catalog/:id" component={ Product }/>
                     </Switch>
                     <Footer/>
                 </div>

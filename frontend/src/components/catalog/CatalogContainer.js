@@ -1,26 +1,32 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import CategorySidebar from './CategorySidebar';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import FilterSidebar from "./FilterSidebar";
-import { Link } from "react-router-dom";
-import { ProductItem } from "./ProductItem";
+import {ProductItem} from "./ProductItem";
 import DataService from "../../service/DataService";
-import { categoriesList } from '../../actions/CategoriesActions';
-import { productsList } from "../../actions/ProductActions";
-import { productsCategory } from "../../actions/ProductActions";
-import { enableFilter } from "../../actions/ProductActions";
-import { disableFilter } from "../../actions/ProductActions";
+import {categoriesList} from '../../actions/CategoriesActions';
+import {
+    disableFilter,
+    enableFilter,
+    productsCategory,
+    productsList
+} from "../../actions/ProductActions";
 
 class CatalogContainer extends Component {
 
     async componentDidMount() {
+        document.documentElement.scrollIntoView();
         const responses = await Promise.all([
-            DataService.categoriesListRequest(),
-            DataService.productsListRequest()
+            DataService.productsListRequest(),
+            DataService.categoriesListRequest()
         ]);
         const data = await Promise.all(responses.map(item => item.json()));
-        this.props.categoriesList(data[0]);
-        this.props.productsList(data[1]);
+        this.props.productsList(data[0]);
+        this.props.categoriesList(data[1]);
+    }
+
+    componentWillUnmount() {
+        this.props.productsList([]);
     }
 
     _filterProducts(products, { isInStock, minPrice, maxPrice}) {
