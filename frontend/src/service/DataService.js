@@ -3,6 +3,7 @@ const getRequestParams = {
     credentials: 'include'
 };
 
+
 class DataService {
 
     static loginRequest(credentials) {
@@ -58,6 +59,22 @@ class DataService {
 
     static productRequest(id) {
         return fetch(REST_API_URL + `/products/${id}`, getRequestParams);
+    }
+
+    static addToCartRequest(product) {
+        const params = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(product),
+            credentials: 'include'
+        };
+        return fetch(REST_API_URL + '/baskets', params);
+    }
+
+    static cartRequest() {
+        return fetch(REST_API_URL + '/baskets', getRequestParams);
     }
 }
 

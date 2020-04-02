@@ -30,7 +30,7 @@ class AuthorizedNavbar extends Component {
                     <img src={ book } alt="catalog" width="32"/>
                     Catalog
                 </Link>
-                <Link className="nav-item nav-link" to="#">
+                <Link className="nav-item nav-link" to="/account/cart">
                     <img src={ cart } alt="cart" width="30" className="p-1"/>
                     Cart
                 </Link>

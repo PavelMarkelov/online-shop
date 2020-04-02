@@ -1,7 +1,7 @@
 import * as actionType from '../actions/ActionsType';
 import faker from 'faker';
 
-const images = new Map([
+export const images = new Map([
     [28, 'https://img4.okidoker.com/c/3/9/6/296760/5782249/12257100_2.jpg'],
     [23, 'https://cdn-1.dar.kz/darbiz/catalogs/93e/a75b3fc6-93e2-11e9-91a3-0a580a0205da.jpg'],
     [31, 'https://i.ebayimg.com/00/s/OTEwWDY0Ng==/z/ylIAAOSwXwtdIjr3/$_57.JPG?set_id=8800005007'],
