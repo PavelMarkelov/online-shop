@@ -76,6 +76,41 @@ class DataService {
     static cartRequest() {
         return fetch(REST_API_URL + '/baskets', getRequestParams);
     }
+
+    static removeCartItemRequest(id) {
+        const params = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            credentials: 'include'
+        };
+        return fetch(REST_API_URL + `/baskets/${id}`, params);
+    }
+
+    static changeCartItemQuantity(product) {
+        const params = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(product),
+            credentials: 'include'
+        };
+        return fetch(REST_API_URL + '/baskets', params);
+    }
+
+    static buyCartRequest(cart) {
+        const params = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(cart),
+            credentials: 'include'
+        };
+        return fetch(REST_API_URL + '/purchases/baskets', params);
+    }
 }
 
 export default DataService;

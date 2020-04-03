@@ -26,7 +26,6 @@ class Product extends Component {
         const countForm = document.forms['add-to-cart'];
         const count = +countForm.elements['count'].value;
         const {id, name, price} = this.props.product;
-        debugger
         const productForRequest = {
             id,
             name,

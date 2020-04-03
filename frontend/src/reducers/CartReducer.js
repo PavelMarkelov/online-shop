@@ -16,6 +16,12 @@ const cartReducer = (state = initialState, action) => {
                     .map(item => Object.assign(item, {image: images.get(item.id)}))
             };
 
+        case actionType.REMOVE_CART_ITEM:
+            return {
+                ...state,
+                cart: state.cart.filter(value => value.id !== action.payload)
+            };
+
         default:
             return state
     }

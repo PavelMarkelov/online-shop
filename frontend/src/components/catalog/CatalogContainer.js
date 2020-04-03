@@ -9,7 +9,7 @@ import {
     disableFilter,
     enableFilter,
     productsCategory,
-    productsList
+    productsList,
 } from "../../actions/ProductActions";
 
 class CatalogContainer extends Component {
@@ -20,7 +20,7 @@ class CatalogContainer extends Component {
             DataService.productsListRequest(),
             DataService.categoriesListRequest()
         ]);
-        const data = await Promise.all(responses.map(item => item.json()));
+        const data = await Promise.all(responses.map(response => response.json()));
         this.props.productsList(data[0]);
         this.props.categoriesList(data[1]);
     }

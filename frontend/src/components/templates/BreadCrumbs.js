@@ -9,21 +9,22 @@ const BreadCrumbs = (props) => {
     const lastIndex = linksArr.length - 1;
     let addressLink = '';
     linksArr = linksArr.map((value, index) => {
-        addressLink += '/' + value;
-        value = isNaN(value) ? value : product;
-        value = value[0].toUpperCase() + value.slice(1);
-        if (value && index !== lastIndex)
+        if (value) {
+            addressLink += '/' + value;
+            value = isNaN(value) ? value : product;
+            value = value[0].toUpperCase() + value.slice(1);
+            if (index !== lastIndex)
+                return (
+                    <li key={value} className="breadcrumb-item">
+                        <Link to={addressLink}>{value}</Link>
+                    </li>
+                );
             return (
-                <li key={value} className="breadcrumb-item">
-                    <Link to={ addressLink }>{ value }</Link>
+                <li key={value} className="breadcrumb-item active">
+                    {value}
                 </li>
             );
-        if (value && index === lastIndex)
-            return (
-                <li key={ value } className="breadcrumb-item active">
-                    { value }
-                </li>
-            );
+        }
         return <li key='login' className="breadcrumb-item active">Log in</li>;
     });
     return (

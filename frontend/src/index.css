@@ -40,3 +40,15 @@ h1 {
 .cart-item {
   max-width: 530px;
 }
+
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
+}
+
+.empty-cart h4 {
+  position: absolute;
+  top: 50%;
+  left: 36%;
+}

@@ -7,3 +7,10 @@ export const userCart = (cart) => {
         payload: cart
     }
 };
+
+export const removeCartItem = (id) => {
+    return {
+        type: actionsType.REMOVE_CART_ITEM,
+        payload: id
+    }
+};
