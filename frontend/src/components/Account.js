@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {userAccount} from '../actions/AccountActions';
 import DataService from '../service/DataService';
 import { Link } from "react-router-dom";
+import { accountEditError } from "../actions/ErrorActions";
 
 
 class Account extends Component {
@@ -12,10 +13,10 @@ class Account extends Component {
     constructor(props) {
         super(props);
         this.handelSubmit = this.handelSubmit.bind(this);
-        this.handleCancel = this.handelSubmit.bind(this);
     }
 
     async componentDidMount() {
+        this.props.accountEditError(null);
         const response = await DataService.userProfileRequest();
         const account = await response.json();
         this.props.userAccount(account);
@@ -43,70 +44,111 @@ class Account extends Component {
             newPassword
         };
         const response = await DataService.editAccountDataRequest(newAccountData);
-        if (!response.ok)
+        if (response.status === 403 || response.status === 406) {
+            this.props.accountEditError(await response.json());
             return false;
+        }
+        this.props.accountEditError(null);
         const account = await response.json();
         this.props.userAccount(account);
         this.props.history.push('/catalog');
     }
 
-    handleCancel() {
-        this.props.history.push('/catalog');
-    }
-
     render() {
         const account = this.props.account || {};
+        let error = this.props.error;
+        const classesForInput = "form-control form-control-lg";
+        const classesForInputWithAlert = "form-control form-control-lg is-invalid";
+        const errorsFields = new Map();
+        if (error) {
+            if (error.errors)
+                error.errors.forEach(item => errorsFields.set(item.field, item.message));
+            else
+                errorsFields.set(error.field, error.message);
+        }
         return (
             <div className="w-25 account-edit-container">
                 <h1 className="m-4">Account</h1>
                 <form name="edit-form" onSubmit={ this.handelSubmit }>
                     <div className="form-group">
                         <label><b>Fist name</b></label>
-                        <input type="text" className="form-control form-control-lg " id="fistName"
+                        <input type="text" className={errorsFields.get('fistName') ?
+                            classesForInputWithAlert : classesForInput}
                                name="firstName" placeholder="Your fist name"
-                               defaultValue={ account.firstName || '' } required autoFocus/>
+                               defaultValue={ account.firstName || '' } autoFocus/>
+                        <div className="invalid-feedback">
+                            { errorsFields.get('fistName') }
+                        </div>
                     </div>
                     <div className="form-group">
                         <label><b>Last name</b></label>
-                        <input type="text" className="form-control form-control-lg" id="lastName"
+                        <input type="text" className={errorsFields.get('lastName') ?
+                            classesForInputWithAlert : classesForInput}
                                name="lastName" placeholder="Your last name"
-                               defaultValue={ account.lastName || '' } required/>
+                               defaultValue={ account.lastName || '' }/>
+                        <div className="invalid-feedback">
+                            { errorsFields.get('lastName') }
+                        </div>
                     </div>
                     <div className="form-group">
                         <label><b>Patronymic</b></label>
-                        <input type="text" className="form-control form-control-lg" id="patronymic"
+                        <input type="text" className={errorsFields.get('patronymic') ?
+                            classesForInputWithAlert : classesForInput}
                                name="patronymic" placeholder="Your patronymic"
                                defaultValue={ account.patronymic || '' }/>
+                        <div className="invalid-feedback">
+                            { errorsFields.get('patronymic') }
+                        </div>
                     </div>
                     <div className="form-group">
                         <label><b>Email</b></label>
-                        <input type="email" className="form-control form-control-lg" id="email"
-                               name="email" placeholder="Your email" required
+                        <input type="email" className={errorsFields.get('email') ?
+                            classesForInputWithAlert : classesForInput}
+                               name="email" placeholder="Your email"
                                defaultValue={ account.email  || '' }/>
+                        <div className="invalid-feedback">
+                            { errorsFields.get('email') }
+                        </div>
                     </div>
                     <div className="form-group">
                         <label><b>Address</b></label>
-                        <input type="text" className="form-control form-control-lg" id="address"
-                               name="address" placeholder="Your address" required
+                        <input type="text" className={errorsFields.get('address') ?
+                            classesForInputWithAlert : classesForInput}
+                               name="address" placeholder="Your address"
                                defaultValue={ account.address || '' }/>
+                        <div className="invalid-feedback">
+                            { errorsFields.get('address') }
+                        </div>
                     </div>
                     <div className="form-group">
                         <label><b>Phone</b></label>
-                        <input type="text" className="form-control form-control-lg" id="phone"
-                               name="phone" placeholder="Your phone" required
+                        <input type="text" className={errorsFields.get('phone') ?
+                            classesForInputWithAlert : classesForInput}
+                               name="phone" placeholder="Your phone"
                                defaultValue={ account.phone || '' }/>
+                            <div className="invalid-feedback">
+                                { errorsFields.get('phone') }
+                            </div>
                     </div>
                     <div className="form-group">
                         <label><b>Old password</b></label>
-                        <input type="password" className="form-control form-control-lg" id="oldPassword"
-                               name="oldPassword" placeholder="Old password" required
+                        <input type="password" className={errorsFields.get('oldPassword') ?
+                            classesForInputWithAlert : classesForInput}
+                               name="oldPassword" placeholder="Old password"
                                defaultValue={this.password}/>
+                        <div className="invalid-feedback">
+                            { errorsFields.get('oldPassword') }
+                        </div>
                     </div>
                     <div className="form-group">
                         <label><b>New password</b></label>
-                        <input type="password" className="form-control form-control-lg" id="newPassword"
-                               name="newPassword" placeholder="New password" required minLength="8"
+                        <input type="password" className={errorsFields.get('newPassword') ?
+                            classesForInputWithAlert : classesForInput}
+                               name="newPassword" placeholder="New password"
                                defaultValue={this.password}/>
+                        <div className="invalid-feedback">
+                            { errorsFields.get('newPassword') }
+                        </div>
                     </div>
                     <div className="form-group mt-4 row">
                         <div className="col-6">
@@ -125,13 +167,15 @@ class Account extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        account: state.userState.user
+        account: state.userState.user,
+        error: state.errorState.error
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        userAccount: (account) => dispatch(userAccount(account))
+        userAccount: (account) => dispatch(userAccount(account)),
+        accountEditError: (error) => dispatch(accountEditError(error))
     }
 };
 

@@ -24,7 +24,6 @@ class FilterSidebar extends Component {
         const isEmptyForm = !filter.isInStock && !filter.minPrice && !filter.maxPrice;
         const isInvalidRange = filter.minPrice && filter.maxPrice
             && filter.minPrice > filter.maxPrice;
-    debugger
         if (isEmptyForm || isInvalidRange)
             return false;
         this.props.enableFilter(filter);

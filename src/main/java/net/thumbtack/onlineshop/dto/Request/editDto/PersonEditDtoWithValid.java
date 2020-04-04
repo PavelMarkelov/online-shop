@@ -69,21 +69,21 @@ public abstract class PersonEditDtoWithValid {
         this.newPassword = newPassword;
     }
 
-    @AssertTrue(message = "FirstName can't be empty and have a maximum 50 of letters " +
+    @AssertTrue(message = "FirstName can't be empty and must have a maximum 50 of letters " +
             "and contain letters of the russian alphabet, spaces and dashes")
     public boolean isFistName() {
         return !StringUtils.isEmpty(firstName) && firstName.matches("[А-Яа-я\\s-]+")
                 && firstName.length() <= maxNameLength;
     }
 
-    @AssertTrue(message = "LastName can't be empty and have a maximum length of 50 letters " +
+    @AssertTrue(message = "LastName can't be empty and must have a maximum length of 50 letters " +
             "and contain letters of the russian alphabet, spaces and dashes")
     public boolean isLastName() {
         return !StringUtils.isEmpty(lastName) && lastName.matches("[А-Яа-я\\s-]+")
                 && lastName.length() <= maxNameLength;
     }
 
-    @AssertTrue(message = "Patronymic have a maximum length of 50 letters " +
+    @AssertTrue(message = "Patronymic must have a maximum length of 50 letters " +
             "and contain letters of the russian alphabet, spaces and dashes")
     public boolean isPatronymic() {
         if(!StringUtils.isEmpty(patronymic))
@@ -92,7 +92,7 @@ public abstract class PersonEditDtoWithValid {
     }
 
 
-    @AssertTrue(message = "Password can't be empty and have a minimum length of 8 letters")
+    @AssertTrue(message = "Password can't be empty and must have a minimum length of 8 letters")
     public boolean isNewPassword() {
         return !StringUtils.isEmpty(newPassword) && newPassword.matches("\\w+") && newPassword.length() >= minPasswordLength;
     }

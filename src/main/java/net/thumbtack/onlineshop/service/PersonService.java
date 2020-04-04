@@ -100,7 +100,7 @@ public class PersonService implements UserDetailsService {
                                                      CustomerDtoEditWithValid customerDto
                                                      ) {
         if (!passwordEncoder.matches(customerDto.getOldPassword(), customer.getPassword()))
-            throw new IllegalArgumentException();
+            throw new FailPasswordException(GlobalExceptionErrorCode.BAD_PASSWORD);
         customer.setFirstName(customerDto.getFirstName());
         customer.setLastName(customerDto.getLastName());
         customer.setPatronymic(customerDto.getPatronymic());

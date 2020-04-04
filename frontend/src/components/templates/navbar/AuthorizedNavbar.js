@@ -24,6 +24,7 @@ class AuthorizedNavbar extends Component {
     }
 
     render() {
+        const badgeStatus = this.props.count ? 'badge-success' : 'badge-light';
         return (
             <div className="navbar-nav ml-auto">
                 <Link className="nav-item nav-link" to="/catalog">
@@ -31,8 +32,8 @@ class AuthorizedNavbar extends Component {
                     Catalog
                 </Link>
                 <Link className="nav-item nav-link" to="/account/cart">
-                    <img src={ cart } alt="cart" width="30" className="p-1"/>
-                    Cart
+                    <img src={ cart } alt="cart" width="34" className="p-1"/>
+                    Cart <span className={ `badge ${ badgeStatus }` }>{ this.props.count }</span>
                 </Link>
                 <Link className="nav-item nav-link" onClick={ this.handleLogout } to="/">
                     <img src={ arrowLeft } alt="logout" width="32"
@@ -50,6 +51,7 @@ class AuthorizedNavbar extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        count: state.cartState.cart.length,
         userFirstName: state.userState.user.firstName
     }
 };

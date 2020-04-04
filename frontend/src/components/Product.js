@@ -33,6 +33,8 @@ class Product extends Component {
             count
         };
         const response = await DataService.addToCartRequest(productForRequest);
+        if (!response.ok)
+            return false;
         const cart = await response.json();
         this.props.userCart(cart);
     }
