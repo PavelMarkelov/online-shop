@@ -3,7 +3,7 @@ import * as actionsType from './ActionsType'
 
 export const userCart = (cart) => {
     return {
-        type: actionsType.USER_CART,
+        type: actionsType.ADD_ITEMS_IN_USER_CART,
         payload: cart
     }
 };

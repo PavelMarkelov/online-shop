@@ -1,43 +1,49 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import {Link} from "react-router-dom";
 import DataService from '../../service/DataService'
 
 
-class CategorySidebar extends Component {
+const CategorySidebar = (props) => {
 
-    constructor(props) {
-        super(props);
-        this.handleProductsCategory = this.handleProductsCategory.bind(this);
-    }
-
-    async handleProductsCategory(id, event) {
+    const handleProductsCategory = async (id, event) => {
         event.preventDefault();
+        const childrenCategoriesList = event.target.parentNode.querySelector('ul');
+        if (childrenCategoriesList)
+            childrenCategoriesList.classList.toggle('visible-children-categories');
         const response = await DataService.productsCategoryRequest(id);
         const products = await response.json();
         document.forms['filters-form'].reset();
-        this.props.productsCategory(products);
-    }
+        props.productsCategory(products);
+    };
 
-    render() {
-        const categoriesForRender = this.props.categoriesList.map(value => {
+        const categoriesForRender = props.categoriesList.map(value => {
             if (!value.parentId) {
-                let childrenCategories = this.props.categoriesList
-                    .filter(children => value.id === children.parentId);
-                childrenCategories = childrenCategories.map(children =>
-                    <ul key={children.id} className="categories-list">
-                        <li>
-                            <Link to="#" onClick={ (event) => this.handleProductsCategory(children.id, event) }
-                                  className="card-link">{children.name}</Link>
+                const parentCategory =
+                    <Link to="#" onClick={ (event) => handleProductsCategory(value.id, event) }
+                          className="card-link">{ value.name }</Link>;
+
+                const childrenCategories = props.categoriesList
+                    .filter(children => value.id === children.parentId)
+                    .map(value =>
+                        <li key={ value.id }>
+                            <Link to="#" onClick={ (event) => handleProductsCategory(value.id, event) }
+                                  className="card-link">{value.name}</Link>
                         </li>
-                    </ul>
-                );
+                    );
+                if (childrenCategories.length)
+                    return (
+                        <li key={ value.id } className="mb-2">
+                            { parentCategory }
+                            <ul className="categories-list hidden-children-categories">
+                                { childrenCategories }
+                            </ul>
+                        </li>
+                    );
                 return (
                     <li key={ value.id } className="mb-2">
-                        <Link to="#" onClick={ (event) => this.handleProductsCategory(value.id, event) }
-                              className="card-link">{ value.name }</Link>
-                        { childrenCategories }
+                        { parentCategory }
                     </li>
-                )
+                );
             }
             return null;
         });
@@ -52,7 +58,7 @@ class CategorySidebar extends Component {
                 </div>
             </div>
         )
-    }
-}
 
-export default CategorySidebar;
+    };
+
+    export default CategorySidebar;

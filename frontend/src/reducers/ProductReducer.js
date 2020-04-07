@@ -29,7 +29,7 @@ const productReducer = (state = initialState, action) => {
                     .map(item => Object.assign(item, {image: images.get(item.id)}))
             };
 
-        case actionType.PRODUCT_CATEGORY:
+        case actionType.PRODUCT_FROM_SELECTED_CATEGORY:
             return {
                 ...state,
                 filter: null,

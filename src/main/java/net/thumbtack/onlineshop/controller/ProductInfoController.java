@@ -20,9 +20,9 @@ import java.util.Optional;
 
 import static net.thumbtack.onlineshop.securiry.CheckAccessPerson.checkAccessAdmin;
 
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/products")
-@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 public class ProductInfoController {
 
     private final PersonService personService;

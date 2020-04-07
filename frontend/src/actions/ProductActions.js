@@ -1,28 +1,28 @@
 import * as actionType from './ActionsType'
 
 
-export const productsList = (products) => {
+export const productsListAction = (products) => {
     return {
         type: actionType.PRODUCTS_LIST,
         payload: products
     }
 };
 
-export const productsCategory = products => {
+export const productsFromCategoryAction = products => {
     return {
-        type: actionType.PRODUCT_CATEGORY,
+        type: actionType.PRODUCT_FROM_SELECTED_CATEGORY,
         payload: products
     }
 };
 
-export const enableFilter = filter => {
+export const enableFilterAction = filter => {
     return {
         type: actionType.ENABLE_FILTER,
         payload: filter
     }
 };
 
-export const disableFilter = products => {
+export const disableFilterAction = products => {
     return {
         type: actionType.DISABLE_FILTER,
         payload: products

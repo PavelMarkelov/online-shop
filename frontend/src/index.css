@@ -32,6 +32,10 @@ h1 {
   padding-left: 8%;
 }
 
+.categories-list ul {
+  padding-left: 10%;
+}
+
 .price-range::-webkit-outer-spin-button,
 .price-range::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -51,4 +55,15 @@ h1 {
   position: absolute;
   top: 50%;
   left: 36%;
+}
+
+.hidden-children-categories {
+  max-height: 0;
+  transition: all 0.5s ease-out;
+  overflow: hidden;
+}
+
+.visible-children-categories {
+  max-height: 100vh;
+  transition: all 0.5s ease-in;
 }
