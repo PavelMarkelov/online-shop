@@ -38,7 +38,7 @@ const BreadCrumbs = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        product: state.productState.productDescription
+        product: state.productState.productDetails
     }
 };
 

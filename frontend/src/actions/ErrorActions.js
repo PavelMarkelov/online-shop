@@ -1,14 +1,14 @@
 import * as actionsType from './ActionsType';
 
 
-export const loginError = (isLoginFalse) => {
+export const loginErrorAction = (isLoginFalse) => {
     return {
         type: actionsType.LOGIN_FAIL,
         payload: isLoginFalse
     }
 };
 
-export const accountEditError = (error) => {
+export const accountEditErrorAction = (error) => {
     return {
         type: actionsType.ACCOUNT_EDIT_FAIL,
         payload: error

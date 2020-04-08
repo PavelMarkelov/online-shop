@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import CategorySidebar from './CategorySidebar';
 import FilterSidebar from "./FilterSidebar";
 import {ProductItem} from "./ProductItem";
@@ -10,39 +10,63 @@ import {
     productsFromCategoryAction,
     productsListAction,
 } from "../../actions/ProductActions";
+import { addItemsInUserCartAction } from "../../actions/CartActions";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 
 const CatalogContainer = () => {
 
-    const { categories, products, filters } = useSelector(state => ({
+    const { categories, products, filters, isCartIsLoaded } = useSelector(state => ({
         categories: state.categoriesState.categoriesList,
         products: state.productState.productsList,
-        filters: state.productState.filter
+        filters: state.productState.filter,
+        isCartIsLoaded: state.cartState.isCartIsLoaded
     }), shallowEqual);
 
     const dispatch = useDispatch();
-    const { categoriesList, productsList, productsCategory, enableFilter, disableFilter } = {
-            categoriesList: categories => dispatch(categoriesListAction(categories)),
-            productsList: products => dispatch(productsListAction(products)),
-            productsCategory: products => dispatch(productsFromCategoryAction(products)),
-            enableFilter: filter => dispatch(enableFilterAction(filter)),
-            disableFilter: products => dispatch(disableFilterAction(products))
-        };
+    const { categoriesList, productsList, productsCategory, enableFilter, disableFilter, addItemsInUserCart } = {
+        categoriesList: categories => dispatch(categoriesListAction(categories)),
+        productsList: products => dispatch(productsListAction(products)),
+        addItemsInUserCart: cart => dispatch(addItemsInUserCartAction(cart)),
+        productsCategory: useCallback(products =>
+            dispatch(productsFromCategoryAction(products)), [dispatch]),
+        enableFilter: useCallback(filter =>
+            dispatch(enableFilterAction(filter)), [dispatch]),
+        disableFilter: useCallback(products =>
+            dispatch(disableFilterAction(products)), [dispatch])
+    };
+
+    const loadDataWithCart = async () => {
+        document.documentElement.scrollIntoView();
+        const responses = await Promise.all([
+            DataService.productsListRequest(),
+            DataService.categoriesListRequest(),
+            DataService.cartRequest()
+        ]);
+        const data = await Promise.all(responses.map(response => response.json()));
+        productsList(data[0]);
+        categoriesList(data[1]);
+        addItemsInUserCart(data[2])
+    };
+
+    const loadDataWithoutCart = async () => {
+        document.documentElement.scrollIntoView();
+        const responses = await Promise.all([
+            DataService.productsListRequest(),
+            DataService.categoriesListRequest(),
+        ]);
+        const data = await Promise.all(responses.map(response => response.json()));
+        productsList(data[0]);
+        categoriesList(data[1]);
+    };
 
     useEffect(() => {
-        (async () => {
-            document.documentElement.scrollIntoView();
-            const responses = await Promise.all([
-                DataService.productsListRequest(),
-                DataService.categoriesListRequest()
-            ]);
-            const data = await Promise.all(responses.map(response => response.json()));
-            productsList(data[0]);
-            categoriesList(data[1]);
-        })();
+        let time = performance.now();
+        isCartIsLoaded ? loadDataWithoutCart() : loadDataWithCart();
+        time = performance.now() - time;
+        console.log('Время выполнения = ', time);
         return () => productsList([])
-    }, []);
+    }, [isCartIsLoaded]);
 
     const _filterProducts = (products, { isInStock, minPrice, maxPrice}) => {
         return products.filter(item => {

@@ -3,6 +3,7 @@ import { images } from "./ProductReducer";
 
 
 const initialState = {
+    isCartIsLoaded: false,
     cart: []
 };
 
@@ -12,6 +13,7 @@ const cartReducer = (state = initialState, action) => {
         case actionType.ADD_ITEMS_IN_USER_CART:
             return {
                 ...state,
+                isCartIsLoaded: true,
                 cart: action.payload
                     .map(item => Object.assign(item, {image: images.get(item.id)}))
             };

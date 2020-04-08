@@ -16,49 +16,49 @@ const CategorySidebar = (props) => {
         props.productsCategory(products);
     };
 
-        const categoriesForRender = props.categoriesList.map(value => {
-            if (!value.parentId) {
-                const parentCategory =
-                    <Link to="#" onClick={ (event) => handleProductsCategory(value.id, event) }
-                          className="card-link">{ value.name }</Link>;
+    const categoriesForRender = props.categoriesList.map(value => {
+        if (!value.parentId) {
+            const parentCategory =
+                <Link to="#" onClick={ (event) => handleProductsCategory(value.id, event) }
+                      className="card-link">{ value.name }</Link>;
 
-                const childrenCategories = props.categoriesList
-                    .filter(children => value.id === children.parentId)
-                    .map(value =>
-                        <li key={ value.id }>
-                            <Link to="#" onClick={ (event) => handleProductsCategory(value.id, event) }
-                                  className="card-link">{value.name}</Link>
-                        </li>
-                    );
-                if (childrenCategories.length)
-                    return (
-                        <li key={ value.id } className="mb-2">
-                            { parentCategory }
-                            <ul className="categories-list hidden-children-categories">
-                                { childrenCategories }
-                            </ul>
-                        </li>
-                    );
+            const childrenCategories = props.categoriesList
+                .filter(children => value.id === children.parentId)
+                .map(value =>
+                    <li key={ value.id }>
+                        <Link to="#" onClick={ (event) => handleProductsCategory(value.id, event) }
+                              className="card-link">{value.name}</Link>
+                    </li>
+                );
+            if (childrenCategories.length)
                 return (
                     <li key={ value.id } className="mb-2">
                         { parentCategory }
+                        <ul className="categories-list hidden-children-categories">
+                            { childrenCategories }
+                        </ul>
                     </li>
                 );
-            }
-            return null;
-        });
+            return (
+                <li key={ value.id } className="mb-2">
+                    { parentCategory }
+                </li>
+            );
+        }
+        return null;
+    });
 
-        return (
-            <div className="card sidebar-card">
-                <div className="card-body">
-                    <h5 className="card-title mb-4">Categories</h5>
-                    <ul className="categories-list">
-                        { categoriesForRender }
-                    </ul>
-                </div>
+    return (
+        <div className="card sidebar-card">
+            <div className="card-body">
+                <h5 className="card-title mb-4">Categories</h5>
+                <ul className="categories-list">
+                    { categoriesForRender }
+                </ul>
             </div>
-        )
+        </div>
+    )
 
-    };
+};
 
-    export default CategorySidebar;
+export default CategorySidebar;

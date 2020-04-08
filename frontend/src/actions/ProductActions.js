@@ -29,9 +29,9 @@ export const disableFilterAction = products => {
     }
 };
 
-export const productDescription = product => {
+export const productDetailsAction = product => {
     return {
-        type: actionType.PRODUCT_DESCRIPTION,
+        type: actionType.PRODUCT_DETAILS,
         payload: product
     }
 };

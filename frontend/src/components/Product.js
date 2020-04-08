@@ -1,31 +1,33 @@
-import React, { Component } from "react";
+import React, {useEffect} from "react";
 import DataService from "../service/DataService";
-import { productDescription } from "../actions/ProductActions";
-import { connect } from 'react-redux';
-import { userCart } from "../actions/CartActions";
+import {productDetailsAction} from "../actions/ProductActions";
+import {useDispatch, useSelector} from 'react-redux';
+import {addItemsInUserCartAction} from "../actions/CartActions";
 
-class Product extends Component {
+const Product = (props) => {
 
-    constructor(props) {
-        super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+    const product = useSelector(state => state.productState.productDetails);
 
-    async componentDidMount() {
-        const request = await DataService.productRequest(this.props.match.params.id);
-        const product = await request.json();
-        this.props.productDescription(product);
-    }
+    const dispatch = useDispatch();
+    const { productDetails, addItemsInUserCart } = {
+        productDetails: product => dispatch(productDetailsAction(product)),
+        addItemsInUserCart: (cart) => dispatch(addItemsInUserCartAction(cart))
+    };
 
-    componentWillUnmount() {
-        this.props.productDescription({});
-    }
+    useEffect(() => {
+        (async () =>{
+            const request = await DataService.productRequest(props.match.params.id);
+            const product = await request.json();
+            productDetails(product);
+        })();
+        return (() => productDetails({}))
+    }, [props.match.params.id]);
 
-    async handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         const countForm = document.forms['add-to-cart'];
         const count = +countForm.elements['count'].value;
-        const {id, name, price} = this.props.product;
+        const {id, name, price} = product;
         const productForRequest = {
             id,
             name,
@@ -36,60 +38,45 @@ class Product extends Component {
         if (!response.ok)
             return false;
         const cart = await response.json();
-        this.props.userCart(cart);
+        addItemsInUserCart(cart);
     }
 
-    render() {
-        let stockLevel = 'none';
-        const count = this.props.product.count;
-        if (count)
-            stockLevel = count < 10 ? 'few' : 'much';
-        return (
-            <div className="row row-cols-2 mx-3">
-                <div className="col-sm-3">
-                    <h5>{ this.props.product.name }</h5>
-                    <img src={ this.props.product.image }
-                         className="img-fluid mt-2" alt={ this.props.product.name }/>
-                    <p className="mt-2 mb-1"><strong>Price: </strong>${ this.props.product.price }</p>
-                    <p><strong>Stock level: </strong>{ stockLevel }</p>
-                    <form name="add-to-cart" onSubmit={ this.handleSubmit }>
-                        <div className="row">
+    let stockLevel = 'none';
+    const count = product.count;
+    if (count)
+        stockLevel = count < 10 ? 'few' : 'much';
+    return (
+        <div className="row row-cols-2 mx-3">
+            <div className="col-sm-3">
+                <h5>{ product.name }</h5>
+                <img src={ product.image }
+                     className="img-fluid mt-2" alt={ product.name }/>
+                <p className="mt-2 mb-1"><strong>Price: </strong>${ product.price }</p>
+                <p><strong>Stock level: </strong>{ stockLevel }</p>
+                <form name="add-to-cart" onSubmit={ handleSubmit }>
+                    <div className="row">
 
-                            <div className="col-5">
-                                <input className="form-control form-control-sm count-for-cart" type="number"
-                                       name="count" min="1"/>
-                            </div>
-                            <div className="col-7">
-                                <button style={ {width: "80%"} } type="submit"
-                                        className="btn btn-primary btn-sm btn-success">
-                                    Add to Cart
-                                </button>
-                            </div>
-
+                        <div className="col-5">
+                            <input className="form-control form-control-sm count-for-cart" type="number"
+                                   name="count" min="1"/>
                         </div>
-                    </form>
-                </div>
+                        <div className="col-7">
+                            <button style={ {width: "80%"} } type="submit"
+                                    className="btn btn-primary btn-sm btn-success">
+                                Add to Cart
+                            </button>
+                        </div>
 
-                <div className="col-sm-9">
-                    <p className="font-weight-bold">Description</p>
-                    <p className="text-justify">{ this.props.product.description }</p>
-                </div>
+                    </div>
+                </form>
             </div>
-        )
-    }
-}
 
-const mapStateToProps = (state) => {
-    return {
-        product: state.productState.productDescription
-    }
+            <div className="col-sm-9">
+                <p className="font-weight-bold">Description</p>
+                <p className="text-justify">{ product.description }</p>
+            </div>
+        </div>
+    )
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        productDescription: product => dispatch(productDescription(product)),
-        userCart: (cart) => dispatch(userCart(cart))
-    }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Product);
+export default Product;

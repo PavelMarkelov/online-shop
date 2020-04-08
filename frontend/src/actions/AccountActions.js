@@ -1,6 +1,6 @@
 import * as actionType from './ActionsType';
 
-export const loginUser = (user) => {
+export const loginUserAction = (user) => {
     return {
         type: actionType.LOGIN_USER,
         payload: user
@@ -14,7 +14,7 @@ export const logoutUser = () => {
     }
 };
 
-export const userAccount = (account) => {
+export const userAccountAction = (account) => {
     return {
         type: actionType.USER_ACCOUNT,
         payload: account

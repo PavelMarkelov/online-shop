@@ -1,87 +1,73 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { loginUser } from '../actions/AccountActions';
+import { useDispatch, useSelector } from "react-redux";
+import { loginUserAction } from '../actions/AccountActions';
 import DataService from '../service/DataService';
 import { withRouter } from 'react-router-dom';
-import { loginError } from "../actions/ErrorActions";
+import { loginErrorAction } from "../actions/ErrorActions";
 
+const Login = (props) => {
 
-class Login extends Component {
+    const simpleCustomer = {login: 'q', password: 'sddsvwe34s'};
 
-    simpleCustomer = {login: 'q', password: 'sddsvwe34s'};
+    const isLoginFail = useSelector(state => state.errorState.isLoginFail);
 
-    constructor(props) {
-        super(props);
-        this.handleSimpleCustomer = this.handleSimpleCustomer.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleSimpleCustomer(event) {
-        event.preventDefault();
-        const loginForm = document.forms["login-form"];
-        loginForm.elements["login"].value = this.simpleCustomer.login;
-        loginForm.elements["password"].value = this.simpleCustomer.password;
+    const dispatch = useDispatch();
+    const { loginError, loginUser } = {
+        loginError: (isLoginFalse) => dispatch(loginErrorAction(isLoginFalse)),
+        loginUser: user => dispatch(loginUserAction(user))
     };
 
-    async handleSubmit(event) {
+    function handleSimpleCustomer(event) {
+        event.preventDefault();
+        const loginForm = document.forms["login-form"];
+        loginForm.elements["login"].value = simpleCustomer.login;
+        loginForm.elements["password"].value = simpleCustomer.password;
+    }
+
+    async function handleSubmit(event) {
         event.preventDefault();
         const loginForm = document.forms["login-form"];
         const login = loginForm.elements["login"].value;
         const password = loginForm.elements["password"].value;
         const response = await DataService.loginRequest({login, password});
         if (response.status === 401) {
-            this.props.loginError(true);
+            loginError(true);
             return false;
         }
-        this.props.loginError(false);
+        loginError(false);
         const user = await response.json();
-        this.props.loginUser(user);
-        this.props.history.push('/catalog');
+        loginUser(user);
+        props.history.push('/catalog');
     }
 
-    render() {
-        const styleForVisibility = this.props.isLoginFail ? {visibility: 'visible'} : { visibility: 'hidden'};
-        return (
-            <div className="login-container">
-                <div id="warning" className="alert alert-danger text-center py-1 mb-2" role="alert"
-                     style={ styleForVisibility }>
-                    Invalid login or password!
-                </div>
-                <form name="login-form" onSubmit={ this.handleSubmit } >
-                    <div className="form-group">
-                        <label>Login</label>
-                        <input type="text" className="form-control form-control-lg" id="login" placeholder="Enter login"
-                               name="login" autoComplete="on" required autoFocus/>
-                    </div>
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input type="password" className="form-control form-control-lg" id="password" autoComplete="on"
-                               name="password" placeholder="Enter password" required/>
-                    </div>
-                    <div className="form-group mt-4">
-                        <button type="submit" className="btn btn-lg btn-primary btn-block">Log In</button>
-                    </div>
-                </form>
-                <div id="sampleLogin">
-                    <Link onClick={ this.handleSimpleCustomer } to="#">customer</Link>
-                </div>
+    const styleForVisibility = isLoginFail ? {visibility: 'visible'} : { visibility: 'hidden'};
+    return (
+        <div className="login-container">
+            <div id="warning" className="alert alert-danger text-center py-1 mb-2" role="alert"
+                 style={ styleForVisibility }>
+                Invalid login or password!
             </div>
-        );
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        isLoginFail: state.errorState.isLoginFail
-    }
+            <form name="login-form" onSubmit={ handleSubmit } >
+                <div className="form-group">
+                    <label>Login</label>
+                    <input type="text" className="form-control form-control-lg" id="login" placeholder="Enter login"
+                           name="login" autoComplete="on" required autoFocus/>
+                </div>
+                <div className="form-group">
+                    <label>Password</label>
+                    <input type="password" className="form-control form-control-lg" id="password" autoComplete="on"
+                           name="password" placeholder="Enter password" required/>
+                </div>
+                <div className="form-group mt-4">
+                    <button type="submit" className="btn btn-lg btn-primary btn-block">Log In</button>
+                </div>
+            </form>
+            <div id="sampleLogin">
+                <Link onClick={ handleSimpleCustomer } to="#">customer</Link>
+            </div>
+        </div>
+    );
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        loginUser: (user) => dispatch(loginUser(user)),
-        loginError: (isLoginFail) => dispatch(loginError(isLoginFail))
-    }
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+export default withRouter(Login);

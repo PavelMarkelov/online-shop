@@ -15,7 +15,7 @@ export const images = new Map([
 
 const initialState = {
     productsList: [],
-    productDescription: {},
+    productDetails: {},
     filter: null
 };
 
@@ -51,10 +51,10 @@ const productReducer = (state = initialState, action) => {
                     .map(item => Object.assign(item, { image: images.get(item.id) }))
             };
 
-        case actionType.PRODUCT_DESCRIPTION:
+        case actionType.PRODUCT_DETAILS:
             return {
                 ...state,
-                productDescription: Object.assign(action.payload, {
+                productDetails: Object.assign(action.payload, {
                         image : images.get(action.payload.id),
                         description: faker.lorem.paragraphs()
                     }
