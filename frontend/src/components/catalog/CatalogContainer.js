@@ -1,17 +1,18 @@
-import React, { useEffect, useCallback } from 'react';
+import React, {useCallback, useEffect} from 'react';
 import CategorySidebar from './CategorySidebar';
 import FilterSidebar from "./FilterSidebar";
 import {ProductItem} from "./ProductItem";
 import DataService from "../../service/DataService";
-import { categoriesListAction } from '../../actions/CategoriesActions';
+import {categoriesListAction} from '../../actions/CategoriesActions';
 import {
     disableFilterAction,
     enableFilterAction,
     productsFromCategoryAction,
     productsListAction,
 } from "../../actions/ProductActions";
-import { addItemsInUserCartAction } from "../../actions/CartActions";
-import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import {addItemsInUserCartAction} from "../../actions/CartActions";
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import { max, min } from 'lodash';
 
 
 const CatalogContainer = () => {
@@ -61,14 +62,11 @@ const CatalogContainer = () => {
     };
 
     useEffect(() => {
-        let time = performance.now();
         isCartIsLoaded ? loadDataWithoutCart() : loadDataWithCart();
-        time = performance.now() - time;
-        console.log('Время выполнения = ', time);
         return () => productsList([])
     }, [isCartIsLoaded]);
 
-    const _filterProducts = (products, { isInStock, minPrice, maxPrice}) => {
+    const filterProducts = (products, { isInStock, minPrice, maxPrice}) => {
         return products.filter(item => {
             if (isInStock && !item.count)
                 return false;
@@ -80,11 +78,16 @@ const CatalogContainer = () => {
         })
     };
 
+    const pricesArray = [];
     const filteredProducts = filters ?
-        _filterProducts(products, filters) : products;
-    const productsForRender = filteredProducts.map(item =>
-        <ProductItem key={ item.id } product={ item }/>
+        filterProducts(products, filters) : products;
+    const productsForRender = filteredProducts.map(item => {
+            pricesArray.push(item.price);
+            return <ProductItem key={ item.id } product={ item }/>;
+        }
     );
+    const minPrice = min(pricesArray);
+    const maxPrice = max(pricesArray);
 
     return (
         <div className="row">
@@ -92,7 +95,8 @@ const CatalogContainer = () => {
                 <CategorySidebar categoriesList={ categories }
                                  productsCategory={ productsCategory }/>
                 <FilterSidebar enableFilter={ enableFilter }
-                               disableFilter={ disableFilter }/>
+                               disableFilter={ disableFilter }
+                                minPrice={ minPrice } maxPrice={ maxPrice }/>
             </div>
             <div className="col-md-8">
                 <div className="row row-cols-1 row-cols-md-3 text-center">

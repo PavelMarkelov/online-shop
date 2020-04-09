@@ -6,10 +6,14 @@ import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import reducers from './reducers/index';
+import thunkMiddleware from 'redux-thunk';
 
-const store = createStore(reducers);
+const store = createStore(
+    reducers,
+    applyMiddleware(thunkMiddleware)
+);
 
 ReactDOM.render(
     <Provider store={store}>

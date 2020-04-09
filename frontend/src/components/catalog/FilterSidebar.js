@@ -46,14 +46,14 @@ const FilterSidebar = (props) => {
                     <div className="form-row">
                         <div className="col-5">
                             <input type="number" className="form-control form-control-sm price-range"
-                                   min="1" name="minPrice"/>
+                                   min="1" name="minPrice" defaultValue={ props.minPrice }/>
                         </div>
                         <div className="col text-center">
                             <p>{ decodedChar }</p>
                         </div>
                         <div className="col-5">
                             <input type="number" className="form-control form-control-sm price-range"
-                                   min="1" name="maxPrice"/>
+                                   min="1" name="maxPrice" defaultValue={ props.maxPrice }/>
                         </div>
                     </div>
                     <hr/>

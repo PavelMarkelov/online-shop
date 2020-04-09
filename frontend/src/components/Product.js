@@ -3,10 +3,15 @@ import DataService from "../service/DataService";
 import {productDetailsAction} from "../actions/ProductActions";
 import {useDispatch, useSelector} from 'react-redux';
 import {addItemsInUserCartAction} from "../actions/CartActions";
+import _ from 'lodash'
 
 const Product = (props) => {
 
-    const product = useSelector(state => state.productState.productDetails);
+    const { product, productsList } = useSelector(state => ({
+            product: state.productState.productDetails,
+            productsList: state.productState.productsList
+        })
+    );
 
     const dispatch = useDispatch();
     const { productDetails, addItemsInUserCart } = {
@@ -15,12 +20,16 @@ const Product = (props) => {
     };
 
     useEffect(() => {
-        (async () =>{
-            const request = await DataService.productRequest(props.match.params.id);
-            const product = await request.json();
-            productDetails(product);
-        })();
-        return (() => productDetails({}))
+
+        // (async () =>{
+        //     const request = await DataService.productRequest(props.match.params.id);
+        //     const product = await request.json();
+        //     productDetails(product);
+        // })();
+        const id = +props.match.params.id;
+        const product = _.find(productsList, { id });
+        productDetails(product);
+        // return (() => productDetails({}))
     }, [props.match.params.id]);
 
     async function handleSubmit(event) {
@@ -58,7 +67,7 @@ const Product = (props) => {
 
                         <div className="col-5">
                             <input className="form-control form-control-sm count-for-cart" type="number"
-                                   name="count" min="1"/>
+                                   name="count" min="1" defaultValue="1"/>
                         </div>
                         <div className="col-7">
                             <button style={ {width: "80%"} } type="submit"

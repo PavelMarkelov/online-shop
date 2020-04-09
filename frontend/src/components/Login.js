@@ -1,22 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUserAction } from '../actions/AccountActions';
-import DataService from '../service/DataService';
-import { withRouter } from 'react-router-dom';
-import { loginErrorAction } from "../actions/ErrorActions";
+import {Link, withRouter} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {fetchLoginUser} from "../actions/AccountActions";
+import {PopUp} from "./templates/pop-up/PopUp";
 
 const Login = (props) => {
 
     const simpleCustomer = {login: 'q', password: 'sddsvwe34s'};
 
-    const isLoginFail = useSelector(state => state.errorState.isLoginFail);
-
     const dispatch = useDispatch();
-    const { loginError, loginUser } = {
-        loginError: (isLoginFalse) => dispatch(loginErrorAction(isLoginFalse)),
-        loginUser: user => dispatch(loginUserAction(user))
-    };
+    const loginUser = credentials => dispatch(fetchLoginUser(credentials));
 
     function handleSimpleCustomer(event) {
         event.preventDefault();
@@ -30,24 +23,13 @@ const Login = (props) => {
         const loginForm = document.forms["login-form"];
         const login = loginForm.elements["login"].value;
         const password = loginForm.elements["password"].value;
-        const response = await DataService.loginRequest({login, password});
-        if (response.status === 401) {
-            loginError(true);
-            return false;
-        }
-        loginError(false);
-        const user = await response.json();
-        loginUser(user);
+        loginUser({ login, password });
         props.history.push('/catalog');
     }
 
-    const styleForVisibility = isLoginFail ? {visibility: 'visible'} : { visibility: 'hidden'};
     return (
         <div className="login-container">
-            <div id="warning" className="alert alert-danger text-center py-1 mb-2" role="alert"
-                 style={ styleForVisibility }>
-                Invalid login or password!
-            </div>
+            <PopUp/>
             <form name="login-form" onSubmit={ handleSubmit } >
                 <div className="form-group">
                     <label>Login</label>

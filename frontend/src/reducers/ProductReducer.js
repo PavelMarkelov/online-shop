@@ -55,7 +55,7 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 productDetails: Object.assign(action.payload, {
-                        image : images.get(action.payload.id),
+                        // image : images.get(action.payload.id),
                         description: faker.lorem.paragraphs()
                     }
                 )
