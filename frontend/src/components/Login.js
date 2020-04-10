@@ -1,14 +1,16 @@
 import React from "react";
 import {Link, withRouter} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {fetchLoginUser} from "../actions/AccountActions";
-import {PopUp} from "./templates/pop-up/PopUp";
+import {loginUserAction, fetchLoginUser} from "../actions/AccountActions";
+import DataService from "../service/DataService";
+import {addPopUpMessageAction, toggleVisibilityAction} from "../actions/PopUpActions";
 
 const Login = (props) => {
 
     const simpleCustomer = {login: 'q', password: 'sddsvwe34s'};
 
     const dispatch = useDispatch();
+    // const loginUser = credentials => dispatch(loginUserAction(credentials));
     const loginUser = credentials => dispatch(fetchLoginUser(credentials));
 
     function handleSimpleCustomer(event) {
@@ -24,12 +26,13 @@ const Login = (props) => {
         const login = loginForm.elements["login"].value;
         const password = loginForm.elements["password"].value;
         loginUser({ login, password });
-        props.history.push('/catalog');
+        // const response = await DataService.loginRequest({ login, password });
+        // const user = await response.json();
+        // loginUser( user);
     }
 
     return (
         <div className="login-container">
-            <PopUp/>
             <form name="login-form" onSubmit={ handleSubmit } >
                 <div className="form-group">
                     <label>Login</label>

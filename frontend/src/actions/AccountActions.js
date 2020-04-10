@@ -1,6 +1,7 @@
 import * as actionType from './ActionsType';
 import DataService from "../service/DataService";
-import { toggleVisibility, addPopUpMessage } from './PopUpActions';
+import { toggleVisibilityAction, addPopUpMessageAction } from './PopUpActions';
+
 
 export const loginUserAction = (user) => {
     return {
@@ -23,20 +24,21 @@ export const userAccountAction = (account) => {
     }
 };
 
-export const fetchLoginUser = credentials => {
+export const fetchLoginUser = (credentials, callback) => {
     return async dispatch => {
         try {
             const response = await DataService.loginRequest(credentials);
             if (response.status === 401) {
-                dispatch(addPopUpMessage('Invalid login or password!'));
-                dispatch(toggleVisibility(true));
+                dispatch(addPopUpMessageAction('Invalid login or password!'));
+                dispatch(toggleVisibilityAction(true));
                 return
             }
             const user = await response.json();
-            dispatch(loginUserAction(user))
+            dispatch(loginUserAction(user));
+//            Нужно как-то переадресовать
+//           history.push('/catalog')
         } catch (err) {
-            dispatch(addPopUpMessage(''));
-            dispatch(toggleVisibility(true));
+            dispatch(toggleVisibilityAction(true));
         }
     }
 };

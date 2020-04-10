@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import './components/templates/navbar/NavbarContainer'
 import NavbarContainer from "./components/templates/navbar/NavbarContainer";
 import Footer from "./components/templates/Footer";
 import Login from './components/Login';
@@ -10,26 +9,30 @@ import BreadCrumbs from "./components/templates/BreadCrumbs";
 import CatalogContainer from './components/catalog/CatalogContainer';
 import Product from "./components/Product";
 import CartContainer from "./components/cart/CartContainer";
+import PopUp from "./components/templates/pop-up/PopUp";
+import {useSelector} from "react-redux";
 
-class App extends Component {
-    render() {
-        return (
-            <BrowserRouter>
-                <div className="flex-fill">
-                    <NavbarContainer/>
-                    <BreadCrumbs/>
-                    <Switch>
-                        <Route exact path="/" component={ Login }/>
-                        <PrivateRoute exact path="/account" component={ Account }/>
-                        <PrivateRoute exact path="/catalog" component={ CatalogContainer }/>
-                        <PrivateRoute path="/catalog/:id" component={ Product }/>
-                        <PrivateRoute path="/account/cart" component={ CartContainer }/>
-                    </Switch>
-                    <Footer/>
-                </div>
-            </BrowserRouter>
-        );
-    }
-}
+
+const App = () => {
+    const isAuthenticated = useSelector(state => state.userState.isAuthenticated);
+    console.log(isAuthenticated + 'from')
+    return (
+        <BrowserRouter>
+            <div className="flex-fill">
+                <NavbarContainer/>
+                <BreadCrumbs/>
+                <PopUp/>
+                <Switch>
+                    <Route exact path="/" component={ Login }/>
+                    <PrivateRoute exact path="/account" component={ Account }/>
+                    <PrivateRoute exact path="/catalog" component={ CatalogContainer }/>
+                    <PrivateRoute path="/catalog/:id" component={ Product }/>
+                    <PrivateRoute path="/account/cart" component={ CartContainer }/>
+                </Switch>
+                <Footer/>
+            </div>
+        </BrowserRouter>
+    );
+};
 
 export default App;

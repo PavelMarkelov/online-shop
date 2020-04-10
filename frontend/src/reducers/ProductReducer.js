@@ -8,7 +8,7 @@ export const images = new Map([
     [27, 'http://www.shx.ru/info/obektiv-Nikon-24-70-mm-f-2-8-E-VR-Nikkor-AF-S-4.jpg'],
     [22, 'https://main-cdn.goods.ru/big1/hlr-system/1748262/100000009691b0.jpg'],
     [30, 'https://www.gfxtra31.com/uploads/posts/2017-10/1507902280_2.jpg'],
-    [24, 'https://img.moyo.ua/img/gallery/1653/80/303729_main.jpg?1498828241'],
+    [24, 'https://f00.osfr.pl/foto/1/36523758345/cb3703d89624f04182365d6f7152b1b5/sony-aparat-ilce-7-mark-iii-body,36523758345_7.jpg'],
     [26, 'https://skidka-ekb.ru/images/prodacts/sourse/61433/61433000_obyektiv-tamron-sp-af-70-300mm-f-4-0-5-6-di-vc-usd-dlya-canon-ef-a005e-a005-a005e.jpg'],
     [29, 'https://toloka.to/photos/141007202218493983_f0_0.jpg']
 ]);
