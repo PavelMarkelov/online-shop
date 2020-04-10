@@ -2,7 +2,6 @@ import * as actionType from './ActionsType';
 import DataService from "../service/DataService";
 import { toggleVisibilityAction, addPopUpMessageAction } from './PopUpActions';
 
-
 export const loginUserAction = (user) => {
     return {
         type: actionType.LOGIN_USER,
@@ -24,8 +23,16 @@ export const userAccountAction = (account) => {
     }
 };
 
-export const fetchLoginUser = (credentials, callback) => {
+export const submitCredentials = credentials => {
+    return {
+        type: actionType.SUBMIT_CREDENTIALS,
+        payload: credentials
+    }
+};
+
+export const fetchLoginUser = credentials => {
     return async dispatch => {
+        dispatch(submitCredentials(credentials));
         try {
             const response = await DataService.loginRequest(credentials);
             if (response.status === 401) {
@@ -35,9 +42,8 @@ export const fetchLoginUser = (credentials, callback) => {
             }
             const user = await response.json();
             dispatch(loginUserAction(user));
-//            Нужно как-то переадресовать
-//           history.push('/catalog')
         } catch (err) {
+            dispatch(addPopUpMessageAction());
             dispatch(toggleVisibilityAction(true));
         }
     }

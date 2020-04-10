@@ -3,7 +3,9 @@ import * as actionType from '../actions/ActionsType';
 
 const initialState = {
     isAuthenticated: false,
-    user: {}
+    user: {},
+    login: '',
+    password: ''
 };
 
 const userReducer = (state = initialState, action) => {
@@ -25,6 +27,13 @@ const userReducer = (state = initialState, action) => {
             return {
                 isAuthenticated: true,
                 user: action.payload
+            };
+
+        case actionType.SUBMIT_CREDENTIALS:
+            return {
+                ...state,
+                login: action.payload.login,
+                password: action.payload.password
             };
 
         default:

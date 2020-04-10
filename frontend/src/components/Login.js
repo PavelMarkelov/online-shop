@@ -1,17 +1,19 @@
 import React from "react";
 import {Link, withRouter} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {loginUserAction, fetchLoginUser} from "../actions/AccountActions";
-import DataService from "../service/DataService";
-import {addPopUpMessageAction, toggleVisibilityAction} from "../actions/PopUpActions";
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import {fetchLoginUser} from "../actions/AccountActions";
 
 const Login = (props) => {
 
     const simpleCustomer = {login: 'q', password: 'sddsvwe34s'};
 
+    const { login, password } = useSelector(state => ({
+        login: state.userState.login,
+        password: state.userState.password
+    }), shallowEqual);
+
     const dispatch = useDispatch();
-    // const loginUser = credentials => dispatch(loginUserAction(credentials));
-    const loginUser = credentials => dispatch(fetchLoginUser(credentials));
+    const loginUser = async credentials => dispatch(fetchLoginUser(credentials));
 
     function handleSimpleCustomer(event) {
         event.preventDefault();
@@ -25,10 +27,8 @@ const Login = (props) => {
         const loginForm = document.forms["login-form"];
         const login = loginForm.elements["login"].value;
         const password = loginForm.elements["password"].value;
-        loginUser({ login, password });
-        // const response = await DataService.loginRequest({ login, password });
-        // const user = await response.json();
-        // loginUser( user);
+        await loginUser({ login, password });
+        props.history.push('/catalog')
     }
 
     return (
@@ -36,13 +36,13 @@ const Login = (props) => {
             <form name="login-form" onSubmit={ handleSubmit } >
                 <div className="form-group">
                     <label>Login</label>
-                    <input type="text" className="form-control form-control-lg" id="login" placeholder="Enter login"
-                           name="login" autoComplete="on" required autoFocus/>
+                    <input type="text" className="form-control form-control-lg"  placeholder="Enter login"
+                           name="login" autoComplete="on" required autoFocus defaultValue={ login }/>
                 </div>
                 <div className="form-group">
                     <label>Password</label>
-                    <input type="password" className="form-control form-control-lg" id="password" autoComplete="on"
-                           name="password" placeholder="Enter password" required/>
+                    <input type="password" className="form-control form-control-lg"  autoComplete="on"
+                           name="password" placeholder="Enter password" required defaultValue={ password }/>
                 </div>
                 <div className="form-group mt-4">
                     <button type="submit" className="btn btn-lg btn-primary btn-block">Log In</button>

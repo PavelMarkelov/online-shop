@@ -10,12 +10,9 @@ import CatalogContainer from './components/catalog/CatalogContainer';
 import Product from "./components/Product";
 import CartContainer from "./components/cart/CartContainer";
 import PopUp from "./components/templates/pop-up/PopUp";
-import {useSelector} from "react-redux";
 
 
 const App = () => {
-    const isAuthenticated = useSelector(state => state.userState.isAuthenticated);
-    console.log(isAuthenticated + 'from')
     return (
         <BrowserRouter>
             <div className="flex-fill">
