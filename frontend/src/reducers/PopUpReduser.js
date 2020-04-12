@@ -2,7 +2,8 @@ import * as actionsType from '../actions/ActionsType'
 
 const initialState = {
     isVisible: false,
-    message: null
+    messageForFail: '',
+    messageForSuccess: ''
 };
 
 const popUpReducer = (state = initialState, action) => {
@@ -12,11 +13,21 @@ const popUpReducer = (state = initialState, action) => {
                 ...state,
                 isVisible: action.payload
             };
-        case actionsType.ADD_POP_UP_MESSAGE:
+
+        case actionsType.ADD_POP_UP_MESSAGE_FOR_FAIL:
             return {
                 ...state,
-                message: action.payload
+                messageForFail: action.payload,
+                messageForSuccess: ''
             };
+
+        case actionsType.ADD_POP_UP_MESSAGE_FOR_SUCCESS:
+            return {
+                ...state,
+                messageForSuccess: action.payload,
+                messageForFail: ''
+            };
+
         default:
             return state
     }

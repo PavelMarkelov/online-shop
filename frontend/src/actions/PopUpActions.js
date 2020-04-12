@@ -7,9 +7,16 @@ export const toggleVisibilityAction = isVisible => {
     }
 };
 
-export const addPopUpMessageAction = message => {
+export const addPopUpMessageForFailAction = message => {
     return {
-        type: actionsType.ADD_POP_UP_MESSAGE,
+        type: actionsType.ADD_POP_UP_MESSAGE_FOR_FAIL,
+        payload: message
+    }
+};
+
+export const addPopUpMessageForSuccessAction = message => {
+    return {
+        type: actionsType.ADD_POP_UP_MESSAGE_FOR_SUCCESS,
         payload: message
     }
 };

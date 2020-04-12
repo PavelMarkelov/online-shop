@@ -1,42 +1,48 @@
 import React, {useCallback} from 'react';
-import DataService from "../../service/DataService";
-import {addItemsInUserCartAction, removeCartItemAction,} from "../../actions/CartActions";
-import {useDispatch, useSelector} from 'react-redux';
-import CartItem from './CartItem'
-
+import {fetchChangeQuantity, fetchRemoveItem, fetchUserCart,} from "../../actions/CartActions";
+import {useDispatch, useSelector, shallowEqual} from 'react-redux';
+import CartItem from './CartItem';
+import _ from 'lodash';
 
 const CartContainer = () => {
 
-    const cart = useSelector(state => state.cartState.cart);
+    const { editingCart, cachedCart } = useSelector(state => ({
+        editingCart: state.cartState.editingCart,
+        cachedCart: state.cartState.cachedCart
+    }), shallowEqual);
 
     const dispatch = useDispatch();
-    const { addItemsInUserCart, removeCartItem } = {
-        addItemsInUserCart: useCallback(cart => dispatch(addItemsInUserCartAction(cart)), [dispatch]),
-        removeCartItem: useCallback(productId => dispatch(removeCartItemAction(productId)), [dispatch])
+    const { removeItem, checkoutCart, changeQuantity } = {
+        removeItem: (id, editingCart, cachedCart) => dispatch(fetchRemoveItem(id, editingCart, cachedCart)),
+        checkoutCart: async cart => dispatch(fetchUserCart(cart)),
+        changeQuantity: useCallback(async product => dispatch(fetchChangeQuantity(product)),[dispatch])
     };
-    
+
     async function handleCheckout() {
-        const cartWithoutImages = cart
+        const cartWithoutImages = editingCart
             .map(value => {
                 const newValue = {...value};
                 delete newValue.image;
                 return newValue;
             });
-        const response = await DataService.buyCartRequest(cartWithoutImages);
-        const remainingCart = await response.json();
-        addItemsInUserCart(remainingCart.remaining);
+        await checkoutCart(cartWithoutImages);
     }
+    
+    const handleRemove = useCallback(id => {
+        const cartAfterRemoveItem = _.reject(editingCart, { id });
+        removeItem(id, cartAfterRemoveItem, cachedCart);
+    }, [cachedCart, editingCart]);
 
-    let totalSum = cart
+    let totalSum = editingCart
         .map(value => value.count * value.price)
         .reduce((previousValue, currentValue) => previousValue + currentValue, 0);
     totalSum = (totalSum)
         .toLocaleString("en-US",{useGrouping:true});
 
-    const productsInCart = cart
+    const productsInCart = editingCart
         .map(value => <CartItem key={ value.id } product={ value }
-                                remove={ removeCartItem }
-                                addItemsInUserCart={ addItemsInUserCart }/>);
+                                onChangeQuantity={ changeQuantity }
+                                onRemoveItem={ handleRemove }/>);
 
     return (
 

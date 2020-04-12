@@ -1,6 +1,7 @@
 import * as actionType from './ActionsType';
 import DataService from "../service/DataService";
-import { toggleVisibilityAction, addPopUpMessageAction } from './PopUpActions';
+import { toggleVisibilityAction, addPopUpMessageForFailAction } from './PopUpActions';
+import * as messages from '../components/templates/pop-up/pop-up-messages';
 
 export const loginUserAction = (user) => {
     return {
@@ -36,14 +37,14 @@ export const fetchLoginUser = credentials => {
         try {
             const response = await DataService.loginRequest(credentials);
             if (response.status === 401) {
-                dispatch(addPopUpMessageAction('Invalid login or password!'));
+                dispatch(addPopUpMessageForFailAction(messages.LOGIN_FAIL));
                 dispatch(toggleVisibilityAction(true));
                 return
             }
             const user = await response.json();
             dispatch(loginUserAction(user));
         } catch (err) {
-            dispatch(addPopUpMessageAction());
+            dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
             dispatch(toggleVisibilityAction(true));
         }
     }

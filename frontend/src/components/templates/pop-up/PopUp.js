@@ -5,9 +5,10 @@ import { toggleVisibilityAction } from "../../../actions/PopUpActions";
 
 const PopUp = () => {
 
-    const { isVisible, message } = useSelector(state => ({
+    const { isVisible, failMessage, successMessage } = useSelector(state => ({
         isVisible: state.popUpState.isVisible,
-        message: state.popUpState.message
+        failMessage: state.popUpState.messageForFail,
+        successMessage: state.popUpState.messageForSuccess
     }), shallowEqual);
 
     const dispatch = useDispatch();
@@ -21,14 +22,21 @@ const PopUp = () => {
     };
 
     return (
-        <div className="overlay" style={ {display: isVisible ? 'block' : 'none'} }
-             onClick={ handleClosePopUp }>
+        <div className={ isVisible ? 'overlay pop-up-visible' : 'overlay'} onClick={ handleClosePopUp }>
             <div className="block-popup">
-                <div id="warning" className="alert alert-danger text-center" role="alert">
-                    { message || 'Oops! Network error...' }
-                </div>
-                <button style={ {width: '30%'} } type="button"
-                        className="mt-2 btn btn-primary btn-sm btn-success">Close
+                {
+                    failMessage ?
+                        <div className="alert alert-danger text-center" role="alert">
+                            { failMessage }
+                        </div>
+                        :
+                        <div className="alert alert-success" role="alert">
+                            { successMessage }
+                        </div>
+                }
+
+                <button type="button" className="mt-2 btn btn-primary btn-sm btn-success w-25">
+                    Close
                 </button>
             </div>
         </div>

@@ -2,17 +2,15 @@ import React, {useCallback, useEffect} from 'react';
 import CategorySidebar from './CategorySidebar';
 import FilterSidebar from "./FilterSidebar";
 import {ProductItem} from "./ProductItem";
-import DataService from "../../service/DataService";
-import {categoriesListAction} from '../../actions/CategoriesActions';
 import {
     disableFilterAction,
     enableFilterAction,
     productsFromCategoryAction,
     productsListAction,
 } from "../../actions/ProductActions";
-import {addItemsInUserCartAction} from "../../actions/CartActions";
+import { loadDataAction } from "../../actions/CatalogActions";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
-import { max, min } from 'lodash';
+import {max, min} from 'lodash';
 
 
 const CatalogContainer = () => {
@@ -25,46 +23,22 @@ const CatalogContainer = () => {
     }), shallowEqual);
 
     const dispatch = useDispatch();
-    const { categoriesList, productsList, productsCategory, enableFilter, disableFilter, addItemsInUserCart } = {
-        categoriesList: categories => dispatch(categoriesListAction(categories)),
+    const { loadData, productsList, productsCategory, enableFilter, disableFilter } = {
+        loadData: async isCartIsLoaded => dispatch(loadDataAction(isCartIsLoaded)),
         productsList: products => dispatch(productsListAction(products)),
-        addItemsInUserCart: cart => dispatch(addItemsInUserCartAction(cart)),
         productsCategory: useCallback(products =>
             dispatch(productsFromCategoryAction(products)), [dispatch]),
         enableFilter: useCallback(filter =>
             dispatch(enableFilterAction(filter)), [dispatch]),
         disableFilter: useCallback(products =>
-            dispatch(disableFilterAction(products)), [dispatch])
-    };
-
-    const loadDataWithCart = async () => {
-        document.documentElement.scrollIntoView();
-        const responses = await Promise.all([
-            DataService.productsListRequest(),
-            DataService.categoriesListRequest(),
-            DataService.cartRequest()
-        ]);
-        const data = await Promise.all(responses.map(response => response.json()));
-        productsList(data[0]);
-        categoriesList(data[1]);
-        addItemsInUserCart(data[2])
-    };
-
-    const loadDataWithoutCart = async () => {
-        document.documentElement.scrollIntoView();
-        const responses = await Promise.all([
-            DataService.productsListRequest(),
-            DataService.categoriesListRequest(),
-        ]);
-        const data = await Promise.all(responses.map(response => response.json()));
-        productsList(data[0]);
-        categoriesList(data[1]);
+            dispatch(disableFilterAction(products)), [dispatch]),
     };
 
     useEffect(() => {
-        isCartIsLoaded ? loadDataWithoutCart() : loadDataWithCart();
+        document.documentElement.scrollIntoView();
+        loadData(isCartIsLoaded);
         return () => productsList([])
-    }, [isCartIsLoaded]);
+    }, []);
 
     const filterProducts = (products, { isInStock, minPrice, maxPrice}) => {
         return products.filter(item => {

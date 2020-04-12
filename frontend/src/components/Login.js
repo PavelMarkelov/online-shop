@@ -1,11 +1,13 @@
 import React from "react";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useHistory } from "react-router-dom";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {fetchLoginUser} from "../actions/AccountActions";
 
-const Login = (props) => {
+const Login = () => {
 
     const simpleCustomer = {login: 'q', password: 'sddsvwe34s'};
+
+    const history = useHistory();
 
     const { login, password } = useSelector(state => ({
         login: state.userState.login,
@@ -28,7 +30,7 @@ const Login = (props) => {
         const login = loginForm.elements["login"].value;
         const password = loginForm.elements["password"].value;
         await loginUser({ login, password });
-        props.history.push('/catalog')
+        history.push('/catalog')
     }
 
     return (
@@ -55,4 +57,4 @@ const Login = (props) => {
     );
 };
 
-export default withRouter(Login);
+export default Login;

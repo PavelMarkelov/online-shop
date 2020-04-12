@@ -1,23 +1,19 @@
 import React from "react";
-import DataService from "../../service/DataService";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import trash from '../../images/icons/trash.svg';
-import { debounce } from 'lodash';
+import {debounce} from 'lodash';
 
 const CartItem = props => {
 
     function handleRemove(event) {
         event.preventDefault();
-        DataService.removeCartItemRequest(props.product.id);
-        props.remove(props.product.id);
+        props.onRemoveItem(props.product.id)
     }
 
     async function handleChangeQuantity(count) {
         const product = { ...props.product, count };
         delete product.image;
-        const response = await DataService.changeCartItemQuantity(product);
-        const cart = await response.json();
-        props.addItemsInUserCart(cart);
+        props.onChangeQuantity(product);
     }
 
     const debouncedUpdate = debounce(count => handleChangeQuantity(count), 500);

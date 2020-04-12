@@ -51,7 +51,7 @@ class AuthorizedNavbar extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        count: state.cartState.cart.length,
+        count: state.cartState.editingCart.length,
         userFirstName: state.userState.user.firstName
     }
 };
