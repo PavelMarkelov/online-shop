@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-const BreadCrumbs = (props) => {
+export const BreadCrumbs = (props) => {
     const product = props.product.name || ' ';
     let linksArr = props.location.pathname.split('/').slice(1);
     const lastIndex = linksArr.length - 1;
@@ -15,17 +15,18 @@ const BreadCrumbs = (props) => {
             value = value[0].toUpperCase() + value.slice(1);
             if (index !== lastIndex)
                 return (
-                    <li key={value} className="breadcrumb-item">
+                    <li key={value} className="breadcrumb-item" data-testid={ 'li-'+value }>
                         <Link to={addressLink}>{value}</Link>
                     </li>
                 );
             return (
-                <li key={value} className="breadcrumb-item active">
+                <li key={value} className="breadcrumb-item active" data-testid={ 'li-'+value }>
                     {value}
                 </li>
             );
         }
-        return <li key='login' className="breadcrumb-item active">Log in</li>;
+        return <li key='login' className="breadcrumb-item active"
+                   data-testid='li-login'>Log in</li>;
     });
     return (
         <nav aria-label="breadcrumb">
