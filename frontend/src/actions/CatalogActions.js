@@ -8,7 +8,6 @@ import { addItemsInCartAction } from "./CartActions";
 
 const loadDataWithCart = () => {
     return async dispatch => {
-        debugger
         try {
             const responses = await Promise.all([
                 DataService.productsListRequest(),
@@ -34,7 +33,6 @@ const loadDataWithCart = () => {
 const loadDataWithoutCart = () => {
     return async dispatch => {
         try {
-            debugger
             const responses = await Promise.all([
                 DataService.productsListRequest(),
                 DataService.categoriesListRequest(),

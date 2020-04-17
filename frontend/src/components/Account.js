@@ -158,10 +158,10 @@ const Account = props => {
                 <div className="form-group mt-4 row">
                     <div className="col-6">
                         <button type="submit"
-                                className="btn btn-lg btn-primary btn-block">Save</button>
+                                className="btn btn-lg btn-success btn-block">Save</button>
                     </div>
                     <div className="col-6">
-                        <Link className="w-100 btn btn-lg btn-primary btn-warning" to="/catalog" role="button">Cancel</Link>
+                        <Link className="w-100 btn btn-lg btn-primary" to="/catalog" role="button">Cancel</Link>
                     </div>
                 </div>
             </form>

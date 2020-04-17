@@ -8,9 +8,10 @@ import {
     productsFromCategoryAction,
     productsListAction,
 } from "../../actions/ProductActions";
-import { loadDataAction } from "../../actions/CatalogActions";
+import {loadDataAction} from "../../actions/CatalogActions";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {max, min} from 'lodash';
+import {animated, useTransition} from "react-spring";
 
 
 const CatalogContainer = () => {
@@ -55,11 +56,23 @@ const CatalogContainer = () => {
     const pricesArray = [];
     const filteredProducts = filters ?
         filterProducts(products, filters) : products;
-    const productsForRender = filteredProducts.map(item => {
+
+    const transitions = useTransition(filteredProducts, item => item.id, {
+        from: { opacity: 0, transition: 'all 0.2s ease', visibility: 'hidden' },
+        enter: { opacity: 1, transition: 'all 0.2s ease', visibility: 'visible' },
+        leave: { opacity: 0,  transition: 'all 0.2s ease', visibility: 'hidden' },
+    })
+
+    const productsForRender = transitions.map(({ item, key, props }) => {
             pricesArray.push(item.price);
-            return <ProductItem key={ item.id } product={ item }/>;
+            return (
+                <animated.div key={key} style={props}>
+                    <ProductItem key={ item.id } product={ item }/>
+                </animated.div>
+            );
         }
     );
+
     const minPrice = min(pricesArray);
     const maxPrice = max(pricesArray);
 

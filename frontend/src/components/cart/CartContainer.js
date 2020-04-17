@@ -1,8 +1,9 @@
 import React, {useCallback} from 'react';
 import {fetchChangeQuantity, fetchRemoveItem, fetchUserCart,} from "../../actions/CartActions";
-import {useDispatch, useSelector, shallowEqual} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import CartItem from './CartItem';
 import _ from 'lodash';
+import {animated, useTransition} from "react-spring";
 
 const CartContainer = () => {
 
@@ -27,7 +28,7 @@ const CartContainer = () => {
             });
         await checkoutCart(cartWithoutImages);
     }
-    
+
     const handleRemove = useCallback(id => {
         const cartAfterRemoveItem = _.reject(editingCart, { id });
         removeItem(id, cartAfterRemoveItem, cachedCart);
@@ -39,10 +40,20 @@ const CartContainer = () => {
     totalSum = (totalSum)
         .toLocaleString("en-US",{useGrouping:true});
 
-    const productsInCart = editingCart
-        .map(value => <CartItem key={ value.id } product={ value }
-                                onChangeQuantity={ changeQuantity }
-                                onRemoveItem={ handleRemove }/>);
+    const transitions = useTransition(editingCart, item => item.id, {
+        from: { opacity: 0, transition: 'all 0.3s ease', visibility: 'hidden' },
+        enter: { opacity: 1, transition: 'all 0.3s ease', visibility: 'visible' },
+        leave: { opacity: 0,  transition: 'all 0.3s ease', visibility: 'hidden' },
+    })
+
+    const productsInCart = transitions
+        .map(({ item, key, props }) =>
+            <animated.div key={key} style={props}>
+                <CartItem product={ item }
+                          onChangeQuantity={ changeQuantity }
+                          onRemoveItem={ handleRemove }/>
+            </animated.div>
+        );
 
     return (
 
@@ -55,13 +66,11 @@ const CartContainer = () => {
                         <h5>Total: <strong className="text-success">${ totalSum }</strong></h5>
                     </div>
                     <div className="col-sm-4 pr-4">
-                        <button onClick={ handleCheckout } type="button" className="mr-5 btn btn-warning float-right">Checkout</button>
+                        <button onClick={ handleCheckout } type="button" className="mr-5 btn btn-success float-right">Checkout</button>
                     </div>
                 </div>
             </div>
-
             :
-
             <div className="empty-cart">
                 <h4 className="text-muted">Your shopping cart is empty</h4>
             </div>
