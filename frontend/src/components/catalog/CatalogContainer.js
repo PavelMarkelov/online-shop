@@ -6,12 +6,12 @@ import {
     disableFilterAction,
     enableFilterAction,
     productsFromCategoryAction,
-    productsListAction,
+    productsListAction
 } from "../../actions/ProductActions";
 import {loadDataAction} from "../../actions/CatalogActions";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {max, min} from 'lodash';
-import {animated, useTransition} from "react-spring";
+import {animated, useSpring} from "react-spring";
 
 
 const CatalogContainer = () => {
@@ -32,8 +32,13 @@ const CatalogContainer = () => {
         enableFilter: useCallback(filter =>
             dispatch(enableFilterAction(filter)), [dispatch]),
         disableFilter: useCallback(products =>
-            dispatch(disableFilterAction(products)), [dispatch]),
+            dispatch(disableFilterAction(products)), [dispatch])
     };
+
+    const props = useSpring({
+        from: { opacity: 0, transition: 'all 0.5s ease', visibility: 'hidden' },
+        to: { opacity: 1, transition: 'all 0.5s ease', visibility: 'visible' }
+    });
 
     useEffect(() => {
         document.documentElement.scrollIntoView();
@@ -57,18 +62,10 @@ const CatalogContainer = () => {
     const filteredProducts = filters ?
         filterProducts(products, filters) : products;
 
-    const transitions = useTransition(filteredProducts, item => item.id, {
-        from: { opacity: 0, transition: 'all 0.2s ease', visibility: 'hidden' },
-        enter: { opacity: 1, transition: 'all 0.2s ease', visibility: 'visible' },
-        leave: { opacity: 0,  transition: 'all 0.2s ease', visibility: 'hidden' },
-    })
-
-    const productsForRender = transitions.map(({ item, key, props }) => {
+    const productsForRender = filteredProducts.map(item => {
             pricesArray.push(item.price);
             return (
-                <animated.div key={key} style={props}>
-                    <ProductItem key={ item.id } product={ item }/>
-                </animated.div>
+                <ProductItem key={ item.id } product={ item }/>
             );
         }
     );
@@ -83,12 +80,14 @@ const CatalogContainer = () => {
                                  productsCategory={ productsCategory }/>
                 <FilterSidebar enableFilter={ enableFilter }
                                disableFilter={ disableFilter }
-                                minPrice={ minPrice } maxPrice={ maxPrice }/>
+                               minPrice={ minPrice } maxPrice={ maxPrice }/>
             </div>
             <div className="col-md-8">
-                <div className="row row-cols-1 row-cols-md-3 text-center">
-                    { productsForRender }
-                </div>
+                <animated.div style={props}>
+                    <div className="row row-cols-1 row-cols-md-3 text-center">
+                        { productsForRender }
+                    </div>
+                </animated.div>
             </div>
         </div>
     )

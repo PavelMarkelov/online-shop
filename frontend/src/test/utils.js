@@ -26,13 +26,21 @@ export function renderWithRouter(
     }
 }
 
-export const getWrapper = (Component, preloadedState) => {
+export const getWrapper = (
+    Component, preloadedState,
+    {
+        route = '/',
+        history = createMemoryHistory({ initialEntries: [route] }),
+    } = {}
+) => {
     const mockStore = createStore(reducers, preloadedState)
     if (preloadedState)
         mockStore.dispatch = jest.fn();
     return mount(
         <Provider store={mockStore}>
-            <Component/>
+            <Router history={history}>
+                <Component/>
+            </Router>
         </Provider>
     )
 }

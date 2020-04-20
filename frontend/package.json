@@ -7,6 +7,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.4.1",
+    "core-js": "^3.6.5",
     "faker": "^4.1.0",
     "history": "^4.10.1",
     "jquery": "^3.4.1",
@@ -20,7 +21,8 @@
     "react-spring": "^8.0.27",
     "redux": "^4.0.5",
     "redux-api-middleware": "^3.2.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "regenerator-runtime": "^0.13.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -44,7 +46,17 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.2",
     "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.2"
+    "enzyme-adapter-react-16": "^1.15.2",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.2.0",
+    "json-loader": "^0.5.7",
+    "style-loader": "^1.1.4",
+    "svg-inline-loader": "^0.8.2"
   }
 }
