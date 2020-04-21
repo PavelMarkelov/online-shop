@@ -63,7 +63,7 @@ const CartContainer = () => {
                 { productsInCart }
                 <div className="row mt-4">
                     <div className="col-sm-3">
-                        <h5>Total: <strong className="text-success">${ totalSum }</strong></h5>
+                        <h5>Total: <strong className="text-success" data-test="total-sum">${ totalSum }</strong></h5>
                     </div>
                     <div className="col-sm-4 pr-4">
                         <button onClick={ handleCheckout } type="button" className="mr-5 btn btn-success float-right">Checkout</button>
@@ -72,7 +72,7 @@ const CartContainer = () => {
             </div>
             :
             <div className="empty-cart">
-                <h4 className="text-muted">Your shopping cart is empty</h4>
+                <h4 className="text-muted" data-test="empty-cart">Your shopping cart is empty</h4>
             </div>
     )
 };

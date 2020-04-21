@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import DataService from '../../service/DataService'
 
 
@@ -19,20 +18,21 @@ const CategorySidebar = (props) => {
     const categoriesForRender = props.categoriesList.map(value => {
         if (!value.parentId) {
             const parentCategory =
-                <Link to="#" onClick={ (event) => handleProductsCategory(value.id, event) }
-                      className="card-link">{ value.name }</Link>;
+                <button onClick={ (event) => handleProductsCategory(value.id, event) } type="button"
+                        className="btn btn-link p-0" data-test="parent-item">{ value.name }</button>;
 
             const childrenCategories = props.categoriesList
                 .filter(children => value.id === children.parentId)
                 .map(value =>
-                    <li key={ value.id }>
-                        <Link to="#" onClick={ (event) => handleProductsCategory(value.id, event) }
-                              className="card-link">{value.name}</Link>
+                    <li key={ value.id } data-test="children">
+                        <button onClick={ (event) => handleProductsCategory(value.id, event) }
+                                type="button" data-test="child-item"
+                                className="btn btn-link p-0">{value.name}</button>
                     </li>
                 );
             if (childrenCategories.length)
                 return (
-                    <li key={ value.id } className="mb-2">
+                    <li key={ value.id } className="mb-2" data-test="parent">
                         { parentCategory }
                         <ul className="categories-list hidden-children-categories">
                             { childrenCategories }
@@ -40,7 +40,7 @@ const CategorySidebar = (props) => {
                     </li>
                 );
             return (
-                <li key={ value.id } className="mb-2">
+                <li key={ value.id } className="mb-2" data-test="parent">
                     { parentCategory }
                 </li>
             );

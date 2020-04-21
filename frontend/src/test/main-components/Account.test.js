@@ -1,5 +1,5 @@
-import Account from '../components/Account'
-import {getWrapper} from "./utils";
+import Account from '../../components/Account'
+import {getWrapper} from "../utils";
 
 
 describe('testing <Account/>', () => {
@@ -57,8 +57,8 @@ describe('testing <Account/>', () => {
                         message: "Invalid lastName"
                     },
                     {
-                        field: "fistName",
-                        message: "Invalid fistName"
+                        field: "firstName",
+                        message: "Invalid firstName"
                     },
                     {
                         field: "newPassword",

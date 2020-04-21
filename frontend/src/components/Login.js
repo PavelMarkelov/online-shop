@@ -1,7 +1,7 @@
 import React from "react";
-import {Link, useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
-import {fetchLoginUser} from "../actions/AccountActions";
+import {fetchLoginUser, submitCredentialsAction} from "../actions/AccountActions";
 
 const Login = () => {
 
@@ -15,21 +15,27 @@ const Login = () => {
     }), shallowEqual);
 
     const dispatch = useDispatch();
-    const loginUser = async credentials => dispatch(fetchLoginUser(credentials));
+    const {loginUser, submitCredentials} = {
+        loginUser:  async credentials => dispatch(fetchLoginUser(credentials)),
+        submitCredentials: credentials => dispatch(submitCredentialsAction(credentials))
+    }
+
+    const loginForm = { login, password };
 
     function handleSimpleCustomer(event) {
         event.preventDefault();
-        const loginForm = document.forms["login-form"];
-        loginForm.elements["login"].value = simpleCustomer.login;
-        loginForm.elements["password"].value = simpleCustomer.password;
+        document.forms["login-form"].reset();
+        submitCredentials(simpleCustomer);
+    }
+
+    function handleInputChange(event) {
+        const target = event.target;
+        loginForm[target.name] = target.value;
     }
 
     async function handleSubmit(event) {
         event.preventDefault();
-        const loginForm = document.forms["login-form"];
-        const login = loginForm.elements["login"].value;
-        const password = loginForm.elements["password"].value;
-        await loginUser({ login, password });
+        await loginUser(loginForm);
         history.push('/catalog')
     }
 
@@ -39,19 +45,23 @@ const Login = () => {
                 <div className="form-group">
                     <label>Login</label>
                     <input type="text" className="form-control form-control-lg"  placeholder="Enter login"
-                           name="login" autoComplete="on" required autoFocus defaultValue={ login }/>
+                           name="login" autoComplete="on" required autoFocus
+                           defaultValue={ loginForm.login } onChange={ handleInputChange }/>
                 </div>
                 <div className="form-group">
                     <label>Password</label>
                     <input type="password" className="form-control form-control-lg"  autoComplete="on"
-                           name="password" placeholder="Enter password" required defaultValue={ password }/>
+                           name="password" placeholder="Enter password" required
+                           defaultValue={ loginForm.password } onChange={ handleInputChange }/>
                 </div>
                 <div className="form-group mt-4">
                     <button type="submit" className="btn btn-lg btn-primary btn-block">Log In</button>
                 </div>
             </form>
             <div id="sampleLogin">
-                <Link onClick={ handleSimpleCustomer } to="#">customer</Link>
+                <button type="button" className="btn btn-light" onClick={ handleSimpleCustomer }>
+                    <p className="text-center pb-1 m-0">customer</p>
+                </button>
             </div>
         </div>
     );

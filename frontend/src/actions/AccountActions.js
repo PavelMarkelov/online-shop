@@ -24,7 +24,7 @@ export const userAccountAction = (account) => {
     }
 };
 
-export const submitCredentials = credentials => {
+export const submitCredentialsAction = credentials => {
     return {
         type: actionType.SUBMIT_CREDENTIALS,
         payload: credentials
@@ -33,7 +33,7 @@ export const submitCredentials = credentials => {
 
 export const fetchLoginUser = credentials => {
     return async dispatch => {
-        dispatch(submitCredentials(credentials));
+        dispatch(submitCredentialsAction(credentials));
         try {
             const response = await DataService.loginRequest(credentials);
             if (response.status === 401) {

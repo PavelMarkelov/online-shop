@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import React, {useEffect} from "react";
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {userAccountAction} from '../actions/AccountActions';
 import DataService from '../service/DataService';
-import { Link } from "react-router-dom";
-import { accountEditErrorAction } from "../actions/ErrorActions";
+import {Link} from "react-router-dom";
+import {accountEditErrorAction} from "../actions/ErrorActions";
 
 
 const Account = props => {
@@ -30,28 +30,20 @@ const Account = props => {
         })()
     }, []);
 
-    async function handelSubmit(event) {
+    const formBuffer = {
+        ...account,
+        oldPassword: password,
+        newPassword: password
+    };
+
+    function handleInputChange(event) {
+        const target = event.target;
+        formBuffer[target.name] = target.value;
+    }
+
+    async function handleSubmit(event) {
         event.preventDefault();
-        const editForm = document.forms["edit-form"];
-        const firstName = editForm.elements["firstName"].value;
-        const lastName = editForm.elements['lastName'].value;
-        const patronymic = editForm.elements['patronymic'].value;
-        const email = editForm.elements['email'].value;
-        const address = editForm.elements['address'].value;
-        const phone = editForm.elements['phone'].value;
-        const oldPassword = editForm.elements['oldPassword'].value;
-        const newPassword = editForm.elements['newPassword'].value;
-        const newAccountData = {
-            firstName,
-            lastName,
-            patronymic,
-            email,
-            address,
-            phone,
-            oldPassword,
-            newPassword
-        };
-        const response = await DataService.editAccountDataRequest(newAccountData);
+        const response = await DataService.editAccountDataRequest(formBuffer);
         if (response.status === 403 || response.status === 406) {
             accountEditError(await response.json());
             return false;
@@ -74,15 +66,16 @@ const Account = props => {
     return (
         <div className="w-25 account-edit-container">
             <h1 className="m-4">Account</h1>
-            <form name="edit-form" onSubmit={ handelSubmit }>
+            <form name="edit-form" onSubmit={ handleSubmit }>
                 <div className="form-group">
                     <label><b>Fist name</b></label>
-                    <input type="text" className={errorsFields.get('fistName') ?
+                    <input type="text" className={errorsFields.get('firstName') ?
                         classesForInputWithAlert : classesForInput}
-                           name="firstName" placeholder="Your fist name"
-                           defaultValue={ account.firstName || '' } autoFocus/>
+                           name="firstName" placeholder="Your first name"
+                           defaultValue={ formBuffer.firstName || '' } autoFocus
+                           onChange={ handleInputChange }/>
                     <div className="invalid-feedback">
-                        { errorsFields.get('fistName') }
+                        { errorsFields.get('firstName') }
                     </div>
                 </div>
                 <div className="form-group">
@@ -90,7 +83,8 @@ const Account = props => {
                     <input type="text" className={errorsFields.get('lastName') ?
                         classesForInputWithAlert : classesForInput}
                            name="lastName" placeholder="Your last name"
-                           defaultValue={ account.lastName || '' }/>
+                           defaultValue={ formBuffer.lastName || '' }
+                           onChange={ handleInputChange }/>
                     <div className="invalid-feedback">
                         { errorsFields.get('lastName') }
                     </div>
@@ -100,7 +94,8 @@ const Account = props => {
                     <input type="text" className={errorsFields.get('patronymic') ?
                         classesForInputWithAlert : classesForInput}
                            name="patronymic" placeholder="Your patronymic"
-                           defaultValue={ account.patronymic || '' }/>
+                           defaultValue={ formBuffer.patronymic || '' }
+                           onChange={ handleInputChange }/>
                     <div className="invalid-feedback">
                         { errorsFields.get('patronymic') }
                     </div>
@@ -110,7 +105,8 @@ const Account = props => {
                     <input type="email" className={errorsFields.get('email') ?
                         classesForInputWithAlert : classesForInput}
                            name="email" placeholder="Your email"
-                           defaultValue={ account.email  || '' }/>
+                           defaultValue={ formBuffer.email  || '' }
+                           onChange={ handleInputChange }/>
                     <div className="invalid-feedback">
                         { errorsFields.get('email') }
                     </div>
@@ -120,7 +116,8 @@ const Account = props => {
                     <input type="text" className={errorsFields.get('address') ?
                         classesForInputWithAlert : classesForInput}
                            name="address" placeholder="Your address"
-                           defaultValue={ account.address || '' }/>
+                           defaultValue={ formBuffer.address || '' }
+                           onChange={ handleInputChange }/>
                     <div className="invalid-feedback">
                         { errorsFields.get('address') }
                     </div>
@@ -130,7 +127,8 @@ const Account = props => {
                     <input type="text" className={errorsFields.get('phone') ?
                         classesForInputWithAlert : classesForInput}
                            name="phone" placeholder="Your phone"
-                           defaultValue={ account.phone || '' }/>
+                           defaultValue={ formBuffer.phone || '' }
+                           onChange={ handleInputChange }/>
                     <div className="invalid-feedback">
                         { errorsFields.get('phone') }
                     </div>
@@ -140,7 +138,8 @@ const Account = props => {
                     <input type="password" className={errorsFields.get('oldPassword') ?
                         classesForInputWithAlert : classesForInput}
                            name="oldPassword" placeholder="Old password"
-                           defaultValue={ password }/>
+                           defaultValue={ formBuffer.oldPassword }
+                           onChange={ handleInputChange }/>
                     <div className="invalid-feedback">
                         { errorsFields.get('oldPassword') }
                     </div>
@@ -150,7 +149,8 @@ const Account = props => {
                     <input type="password" className={errorsFields.get('newPassword') ?
                         classesForInputWithAlert : classesForInput}
                            name="newPassword" placeholder="New password"
-                           defaultValue={ password }/>
+                           defaultValue={ formBuffer.newPassword }
+                           onChange={ handleInputChange }/>
                     <div className="invalid-feedback">
                         { errorsFields.get('newPassword') }
                     </div>

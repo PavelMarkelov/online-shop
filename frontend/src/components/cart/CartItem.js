@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import trash from '../../images/icons/trash.svg';
 import {debounce} from 'lodash';
 
@@ -22,7 +21,7 @@ const CartItem = (props) => {
     const total = (props.product.count * props.product.price)
         .toLocaleString("en-US",{useGrouping:true});
     return (
-        <div className="card mb-3 border-dark cart-item">
+        <div className="card mb-3 border-dark cart-item" data-test="cart-item">
             <div className="row no-gutters">
                 <div className="col-md-4">
                     <img src={ props.product.image }
@@ -30,9 +29,9 @@ const CartItem = (props) => {
                 </div>
                 <div className="col-md-8">
                     <div className="card-body pb-0">
-                        <h5 className="ml-1 card-title mb-4">{ props.product.name }</h5>
+                        <h5 className="ml-1 card-title mb-4" data-test="name">{ props.product.name }</h5>
                         <p className="ml-1 card-text"><strong>Price: </strong>
-                            <span className="text-success">${ total }</span>
+                            <span className="text-success" data-test="total">${ total }</span>
                         </p>
                         <div className="ml-1 form-group row">
                             <p className="text-center mt-2"><strong>Count:</strong></p>
@@ -44,9 +43,9 @@ const CartItem = (props) => {
                                        name="count" onChange={ ({ target: { value } }) => debouncedUpdate(value) }/>
                             </div>
                             <div className="col-sm-6">
-                                <Link to="#" onClick={ handleRemove } className="btn btn-light">
+                                <button type="button" onClick={ handleRemove } className="btn btn-light">
                                     <img src={ trash } alt="trash" width="32"/>
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     </div>

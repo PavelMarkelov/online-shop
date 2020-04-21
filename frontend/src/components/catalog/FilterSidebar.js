@@ -1,26 +1,23 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import DataService from "../../service/DataService";
 
 
 const FilterSidebar = (props) => {
 
+    const isInStockInput = useRef(null);
+    const minPriceInput = useRef(null);
+    const maxPriceInput = useRef(null);
+
     function handleSubmit(event) {
         event.preventDefault();
-        const filtersForm = document.forms['filters-form'];
-        const isInStock = filtersForm.elements['inStockCheck'].checked;
-        const minPrice = +filtersForm.elements['minPrice'].value;
-        const maxPrice = +filtersForm.elements['maxPrice'].value;
-        const filter = {
-            isInStock,
-            minPrice,
-            maxPrice
-        };
-        const isEmptyForm = !filter.isInStock && !filter.minPrice && !filter.maxPrice;
-        const isInvalidRange = filter.minPrice && filter.maxPrice
-            && filter.minPrice > filter.maxPrice;
+        const isInStock = isInStockInput.current.checked;
+        const minPrice = +minPriceInput.current.value;
+        const maxPrice = +maxPriceInput.current.value;
+        const isEmptyForm = !isInStock && !minPrice && !maxPrice;
+        const isInvalidRange = minPrice > maxPrice;
         if (isEmptyForm || isInvalidRange)
             return false;
-        props.enableFilter(filter);
+        props.enableFilter({ isInStock, minPrice, maxPrice });
     }
 
     async function handleDisableFilter() {
@@ -39,21 +36,21 @@ const FilterSidebar = (props) => {
                     <div className="d-inline font-weight-bold">In stock:</div>
                     <div className="d-inline">
                         <input className="ml-2 align-middle"
-                               type="checkbox" name="inStockCheck"/>
+                               type="checkbox" name="isInStock" ref={ isInStockInput }/>
                     </div>
                     <hr/>
                     <p className="font-weight-bold">Price range:</p>
                     <div className="form-row">
                         <div className="col-5">
                             <input type="number" className="form-control form-control-sm price-range"
-                                   min="1" name="minPrice" defaultValue={ props.minPrice }/>
+                                   defaultValue={ props.minPrice } ref={ minPriceInput }/>
                         </div>
                         <div className="col text-center">
                             <p>{ decodedChar }</p>
                         </div>
                         <div className="col-5">
                             <input type="number" className="form-control form-control-sm price-range"
-                                   min="1" name="maxPrice" defaultValue={ props.maxPrice }/>
+                                   defaultValue={ props.maxPrice } ref={ maxPriceInput }/>
                         </div>
                     </div>
                     <hr/>
@@ -77,8 +74,3 @@ const FilterSidebar = (props) => {
 };
 
 export default FilterSidebar;
-
-
-
-
-

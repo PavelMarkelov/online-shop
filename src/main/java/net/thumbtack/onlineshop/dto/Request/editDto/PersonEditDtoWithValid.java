@@ -69,14 +69,14 @@ public abstract class PersonEditDtoWithValid {
         this.newPassword = newPassword;
     }
 
-    @AssertTrue(message = "FirstName can't be empty and must have a maximum 50 of letters " +
+    @AssertTrue(message = "First name can't be empty and must have a maximum 50 of letters " +
             "and contain letters of the russian alphabet, spaces and dashes")
-    public boolean isFistName() {
+    public boolean isFirstName() {
         return !StringUtils.isEmpty(firstName) && firstName.matches("[А-Яа-я\\s-]+")
                 && firstName.length() <= maxNameLength;
     }
 
-    @AssertTrue(message = "LastName can't be empty and must have a maximum length of 50 letters " +
+    @AssertTrue(message = "Last name can't be empty and must have a maximum length of 50 letters " +
             "and contain letters of the russian alphabet, spaces and dashes")
     public boolean isLastName() {
         return !StringUtils.isEmpty(lastName) && lastName.matches("[А-Яа-я\\s-]+")
