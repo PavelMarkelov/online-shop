@@ -2,8 +2,9 @@ nav {
   background-color: #c2ddfd;
 }
 
-.login-container, .account-edit-container {
-  width:40%;
+.login-container,
+.account-edit-container {
+  width: 40%;
   margin: 25px auto;
 }
 

@@ -1,9 +1,8 @@
-import * as actionType from './ActionsType'
-
+import * as actionType from "./ActionsType";
 
 export const categoriesListAction = (categories) => {
-    return {
-        type: actionType.CATEGORIES_LIST,
-        payload: categories
-    }
+  return {
+    type: actionType.CATEGORIES_LIST,
+    payload: categories,
+  };
 };

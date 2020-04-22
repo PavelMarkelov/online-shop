@@ -1,18 +1,17 @@
-import * as actionType from '../actions/ActionsType';
-
+import * as actionType from "../actions/ActionsType";
 
 const initialState = {
-    categoriesList: []
+  categoriesList: [],
 };
 
 const categoriesReducer = (state = initialState, action) => {
-    if (action.type === actionType.CATEGORIES_LIST) {
-        return {
-            categoriesList: action.payload
-        };
-    } else {
-        return state
-    }
+  if (action.type === actionType.CATEGORIES_LIST) {
+    return {
+      categoriesList: action.payload,
+    };
+  } else {
+    return state;
+  }
 };
 
 export default categoriesReducer;
