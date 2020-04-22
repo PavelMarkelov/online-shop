@@ -14,10 +14,7 @@ import net.thumbtack.onlineshop.service.TokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.Cookie;
@@ -27,6 +24,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Optional;
 
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 @RestController
 public class SignUpAndLogoutController {
 
@@ -64,17 +62,26 @@ public class SignUpAndLogoutController {
 
     @PostMapping("/sessions")
     public PersonDtoResponse login(@RequestBody LoginDtoRequest loginDto,
-                                   HttpServletResponse response
+                                   HttpServletRequest request, HttpServletResponse response
     ) {
         Person person = personService.getPersonForLogin(loginDto);
-        Cookie cookie = new Cookie(cookieName, person.getTokenWithoutEncoding());
-        response.addCookie(cookie);
+        Optional<Cookie> cookieRequestOpt = Optional.ofNullable(WebUtils.getCookie(request, cookieName));
+        if (cookieRequestOpt.isPresent()) {
+            Cookie cookieRequest = cookieRequestOpt.get();
+            cookieRequest.setValue(person.getTokenWithoutEncoding());
+            response.addCookie(cookieRequest);
+        } else {
+            Cookie cookie = new Cookie(cookieName, person.getTokenWithoutEncoding());
+            response.addCookie(cookie);
+        }
         return StringUtils.isEmpty(person.getEmail()) ?
                 new AdminDtoResponse(person) : new CustomerDtoResponse(person);
     }
 
     @DeleteMapping("/sessions")
-    public String logout(HttpServletRequest request, Principal principal) {
+    public String logout(HttpServletRequest request, HttpServletResponse response,
+                         Principal principal
+    ) {
         Optional<Principal> user = Optional.ofNullable(principal);
         if (!user.isPresent())
             throw new UsernameNotFoundException(GlobalExceptionErrorCode.NOT_LOGIN.getErrorString());
@@ -82,6 +89,8 @@ public class SignUpAndLogoutController {
         cookie.ifPresent(cookie1 -> {
             Optional<Token> token = tokenService.findUserByToken(cookie1.getValue());
             token.ifPresent(tokenService::updateToken);
+            cookie1.setMaxAge(0);
+            response.addCookie(cookie1);
         });
         return "{}";
     }

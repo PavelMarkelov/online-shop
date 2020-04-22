@@ -12,6 +12,7 @@ import static net.thumbtack.onlineshop.securiry.CheckAccessPerson.checkAccessCus
 
 @RestController
 @RequestMapping("/baskets")
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 public class BasketController {
 
     private final BasketService basketService;

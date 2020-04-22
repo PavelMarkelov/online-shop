@@ -1,0 +1,74 @@
+nav {
+  background-color: #c2ddfd;
+}
+
+.login-container,
+.account-edit-container {
+  width: 40%;
+  margin: 25px auto;
+}
+
+h1 {
+  text-align: center;
+}
+
+.dark-font .breadcrumb-item .breadcrumb-item::before {
+  color: #000;
+}
+
+.dark-font .breadcrumb-item.active {
+  color: #455a64;
+}
+
+#sampleLogin {
+  width: 100%;
+}
+
+.sidebar-card {
+  background-color: wheat !important;
+  width: 100%;
+}
+
+.categories-list {
+  padding-left: 8%;
+}
+
+.categories-list ul {
+  padding-left: 10%;
+}
+
+.price-range::-webkit-outer-spin-button,
+.price-range::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.cart-item {
+  max-width: 530px;
+}
+
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
+}
+
+.empty-cart h4 {
+  position: absolute;
+  top: 50%;
+  left: 36%;
+}
+
+.hidden-children-categories {
+  max-height: 0;
+  transition: all 0.5s ease-out;
+  overflow: hidden;
+}
+
+.visible-children-categories {
+  max-height: 100vh;
+  transition: all 0.5s ease-in;
+}
+
+.sidebar-card button {
+  text-decoration: none !important;
+}

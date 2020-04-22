@@ -13,10 +13,7 @@ import net.thumbtack.onlineshop.service.PersonService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -25,6 +22,7 @@ import java.util.Optional;
 
 import static net.thumbtack.onlineshop.securiry.CheckAccessPerson.checkAccessCustomer;
 
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 @RestController
 public class PersonInfoController {
 

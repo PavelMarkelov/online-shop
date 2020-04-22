@@ -7,15 +7,13 @@ import net.thumbtack.onlineshop.securiry.CheckAccessPerson;
 import net.thumbtack.onlineshop.service.BasketService;
 import net.thumbtack.onlineshop.service.ProductService;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/purchases")
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 public class BuyProductController {
 
     private final ProductService productService;

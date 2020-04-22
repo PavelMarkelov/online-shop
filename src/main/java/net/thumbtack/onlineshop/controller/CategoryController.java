@@ -2,17 +2,22 @@ package net.thumbtack.onlineshop.controller;
 
 import net.thumbtack.onlineshop.dto.Request.CategoryDtoRequest;
 import net.thumbtack.onlineshop.dto.Response.CategoryParentDtoResponse;
+import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 import net.thumbtack.onlineshop.service.CategoryService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import static net.thumbtack.onlineshop.securiry.CheckAccessPerson.checkAccessAdmin;
 
 @RestController
 @RequestMapping("/categories")
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -58,8 +63,10 @@ public class CategoryController {
     }
 
     @GetMapping()
-    public List<CategoryParentDtoResponse> getAllCategories(Authentication auth) {
-        checkAccessAdmin(auth);
+    public List<CategoryParentDtoResponse> getAllCategories(Principal principal) {
+        Optional<Principal> name = Optional.ofNullable(principal);
+        if (!name.isPresent())
+            throw new UsernameNotFoundException(GlobalExceptionErrorCode.NOT_LOGIN.getErrorString());
         return categoryService.findAllCategories();
     }
 }
