@@ -59,7 +59,7 @@ excel об остатках товара на складе.</p>
     <li><code>PersonService</code> реализует интерфейс <code>UserDetailsService</code> и обрабатывает событие 
     успешной аутентификации пользователя</li>
 </ul>
-<p>Токен и пароль пользователя сохраняются в БД в зашиврованным с помощью класса <code>BCryptPasswordEncoder</code> 
+<p>Токен и пароль пользователя сохраняются в БД в зашифрованным с помощью класса <code>BCryptPasswordEncoder</code> 
 виде.
 <br/>
 Конфигурация фреймворка Spring Security реализуется классом <code>WebSecurityConfig</code>, который расширяет
