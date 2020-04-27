@@ -39,6 +39,7 @@ const productReducer = (state = initialState, action) => {
     case actionType.PRODUCTS_LIST:
       return {
         ...state,
+        filter: null,
         productsList: action.payload.map((item) =>
           Object.assign(item, { image: images.get(item.id) })
         ),

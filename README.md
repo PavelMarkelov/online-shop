@@ -1,18 +1,18 @@
 <h2>Technologies stack</h2>
 
-<h3>Backend</h3>
+<h4>Backend</h4>
 <ul>
     <li>Spring Boot</li>
     <li>Spring Security</li>
     <li>доступ к данным: Hibernate, Spring Data JPA</li>
     <li>Jackson</li>
     <li>тесты: Spring Test, JUnit, Hamcrest, JSONPath</li>
-    <li>СУБД MySQL</li>
+    <li>MySQL</li>
     <li>Maven</li>
 </ul>
 
 
-<h3>Frontend</h3>
+<h4>Frontend</h4>
 
 <ul>
     <li>React</li>
@@ -43,8 +43,8 @@ excel об остатках товара на складе.</p>
 <p>Структура базы данных приложения сформирована из 11 связанных таблиц, отображаемых 
 средствами Hibernate в 8 классах.</p>
 
+![alt text](./screenshots/online-shop-db-diagram.png "Database diagram")
 
-<br/>
 <p>Доступ к данным реализован с помощью Spring Data JPA. Слой доступа к данным представлен интерфейсами,
 расширяющими CrudRepository и JpaRepository.</p>
 
@@ -99,3 +99,45 @@ Rest - без сохранения состояния. Для этого в ме
 <p>Такой подход позволяет исключить использование блоков try-catch в методах контроллеров, а использование 
 исключений, расширяющих класс <code>RuntimeException</code>, упрощает сигнатуры методов, пробрасывающих 
 исключения.</p>
+
+
+<h2>User interface</h2>
+
+<h4>Login page</h4>
+
+![alt text](./screenshots/login-form.png "Login page")
+
+
+<h4>Catalog page</h4>
+
+![alt text](./screenshots/catalog-page.png "Catalog page")
+
+<p>Products filter</p>
+
+![alt text](./screenshots/products-filter.png "Products filter")
+
+
+<h4>Account page</h4>
+
+![alt text](./screenshots/account-page.png "Account page")
+
+<p>Errors handling on account page</p>
+
+![alt text](./screenshots/account-page-errors.png "Errors handling on account page")
+
+
+<h4>Product page</h4>
+
+![alt text](./screenshots/product-page.png "Product page")
+
+<h4>Cart page</h4>
+
+![alt text](./screenshots/cart-page.png "Cart page")
+
+<p>Checkout</p>
+
+![alt text](./screenshots/checkout.png "Checkout")
+
+
+<h4>Exception handling</h4>
+![alt text](./screenshots/exception-handling.png "Error message")
