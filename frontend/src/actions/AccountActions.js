@@ -5,6 +5,7 @@ import {
   addPopUpMessageForFailAction,
 } from "./PopUpActions";
 import * as messages from "../components/templates/pop-up/pop-up-messages";
+import { accountEditErrorAction } from "../actions/ErrorActions";
 
 export const loginUserAction = (user) => {
   return {
@@ -50,5 +51,24 @@ export const fetchLoginUser = (credentials) => {
       dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
       dispatch(toggleVisibilityAction(true));
     }
+  };
+};
+
+export const fetchAccountEdit = (account) => {
+  return async (dispatch) => {
+    try {
+      const response = await DataService.editAccountDataRequest(account);
+      if (response.status === 403 || response.status === 406) {
+        dispatch(accountEditErrorAction(await response.json()));
+        return false;
+      }
+      dispatch(accountEditErrorAction(null));
+      dispatch(userAccountAction(await response.json()));
+    } catch (err) {
+      dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
+      dispatch(toggleVisibilityAction(true));
+      return false;
+    }
+    return true;
   };
 };

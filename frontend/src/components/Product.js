@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import DataService from "../service/DataService";
 import { productDetailsAction } from "../actions/ProductActions";
 import { useDispatch, useSelector } from "react-redux";
-import { addItemsInCartAction } from "../actions/CartActions";
+import { fetchAddItemsInCart } from "../actions/CartActions";
 import _ from "lodash";
 
 const Product = (props) => {
@@ -13,8 +12,8 @@ const Product = (props) => {
 
   const dispatch = useDispatch();
   const { productDetails, addItemsInCart } = {
-    productDetails: (product) => dispatch(productDetailsAction(product)),
-    addItemsInCart: (cart) => dispatch(addItemsInCartAction(cart)),
+    productDetails: async (product) => dispatch(productDetailsAction(product)),
+    addItemsInCart: (cart) => dispatch(fetchAddItemsInCart(cart)),
   };
 
   useEffect(() => {
@@ -35,10 +34,7 @@ const Product = (props) => {
       price,
       count,
     };
-    const response = await DataService.addToCartRequest(productForRequest);
-    if (!response.ok) return false;
-    const cart = await response.json();
-    addItemsInCart(cart);
+    await addItemsInCart(productForRequest);
   }
 
   let stockLevel = "none";

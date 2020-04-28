@@ -28,6 +28,24 @@ export const addItemsInCartForEditingAction = (editingCart) => {
   };
 };
 
+export const fetchAddItemsInCart = (product) => {
+  return async (dispatch) => {
+    try {
+      const response = await DataService.addToCartRequest(product);
+      if (!response.ok) {
+        dispatch(addPopUpMessageForFailAction(messages.UNKNOWN_ERROR));
+        dispatch(toggleVisibilityAction(true));
+        return;
+      }
+      const cart = await response.json();
+      dispatch(addItemsInCartAction(cart));
+    } catch (err) {
+      dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
+      dispatch(toggleVisibilityAction(true));
+    }
+  };
+};
+
 export const fetchUserCart = (cart) => {
   return async (dispatch) => {
     try {
@@ -48,7 +66,7 @@ export const fetchUserCart = (cart) => {
       dispatch(addPopUpMessageForSuccessAction(message));
       dispatch(toggleVisibilityAction(true));
     } catch (err) {
-      dispatch(addPopUpMessageForFailAction());
+      dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
       dispatch(toggleVisibilityAction(true));
     }
   };

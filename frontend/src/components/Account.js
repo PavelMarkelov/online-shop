@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { userAccountAction } from "../actions/AccountActions";
-import DataService from "../service/DataService";
+import { fetchAccountEdit } from "../actions/AccountActions";
 import { Link } from "react-router-dom";
 import { accountEditErrorAction } from "../actions/ErrorActions";
 
@@ -17,18 +16,13 @@ const Account = (props) => {
   );
 
   const dispatch = useDispatch();
-  const { userAccount, accountEditError } = {
-    userAccount: (account) => dispatch(userAccountAction(account)),
+  const { accountEdit, accountEditError } = {
+    accountEdit: async (account) => dispatch(fetchAccountEdit(account)),
     accountEditError: (error) => dispatch(accountEditErrorAction(error)),
   };
 
   useEffect(() => {
-    (async () => {
-      accountEditError(null);
-      const response = await DataService.userProfileRequest();
-      const account = await response.json();
-      userAccount(account);
-    })();
+    return () => accountEditError(null);
   }, []);
 
   const formBuffer = {
@@ -44,15 +38,8 @@ const Account = (props) => {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const response = await DataService.editAccountDataRequest(formBuffer);
-    if (response.status === 403 || response.status === 406) {
-      accountEditError(await response.json());
-      return false;
-    }
-    accountEditError(null);
-    const account = await response.json();
-    userAccount(account);
-    props.history.push("/catalog");
+    const hasNoError = await accountEdit(formBuffer);
+    if (hasNoError) props.history.push("/catalog");
   }
 
   const classesForInput = "form-control form-control-lg";
@@ -150,8 +137,7 @@ const Account = (props) => {
           <label>
             <b>Address</b>
           </label>
-          <input
-            type="text"
+          <textarea
             className={
               errorsFields.get("address")
                 ? classesForInputWithAlert
@@ -161,6 +147,7 @@ const Account = (props) => {
             placeholder="Your address"
             defaultValue={formBuffer.address || ""}
             onChange={handleInputChange}
+            rows="2"
           />
           <div className="invalid-feedback">{errorsFields.get("address")}</div>
         </div>
