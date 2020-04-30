@@ -10,8 +10,17 @@ import CatalogContainer from "./components/catalog/CatalogContainer";
 import Product from "./components/Product";
 import CartContainer from "./components/cart/CartContainer";
 import PopUp from "./components/templates/pop-up/PopUp";
+import { useDispatch } from "react-redux";
+import { loginUserAction } from "./actions/AccountActions";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  if (localStorage.getItem("user")) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    dispatch(loginUserAction(user));
+  }
+
   return (
     <BrowserRouter>
       <div className="flex-fill">

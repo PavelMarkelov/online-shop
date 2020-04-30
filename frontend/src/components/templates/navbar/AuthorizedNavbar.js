@@ -5,7 +5,7 @@ import arrowLeft from "../../../images/icons/box-arrow-left.svg";
 import person from "../../../images/icons/person.svg";
 import { Link } from "react-router-dom";
 import DataService from "../../../service/DataService";
-import { logoutUser } from "../../../actions/AccountActions";
+import { logoutUserAction } from "../../../actions/AccountActions";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
@@ -57,7 +57,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logoutUser: () => dispatch(logoutUser()),
+    logoutUser: () => dispatch(logoutUserAction()),
   };
 };
 

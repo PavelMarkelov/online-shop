@@ -14,7 +14,7 @@ export const loginUserAction = (user) => {
   };
 };
 
-export const logoutUser = () => {
+export const logoutUserAction = () => {
   return {
     type: actionType.LOGOUT_USER,
     payload: {},
@@ -47,6 +47,25 @@ export const fetchLoginUser = (credentials) => {
       }
       const user = await response.json();
       dispatch(loginUserAction(user));
+      if (credentials.isRememberMe)
+        localStorage.setItem("user", JSON.stringify(user));
+    } catch (err) {
+      dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
+      dispatch(toggleVisibilityAction(true));
+    }
+  };
+};
+
+export const fetchUserAccount = () => {
+  return async (dispatch) => {
+    try {
+      const response = await DataService.userProfileRequest();
+      if (!response.ok) {
+        dispatch(addPopUpMessageForFailAction(messages.UNKNOWN_ERROR));
+        dispatch(toggleVisibilityAction(true));
+        return;
+      }
+      dispatch(userAccountAction(await response.json()));
     } catch (err) {
       dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
       dispatch(toggleVisibilityAction(true));

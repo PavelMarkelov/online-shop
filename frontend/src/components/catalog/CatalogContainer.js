@@ -5,7 +5,7 @@ import { ProductItem } from "./ProductItem";
 import {
   disableFilterAction,
   enableFilterAction,
-  productsFromCategoryAction,
+  fetchProductFromCategory,
   productsListAction,
 } from "../../actions/ProductActions";
 import { loadDataAction } from "../../actions/CatalogActions";
@@ -14,10 +14,17 @@ import { max, min } from "lodash";
 import { animated, useSpring } from "react-spring";
 
 const CatalogContainer = () => {
-  const { categories, products, filters, isCartIsLoaded } = useSelector(
+  const {
+    categories,
+    products,
+    cachedProducts,
+    filters,
+    isCartIsLoaded,
+  } = useSelector(
     (state) => ({
       categories: state.categoriesState.categoriesList,
       products: state.productState.productsList,
+      cachedProducts: state.productState.cachedProductList,
       filters: state.productState.filter,
       isCartIsLoaded: state.cartState.isCartIsLoaded,
     }),
@@ -35,17 +42,15 @@ const CatalogContainer = () => {
       dispatch(loadDataAction(isCartIsLoaded)),
     productsList: (products) => dispatch(productsListAction(products)),
     productsCategory: useCallback(
-      (products) => dispatch(productsFromCategoryAction(products)),
+      async (categoryId) => dispatch(fetchProductFromCategory(categoryId)),
       [dispatch]
     ),
     enableFilter: useCallback(
       (filter) => dispatch(enableFilterAction(filter)),
       [dispatch]
     ),
-    disableFilter: useCallback(
-      (products) => dispatch(disableFilterAction(products)),
-      [dispatch]
-    ),
+    disableFilter: (cachedProducts) =>
+      dispatch(disableFilterAction(cachedProducts)),
   };
 
   const props = useSpring({
@@ -67,6 +72,11 @@ const CatalogContainer = () => {
       return true;
     });
   };
+
+  const handleDisableFilter = useCallback(() => disableFilter(cachedProducts), [
+    cachedProducts,
+    disableFilter,
+  ]);
 
   const pricesArray = [];
   const filteredProducts = filters
@@ -90,7 +100,7 @@ const CatalogContainer = () => {
         />
         <FilterSidebar
           enableFilter={enableFilter}
-          disableFilter={disableFilter}
+          onDisableFilter={handleDisableFilter}
           minPrice={minPrice}
           maxPrice={maxPrice}
         />

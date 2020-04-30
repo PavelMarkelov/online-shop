@@ -1,4 +1,10 @@
 import * as actionType from "./ActionsType";
+import DataService from "../service/DataService";
+import {
+  addPopUpMessageForFailAction,
+  toggleVisibilityAction,
+} from "./PopUpActions";
+import * as messages from "../components/templates/pop-up/pop-up-messages";
 
 export const productsListAction = (products) => {
   return {
@@ -32,5 +38,17 @@ export const productDetailsAction = (product) => {
   return {
     type: actionType.PRODUCT_DETAILS,
     payload: product,
+  };
+};
+
+export const fetchProductFromCategory = (categoryId) => {
+  return async (dispatch) => {
+    try {
+      const response = await DataService.productsCategoryRequest(categoryId);
+      dispatch(productsFromCategoryAction(await response.json()));
+    } catch (err) {
+      dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
+      dispatch(toggleVisibilityAction(true));
+    }
   };
 };

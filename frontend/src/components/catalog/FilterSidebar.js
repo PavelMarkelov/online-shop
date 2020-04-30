@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import DataService from "../../service/DataService";
 
 const FilterSidebar = (props) => {
   const isInStockInput = useRef(null);
@@ -15,12 +14,6 @@ const FilterSidebar = (props) => {
     const isInvalidRange = minPrice > maxPrice;
     if (isEmptyForm || isInvalidRange) return false;
     props.enableFilter({ isInStock, minPrice, maxPrice });
-  }
-
-  async function handleDisableFilter() {
-    const response = await DataService.productsListRequest();
-    const products = await response.json();
-    props.disableFilter(products);
   }
 
   const parser = new DOMParser();
@@ -81,7 +74,7 @@ const FilterSidebar = (props) => {
                 style={{ width: "100%" }}
                 type="reset"
                 className="btn btn-secondary btn-sm"
-                onClick={handleDisableFilter}
+                onClick={props.onDisableFilter}
               >
                 Reset
               </button>

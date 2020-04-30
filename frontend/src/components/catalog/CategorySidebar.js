@@ -1,5 +1,4 @@
 import React from "react";
-import DataService from "../../service/DataService";
 
 const CategorySidebar = (props) => {
   const handleProductsCategory = async (id, event) => {
@@ -7,10 +6,8 @@ const CategorySidebar = (props) => {
     const childrenCategoriesList = event.target.parentNode.querySelector("ul");
     if (childrenCategoriesList)
       childrenCategoriesList.classList.toggle("visible-children-categories");
-    const response = await DataService.productsCategoryRequest(id);
-    const products = await response.json();
     document.forms["filters-form"].reset();
-    props.productsCategory(products);
+    await props.productsCategory(id);
   };
 
   const categoriesForRender = props.categoriesList.map((value) => {

@@ -29,6 +29,7 @@ export const images = new Map([
 ]);
 
 const initialState = {
+  cachedProductList: [],
   productsList: [],
   productDetails: {},
   filter: null,
@@ -37,12 +38,14 @@ const initialState = {
 const productReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionType.PRODUCTS_LIST:
+      const payload = action.payload.map((item) =>
+        Object.assign(item, { image: images.get(item.id) })
+      );
       return {
         ...state,
         filter: null,
-        productsList: action.payload.map((item) =>
-          Object.assign(item, { image: images.get(item.id) })
-        ),
+        cachedProductList: payload.slice(),
+        productsList: payload.slice(),
       };
 
     case actionType.PRODUCT_FROM_SELECTED_CATEGORY:
@@ -64,9 +67,7 @@ const productReducer = (state = initialState, action) => {
       return {
         ...state,
         filter: null,
-        productsList: action.payload.map((item) =>
-          Object.assign(item, { image: images.get(item.id) })
-        ),
+        productsList: action.payload,
       };
 
     case actionType.PRODUCT_DETAILS:

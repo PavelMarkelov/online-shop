@@ -3,40 +3,58 @@ import { useHistory } from "react-router-dom";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
   fetchLoginUser,
+  logoutUserAction,
   submitCredentialsAction,
 } from "../actions/AccountActions";
 
 const Login = () => {
-  const simpleCustomer = { login: "q", password: "sddsvwe34s" };
+  const simpleCustomer = {
+    login: "q",
+    password: "sddsvwe34s",
+  };
 
   const history = useHistory();
 
-  const { login, password } = useSelector(
+  const { login, password, isRememberMe } = useSelector(
     (state) => ({
       login: state.userState.login,
       password: state.userState.password,
+      isRememberMe: state.userState.isRememberMe,
     }),
     shallowEqual
   );
 
   const dispatch = useDispatch();
-  const { loginUser, submitCredentials } = {
+
+  const { loginUser, submitCredentials, logoutUser } = {
     loginUser: async (credentials) => dispatch(fetchLoginUser(credentials)),
     submitCredentials: (credentials) =>
       dispatch(submitCredentialsAction(credentials)),
+    logoutUser: () => dispatch(logoutUserAction()),
   };
 
-  const loginForm = { login, password };
+  if (localStorage.getItem("user")) {
+    localStorage.clear();
+    logoutUser();
+  }
+
+  const loginForm = { login, password, isRememberMe };
 
   function handleSimpleCustomer(event) {
     event.preventDefault();
     document.forms["login-form"].reset();
-    submitCredentials(simpleCustomer);
+    submitCredentials({
+      ...simpleCustomer,
+      isRememberMe: loginForm.isRememberMe,
+    });
   }
 
   function handleInputChange(event) {
     const target = event.target;
-    loginForm[target.name] = target.value;
+    target.type !== "checkbox"
+      ? (loginForm[target.name] = target.value)
+      : (loginForm[target.name] = target.checked);
+    submitCredentials(loginForm);
   }
 
   async function handleSubmit(event) {
@@ -74,6 +92,16 @@ const Login = () => {
             defaultValue={loginForm.password}
             onChange={handleInputChange}
           />
+        </div>
+        <div className="form-group form-check">
+          <input
+            type="checkbox"
+            className="form-check-input mt-2"
+            name="isRememberMe"
+            defaultChecked={loginForm.isRememberMe}
+            onChange={handleInputChange}
+          />
+          <label className="form-check-label">Remember me</label>
         </div>
         <div className="form-group mt-4">
           <button type="submit" className="btn btn-lg btn-primary btn-block">

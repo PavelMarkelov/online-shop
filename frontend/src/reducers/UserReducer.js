@@ -5,6 +5,7 @@ const initialState = {
   user: {},
   login: "",
   password: "",
+  isRememberMe: false,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -32,6 +33,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
         login: action.payload.login,
         password: action.payload.password,
+        isRememberMe: action.payload.isRememberMe,
       };
 
     default:

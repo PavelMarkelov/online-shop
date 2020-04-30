@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { fetchAccountEdit } from "../actions/AccountActions";
+import { fetchAccountEdit, fetchUserAccount } from "../actions/AccountActions";
 import { Link } from "react-router-dom";
 import { accountEditErrorAction } from "../actions/ErrorActions";
 
@@ -16,12 +16,14 @@ const Account = (props) => {
   );
 
   const dispatch = useDispatch();
-  const { accountEdit, accountEditError } = {
+  const { accountEdit, accountEditError, userAccount } = {
     accountEdit: async (account) => dispatch(fetchAccountEdit(account)),
     accountEditError: (error) => dispatch(accountEditErrorAction(error)),
+    userAccount: () => dispatch(fetchUserAccount()),
   };
 
   useEffect(() => {
+    userAccount();
     return () => accountEditError(null);
   }, []);
 
