@@ -56,6 +56,21 @@ export const fetchLoginUser = (credentials) => {
   };
 };
 
+export const fetchLogout = () => {
+  return async (dispatch) => {
+    try {
+      await DataService.logoutRequest();
+      dispatch(logoutUserAction());
+      if (localStorage.getItem("user")) localStorage.clear();
+      return true;
+    } catch (err) {
+      dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
+      dispatch(toggleVisibilityAction(true));
+      return false;
+    }
+  };
+};
+
 export const fetchUserAccount = () => {
   return async (dispatch) => {
     try {

@@ -4,13 +4,13 @@ import net.thumbtack.onlineshop.dto.Request.GetAllProductDtoRequest;
 import net.thumbtack.onlineshop.dto.Request.GetReportDtoWithValid;
 import net.thumbtack.onlineshop.dto.Response.ProductInfoDtoResponse;
 import net.thumbtack.onlineshop.entities.Person;
-import net.thumbtack.onlineshop.entities.Product;
 import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 import net.thumbtack.onlineshop.service.EmailService;
 import net.thumbtack.onlineshop.service.PersonService;
 import net.thumbtack.onlineshop.service.ProductService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,7 +50,7 @@ public class ProductInfoController {
     public List<ProductInfoDtoResponse> getAllProductsByOrder(
             GetAllProductDtoRequest request,
             Principal principal
-            ) {
+    ) {
         Optional<Principal> name = Optional.ofNullable(principal);
         if (!name.isPresent())
             throw new UsernameNotFoundException(GlobalExceptionErrorCode.NOT_LOGIN.getErrorString());
@@ -58,13 +58,15 @@ public class ProductInfoController {
     }
 
     @PostMapping("/report")
-    public String getReportInExcelToEmail(@Valid @RequestBody GetReportDtoWithValid request,
+    public List<ProductInfoDtoResponse> getReportInExcelToEmail(@Valid @RequestBody GetReportDtoWithValid request,
                                           Authentication auth
     ) {
         checkAccessAdmin(auth);
         Person admin = personService.findByLogin(auth.getPrincipal().toString());
-        List<Product> products = productService.getProductReport(request.getCount());
-        emailService.sendMessage(admin, request.getEmail(), products);
-        return "{}";
+        List<ProductInfoDtoResponse> products = productService
+                .getProductReport(request.getMinCount(), request.getMaxCount());
+        if (!StringUtils.isEmpty(request.getEmail()))
+            emailService.sendMessage(admin, request.getEmail(), products);
+        return products;
     }
 }

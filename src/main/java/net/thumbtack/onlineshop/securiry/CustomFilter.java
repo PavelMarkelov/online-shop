@@ -1,9 +1,7 @@
 package net.thumbtack.onlineshop.securiry;
 
 import net.thumbtack.onlineshop.entities.Person;
-import net.thumbtack.onlineshop.entities.Role;
 import net.thumbtack.onlineshop.entities.Token;
-import net.thumbtack.onlineshop.service.PersonService;
 import net.thumbtack.onlineshop.service.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -58,6 +55,7 @@ public class CustomFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken auth
                             = new UsernamePasswordAuthenticationToken(login, null, list);
                     SecurityContextHolder.getContext().setAuthentication(auth);
+                    cookie.setMaxAge(3600);
                 } catch (Exception e) {
                     logger.debug("Set Authentication from cookie failed {}", tokenOpt.get().getPerson());
                 }

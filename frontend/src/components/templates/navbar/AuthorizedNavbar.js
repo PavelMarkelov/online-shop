@@ -3,11 +3,9 @@ import book from "../../../images/icons/book.svg";
 import cart from "../../../images/icons/cart-svgrepo-com.svg";
 import arrowLeft from "../../../images/icons/box-arrow-left.svg";
 import person from "../../../images/icons/person.svg";
-import { Link } from "react-router-dom";
-import DataService from "../../../service/DataService";
-import { logoutUserAction } from "../../../actions/AccountActions";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { fetchLogout } from "../../../actions/AccountActions";
 
 class AuthorizedNavbar extends Component {
   constructor(props) {
@@ -17,9 +15,7 @@ class AuthorizedNavbar extends Component {
 
   async handleLogout(event) {
     event.preventDefault();
-    await DataService.logoutRequest();
-    this.props.logoutUser();
-    this.props.history.push("/");
+    if (await this.props.logoutUser()) this.props.history.push("/");
   }
 
   render() {
@@ -57,7 +53,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logoutUser: () => dispatch(logoutUserAction()),
+    logoutUser: async () => dispatch(fetchLogout()),
   };
 };
 

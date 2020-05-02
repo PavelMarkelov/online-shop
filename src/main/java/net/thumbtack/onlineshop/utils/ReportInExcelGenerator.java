@@ -1,23 +1,22 @@
 package net.thumbtack.onlineshop.utils;
 
-import net.thumbtack.onlineshop.entities.Category;
-import net.thumbtack.onlineshop.entities.Product;
+import net.thumbtack.onlineshop.dto.Response.ProductInfoDtoResponse;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class ReportInExcelGenerator {
 
-    private final static String[] COLUMNs = {"Count", "Id", "Name", "Price", "Categories"};
+    private final static String[] COLUMNs = {"Id", "Count", "Name", "Price", "Categories"};
     private final static String SHEET = "Product report";
 
-    public static InputStreamSource productsToExcel(List<Product> products)
+    public static InputStreamSource productsToExcel(List<ProductInfoDtoResponse> products)
             throws IOException {
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()
@@ -42,16 +41,16 @@ public class ReportInExcelGenerator {
             CellStyle bodyCellStyle = workbook.createCellStyle();
             bodyCellStyle.setAlignment(HorizontalAlignment.RIGHT);
             int rowIdx = 1;
-            for (Product product : products) {
+            for (ProductInfoDtoResponse product : products) {
                 Row bodyRow = sheet.createRow(rowIdx++);
 
                 Cell cell = bodyRow.createCell(0);
                 cell.setCellStyle(bodyCellStyle);
-                cell.setCellValue(product.getCount());
+                cell.setCellValue(product.getId());
 
                 cell = bodyRow.createCell(1);
                 cell.setCellStyle(bodyCellStyle);
-                cell.setCellValue(product.getId());
+                cell.setCellValue(product.getCount());
 
                 cell = bodyRow.createCell(2);
                 cell.setCellStyle(bodyCellStyle);
@@ -61,11 +60,7 @@ public class ReportInExcelGenerator {
                 cell.setCellStyle(bodyCellStyle);
                 cell.setCellValue(product.getPrice());
 
-                String categories = product.getCategories()
-                        .stream()
-                        .map(Category::getName)
-                        .sorted()
-                        .collect(Collectors.joining(", "));
+                String categories = String.join(", ", product.getCategories());
                 cell = bodyRow.createCell(4);
                 cell.setCellStyle(bodyCellStyle);
                 cell.setCellValue(categories);

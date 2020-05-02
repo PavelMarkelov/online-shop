@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
   fetchLoginUser,
-  logoutUserAction,
   submitCredentialsAction,
 } from "../actions/AccountActions";
 
@@ -26,17 +25,11 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
-  const { loginUser, submitCredentials, logoutUser } = {
+  const { loginUser, submitCredentials } = {
     loginUser: async (credentials) => dispatch(fetchLoginUser(credentials)),
     submitCredentials: (credentials) =>
       dispatch(submitCredentialsAction(credentials)),
-    logoutUser: () => dispatch(logoutUserAction()),
   };
-
-  if (localStorage.getItem("user")) {
-    localStorage.clear();
-    logoutUser();
-  }
 
   const loginForm = { login, password, isRememberMe };
 

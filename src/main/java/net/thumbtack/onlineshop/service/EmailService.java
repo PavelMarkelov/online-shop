@@ -1,7 +1,7 @@
 package net.thumbtack.onlineshop.service;
 
+import net.thumbtack.onlineshop.dto.Response.ProductInfoDtoResponse;
 import net.thumbtack.onlineshop.entities.Person;
-import net.thumbtack.onlineshop.entities.Product;
 import net.thumbtack.onlineshop.utils.ReportInExcelGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,8 @@ public class EmailService {
         this.templateEngine = templateEngine;
     }
 
-    public void sendMessage(Person person, String emailAddress, List<Product> products
+    public void sendMessage(Person person, String emailAddress,
+                            List<ProductInfoDtoResponse> products
     ) {
         logger.info("Sending message to email {}", emailAddress);
 

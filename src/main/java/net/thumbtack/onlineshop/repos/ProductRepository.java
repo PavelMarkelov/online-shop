@@ -8,5 +8,5 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByOrderByNameAsc();
-    List<Product> findByCountIsLessThanEqualOrderByNameAsc(int count);
+    List<Product> findByCountBetweenOrderByCountAscNameAsc(int minCount, int maxCount);
 }

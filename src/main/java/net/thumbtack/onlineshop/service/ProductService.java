@@ -235,7 +235,34 @@ public class ProductService {
                 request.getPrice(), count);
     }
 
-    public List<Product> getProductReport(int count) {
-        return productRepository.findByCountIsLessThanEqualOrderByNameAsc(count);
+    public List<ProductInfoDtoResponse> getProductReport(int minCount, int maxCount) {
+        List<Product> products = productRepository
+                .findByCountBetweenOrderByCountAscNameAsc(minCount, maxCount);
+        return products
+                .stream()
+                .map(product -> {
+                    ProductInfoDtoResponse productDto = new ProductInfoDtoResponse(product);
+                    List<String> categories = new ArrayList<>();
+                    product.getCategories()
+                            .stream()
+                            .sorted(Comparator.comparing(Category::getName))
+                            .forEach(category -> {
+                                Optional<Category> parentCategory = Optional.ofNullable(category.getParentCategory());
+                                if (!parentCategory.isPresent()) {
+                                    categories.add(category.getName());
+                                    if (category.getChildrenCategories().size() != 0)
+                                        category.getChildrenCategories()
+                                                .stream()
+                                                .sorted(Comparator.comparing(Category::getName))
+                                                .forEach(childrenCategory -> {
+                                                    if (product.getCategories().contains(childrenCategory))
+                                                        categories.add(childrenCategory.getName());
+                                                });
+                                }
+                            });
+                    productDto.setCategories(categories);
+                    return productDto;
+                })
+                .collect(Collectors.toList());
     }
 }

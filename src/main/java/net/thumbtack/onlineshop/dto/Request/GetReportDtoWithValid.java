@@ -6,18 +6,28 @@ import javax.validation.constraints.AssertTrue;
 
 public class GetReportDtoWithValid {
 
-    private int count;
+    private int minCount;
+    private int maxCount;
     private String email;
 
     public GetReportDtoWithValid() {
     }
 
-    public int getCount() {
-        return count;
+
+    public int getMinCount() {
+        return minCount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setMinCount(int minCount) {
+        this.minCount = minCount;
+    }
+
+    public int getMaxCount() {
+        return maxCount;
+    }
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
     }
 
     public String getEmail() {
@@ -28,14 +38,15 @@ public class GetReportDtoWithValid {
         this.email = email;
     }
 
-    @AssertTrue(message = "Count can't be less than zero")
-    public boolean isCount() {
-        return count >= 0;
+    @AssertTrue(message = "Invalid range")
+    public boolean isRange() {
+        return minCount >= 0 && maxCount >= 0 && minCount <= maxCount;
     }
 
     @AssertTrue(message = "Invalid format e-mail")
     public boolean isEmail() {
-        return !StringUtils.isEmpty(email) &&
-                email.matches("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]+$");
+        if (!StringUtils.isEmpty(email))
+            return email.matches("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]+$");
+        else return true;
     }
 }
