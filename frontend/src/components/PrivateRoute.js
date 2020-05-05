@@ -1,19 +1,26 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import userRole from "../userRole";
 
-const PrivateRoute = ({ component: Component, auth, ...rest }) => (
+const PrivateRoute = ({ component: Component, auth, role, ...rest }) => (
   <Route
     {...rest}
-    render={(props) =>
-      auth === true ? <Component {...props} /> : <Redirect to="/" />
-    }
+    render={(props) => {
+      if (auth) {
+        if (role === userRole.CUSTOMER && rest.path === "/report")
+          return <Redirect to="/catalog" />;
+        else return <Component {...props} />;
+      }
+      return <Redirect to="/" />;
+    }}
   />
 );
 
 const mapStateToProps = (state) => {
   return {
     auth: state.userState.isAuthenticated,
+    role: state.userState.user.role,
   };
 };
 

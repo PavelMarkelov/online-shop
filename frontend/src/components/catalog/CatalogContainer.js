@@ -20,6 +20,7 @@ const CatalogContainer = () => {
     cachedProducts,
     filters,
     isCartIsLoaded,
+    role,
   } = useSelector(
     (state) => ({
       categories: state.categoriesState.categoriesList,
@@ -27,6 +28,7 @@ const CatalogContainer = () => {
       cachedProducts: state.productState.cachedProductList,
       filters: state.productState.filter,
       isCartIsLoaded: state.cartState.isCartIsLoaded,
+      role: state.userState.user.role,
     }),
     shallowEqual
   );
@@ -38,8 +40,8 @@ const CatalogContainer = () => {
     enableFilter,
     disableFilter,
   } = {
-    loadData: async (isCartIsLoaded) =>
-      dispatch(loadDataAction(isCartIsLoaded)),
+    loadData: async (isCartIsLoaded, role) =>
+      dispatch(loadDataAction(isCartIsLoaded, role)),
     productsList: (products) => dispatch(productsListAction(products)),
     productsCategory: useCallback(
       async (categoryId) => dispatch(fetchProductFromCategory(categoryId)),
@@ -60,7 +62,7 @@ const CatalogContainer = () => {
 
   useEffect(() => {
     document.documentElement.scrollIntoView();
-    loadData(isCartIsLoaded);
+    loadData(isCartIsLoaded, role);
     return () => productsList([]);
   }, []);
 

@@ -1,19 +1,24 @@
 import React, { useEffect, useRef } from "react";
 import { productDetailsAction } from "../actions/ProductActions";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { fetchAddItemsInCart } from "../actions/CartActions";
 import _ from "lodash";
 
 const Product = (props) => {
-  const { product, productsList } = useSelector((state) => ({
-    product: state.productState.productDetails,
-    productsList: state.productState.productsList,
-  }));
+  const { product, productsList, role } = useSelector(
+    (state) => ({
+      product: state.productState.productDetails,
+      productsList: state.productState.productsList,
+      role: state.userState.user.role,
+    }),
+    shallowEqual
+  );
 
   const dispatch = useDispatch();
   const { productDetails, addItemsInCart } = {
     productDetails: async (product) => dispatch(productDetailsAction(product)),
-    addItemsInCart: (cart) => dispatch(fetchAddItemsInCart(cart)),
+    addItemsInCart: (productForRequest, role) =>
+      dispatch(fetchAddItemsInCart(productForRequest, role)),
   };
 
   useEffect(() => {
@@ -34,7 +39,7 @@ const Product = (props) => {
       price,
       count,
     };
-    await addItemsInCart(productForRequest);
+    await addItemsInCart(productForRequest, role);
   }
 
   let stockLevel = "none";

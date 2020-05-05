@@ -6,6 +6,7 @@ import {
 } from "./PopUpActions";
 import * as messages from "../components/templates/pop-up/pop-up-messages";
 import { accountEditErrorAction } from "../actions/ErrorActions";
+import userRole from "../userRole";
 
 export const loginUserAction = (user) => {
   return {
@@ -46,6 +47,7 @@ export const fetchLoginUser = (credentials) => {
         return;
       }
       const user = await response.json();
+      user.role = user.position ? userRole.ADMIN : userRole.CUSTOMER;
       dispatch(loginUserAction(user));
       if (credentials.isRememberMe)
         localStorage.setItem("user", JSON.stringify(user));

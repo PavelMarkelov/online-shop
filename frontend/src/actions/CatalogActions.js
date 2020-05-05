@@ -7,6 +7,7 @@ import * as messages from "../components/templates/pop-up/pop-up-messages";
 import { categoriesListAction } from "./CategoriesActions";
 import { productsListAction } from "./ProductActions";
 import { addItemsInCartAction } from "./CartActions";
+import userRole from "../userRole";
 
 const loadDataWithCart = () => {
   return async (dispatch) => {
@@ -58,10 +59,12 @@ const loadDataWithoutCart = () => {
   };
 };
 
-export const loadDataAction = (isCartIsLoaded) => {
+export const loadDataAction = (isCartIsLoaded, role) => {
   return async (dispatch) => {
-    isCartIsLoaded
-      ? dispatch(loadDataWithoutCart())
-      : dispatch(loadDataWithCart());
+    if (role === userRole.ADMIN) dispatch(loadDataWithoutCart());
+    else
+      isCartIsLoaded
+        ? dispatch(loadDataWithoutCart())
+        : dispatch(loadDataWithCart());
   };
 };

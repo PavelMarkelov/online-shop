@@ -7,8 +7,9 @@ import {
 } from "../actions/AccountActions";
 
 const Login = () => {
-  const simpleCustomer = {
-    login: "q",
+  const user = {
+    customerLogin: "q",
+    adminLogin: "qefg",
     password: "sddsvwe34s",
   };
 
@@ -33,13 +34,15 @@ const Login = () => {
 
   const loginForm = { login, password, isRememberMe };
 
-  function handleSimpleCustomer(event) {
+  function handleSimpleUser(event) {
     event.preventDefault();
     document.forms["login-form"].reset();
-    submitCredentials({
-      ...simpleCustomer,
-      isRememberMe: loginForm.isRememberMe,
-    });
+    const credentials = { password: user.password };
+    const target =
+      event.target.tagName === "P" ? event.target.parentNode : event.target;
+    credentials.login =
+      target.id === "customer" ? user.customerLogin : user.adminLogin;
+    submitCredentials(credentials);
   }
 
   function handleInputChange(event) {
@@ -102,14 +105,27 @@ const Login = () => {
           </button>
         </div>
       </form>
-      <div id="sampleLogin">
-        <button
-          type="button"
-          className="btn btn-light"
-          onClick={handleSimpleCustomer}
-        >
-          <p className="text-center pb-1 m-0">customer</p>
-        </button>
+      <div className="row">
+        <div className="col-md-3">
+          <button
+            id="customer"
+            type="button"
+            className="btn btn-light"
+            onClick={handleSimpleUser}
+          >
+            <p className="text-center pb-1 m-0">customer</p>
+          </button>
+        </div>
+        <div className="col-md-3">
+          <button
+            id="admin"
+            type="button"
+            className="btn btn-light"
+            onClick={handleSimpleUser}
+          >
+            <p className="text-center pb-1 m-0">admin</p>
+          </button>
+        </div>
       </div>
     </div>
   );
