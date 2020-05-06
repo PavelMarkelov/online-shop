@@ -12,7 +12,7 @@ import CartContainer from "./components/cart/CartContainer";
 import PopUp from "./components/templates/pop-up/PopUp";
 import { useDispatch } from "react-redux";
 import { loginUserAction } from "./actions/AccountActions";
-import Report from "./components/Report";
+import Report from "./components/report/Report";
 
 const App = () => {
   const dispatch = useDispatch();
