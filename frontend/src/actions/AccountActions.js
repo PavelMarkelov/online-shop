@@ -82,7 +82,9 @@ export const fetchUserAccount = () => {
         dispatch(toggleVisibilityAction(true));
         return;
       }
-      dispatch(userAccountAction(await response.json()));
+      const user = await response.json();
+      user.role = user.position ? userRole.ADMIN : userRole.CUSTOMER;
+      dispatch(userAccountAction(user));
     } catch (err) {
       dispatch(addPopUpMessageForFailAction(messages.NETWORK_ERROR));
       dispatch(toggleVisibilityAction(true));

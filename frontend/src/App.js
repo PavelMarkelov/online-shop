@@ -12,6 +12,7 @@ import CartContainer from "./components/cart/CartContainer";
 import PopUp from "./components/templates/pop-up/PopUp";
 import { useDispatch } from "react-redux";
 import { loginUserAction } from "./actions/AccountActions";
+import Report from "./components/Report";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const App = () => {
           <PrivateRoute exact path="/catalog" component={CatalogContainer} />
           <PrivateRoute path="/catalog/:id" component={Product} />
           <PrivateRoute path="/account/cart" component={CartContainer} />
+          <PrivateRoute path="/report" component={Report} />
         </Switch>
         <Footer />
       </div>

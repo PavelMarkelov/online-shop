@@ -7,4 +7,3 @@ export const IF_SOME_ITEMS_ARE_REMAIN =
 export const IF_ALL_ITEMS_ARE_REMAIN =
   "The remaining items in the basket are not in stock";
 export const SUCCESS_CHECKOUT = "Checkout is successfully!";
-export const NO_ACCESS_FOR_ADMIN = "No access for admin!";

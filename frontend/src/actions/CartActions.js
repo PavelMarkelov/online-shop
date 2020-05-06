@@ -1,12 +1,11 @@
 import * as actionsType from "./ActionsType";
 import {
-  toggleVisibilityAction,
   addPopUpMessageForFailAction,
   addPopUpMessageForSuccessAction,
+  toggleVisibilityAction,
 } from "./PopUpActions";
 import DataService from "../service/DataService";
 import * as messages from "../components/templates/pop-up/pop-up-messages";
-import userRole from "../userRole";
 
 export const addItemsInCartAction = (cart) => {
   return {
@@ -29,13 +28,8 @@ export const addItemsInCartForEditingAction = (editingCart) => {
   };
 };
 
-export const fetchAddItemsInCart = (product, role) => {
+export const fetchAddItemsInCart = (product) => {
   return async (dispatch) => {
-    if (role === userRole.ADMIN) {
-      dispatch(addPopUpMessageForFailAction(messages.NO_ACCESS_FOR_ADMIN));
-      dispatch(toggleVisibilityAction(true));
-      return;
-    }
     try {
       const response = await DataService.addToCartRequest(product);
       if (!response.ok) {

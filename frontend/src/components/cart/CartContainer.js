@@ -70,7 +70,7 @@ const CartContainer = () => {
   return productsInCart.length ? (
     <div className="ml-5">
       {productsInCart}
-      <div className="row mt-4">
+      <div className="row mt-4 m-0">
         <div className="col-sm-3">
           <h5>
             Total:{" "}

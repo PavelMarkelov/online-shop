@@ -72,3 +72,7 @@ h1 {
 .sidebar-card button {
   text-decoration: none !important;
 }
+
+.count-cell {
+  background-color: wheat;
+}

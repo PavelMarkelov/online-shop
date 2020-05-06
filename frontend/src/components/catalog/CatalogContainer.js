@@ -94,8 +94,8 @@ const CatalogContainer = () => {
   const maxPrice = max(pricesArray);
 
   return (
-    <div className="row">
-      <div className="col-md-3 ml-4">
+    <div className="row m-0">
+      <div className="col-md-3 ml-3">
         <CategorySidebar
           categoriesList={categories}
           productsCategory={productsCategory}

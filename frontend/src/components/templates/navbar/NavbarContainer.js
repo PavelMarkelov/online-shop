@@ -13,7 +13,7 @@ class NavbarContainer extends Component {
           <img
             src={logo}
             width="32"
-            className="d-inline-block align-top"
+            className="d-inline-block align-top mr-2"
             alt="logo"
           />
           Online-shop

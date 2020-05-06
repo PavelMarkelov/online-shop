@@ -3,6 +3,7 @@ import { productDetailsAction } from "../actions/ProductActions";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { fetchAddItemsInCart } from "../actions/CartActions";
 import _ from "lodash";
+import userRole from "../userRole";
 
 const Product = (props) => {
   const { product, productsList, role } = useSelector(
@@ -17,8 +18,8 @@ const Product = (props) => {
   const dispatch = useDispatch();
   const { productDetails, addItemsInCart } = {
     productDetails: async (product) => dispatch(productDetailsAction(product)),
-    addItemsInCart: (productForRequest, role) =>
-      dispatch(fetchAddItemsInCart(productForRequest, role)),
+    addItemsInCart: (productForRequest) =>
+      dispatch(fetchAddItemsInCart(productForRequest)),
   };
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const Product = (props) => {
       price,
       count,
     };
-    await addItemsInCart(productForRequest, role);
+    await addItemsInCart(productForRequest);
   }
 
   let stockLevel = "none";
@@ -65,28 +66,30 @@ const Product = (props) => {
           <strong>Stock level: </strong>
           {stockLevel}
         </p>
-        <form name="add-to-cart" onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="col-5">
-              <input
-                className="form-control form-control-sm count-for-cart"
-                type="number"
-                min="1"
-                defaultValue="1"
-                ref={countInput}
-              />
+        {role === userRole.CUSTOMER && (
+          <form name="add-to-cart" onSubmit={handleSubmit}>
+            <div className="row">
+              <div className="col-5">
+                <input
+                  className="form-control form-control-sm count-for-cart"
+                  type="number"
+                  min="1"
+                  defaultValue="1"
+                  ref={countInput}
+                />
+              </div>
+              <div className="col-7">
+                <button
+                  style={{ width: "80%" }}
+                  type="submit"
+                  className="btn btn-primary btn-sm btn-success"
+                >
+                  Add to Cart
+                </button>
+              </div>
             </div>
-            <div className="col-7">
-              <button
-                style={{ width: "80%" }}
-                type="submit"
-                className="btn btn-primary btn-sm btn-success"
-              >
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        )}
       </div>
 
       <div className="col-sm-9">
