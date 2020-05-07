@@ -5,7 +5,9 @@ const Report = () => {
   return (
     <div className="row mx-0 mt-4">
       <div className="col-md-3 mr-5">
-        <ReportForm onSubmit={(values) => alert(JSON.stringify(values))} />
+        <ReportForm
+          onSubmit={(values) => console.log(JSON.stringify(values))}
+        />
       </div>
 
       <div className="col-md-7 mt-2">

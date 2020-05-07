@@ -1,12 +1,35 @@
 import React from "react";
-import { Field, reduxForm } from "redux-form";
+import { Field, reduxForm, formValueSelector } from "redux-form";
+import { connect } from "react-redux";
 
-const ReportForm = (props) => {
-  const { handleSubmit, pristine, reset, submitting } = props;
+let ReportForm = (props) => {
+  const {
+    minCount,
+    maxCount,
+    email,
+    isOutOfStock,
+    isSentToEmail,
+    handleSubmit,
+    pristine,
+    reset,
+    submitting,
+  } = props;
 
   const parser = new DOMParser();
   const decodedChar = parser.parseFromString("&horbar;", "text/html").body
     .textContent;
+
+  const isHiddenMessageError =
+    minCount && !isOutOfStock ? minCount <= maxCount : true;
+
+  const hasErrorEmail =
+    isSentToEmail && !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]+$/i.test(email);
+
+  const hasFieldErrors =
+    (!isOutOfStock && !minCount && !maxCount && !email) ||
+    (!isOutOfStock &&
+      (minCount < 0 || maxCount < 0 || !isHiddenMessageError)) ||
+    hasErrorEmail;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -16,11 +39,13 @@ const ReportForm = (props) => {
           <Field
             type="number"
             component="input"
-            min="0"
-            className="form-control form-control-md"
+            className={`form-control form-control-md ${
+              minCount < 0 && !isOutOfStock && "is-invalid"
+            }`}
             placeholder="min"
             name="minCount"
           />
+          <div className="invalid-feedback">Invalid min</div>
         </div>
         <div className="col text-center">
           <p className="mt-1">{decodedChar}</p>
@@ -29,13 +54,17 @@ const ReportForm = (props) => {
           <Field
             type="number"
             component="input"
-            min="0"
-            className="form-control form-control-md"
+            className={`form-control form-control-md ${
+              maxCount < 0 && !isOutOfStock && "is-invalid"
+            }`}
             placeholder="max"
             name="maxCount"
           />
+          <div className="invalid-feedback">Invalid max</div>
         </div>
-        <div className="invalid-feedback">range err</div>
+      </div>
+      <div className="error-message text-center" hidden={isHiddenMessageError}>
+        Invalid range
       </div>
       <div className="form-group mt-3">
         <label>
@@ -44,11 +73,13 @@ const ReportForm = (props) => {
         <Field
           type="text"
           component="input"
-          className="form-control form-control-md"
+          className={`form-control form-control-md ${
+            hasErrorEmail && "is-invalid"
+          }`}
           name="email"
           placeholder="Email"
         />
-        <div className="invalid-feedback">email err</div>
+        <div className="invalid-feedback">Invalid email address</div>
       </div>
       <div className="form-check form-check-inline mr-3">
         <Field
@@ -73,7 +104,7 @@ const ReportForm = (props) => {
           <button
             type="submit"
             className="btn btn-md btn-primary my-3"
-            disabled={pristine || submitting}
+            disabled={pristine || submitting || hasFieldErrors}
             style={{ width: "80%" }}
           >
             Get report
@@ -95,6 +126,20 @@ const ReportForm = (props) => {
   );
 };
 
-export default reduxForm({
+ReportForm = reduxForm({
   form: "reportForm",
 })(ReportForm);
+
+const selector = formValueSelector("reportForm");
+ReportForm = connect((state) => {
+  return selector(
+    state,
+    "minCount",
+    "maxCount",
+    "email",
+    "isOutOfStock",
+    "isSentToEmail"
+  );
+})(ReportForm);
+
+export default ReportForm;
