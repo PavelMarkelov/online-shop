@@ -1,19 +1,28 @@
 import React from "react";
-import { Field, reduxForm, formValueSelector } from "redux-form";
-import { connect } from "react-redux";
+import { Field, formValueSelector, reduxForm } from "redux-form";
+import { connect, useSelector } from "react-redux";
 
 let ReportForm = (props) => {
+  const { handleSubmit, pristine, reset, submitting } = props;
+
+  const selector = formValueSelector("reportForm");
+
   const {
     minCount,
     maxCount,
     email,
     isOutOfStock,
     isSentToEmail,
-    handleSubmit,
-    pristine,
-    reset,
-    submitting,
-  } = props;
+  } = useSelector((state) => {
+    return selector(
+      state,
+      "minCount",
+      "maxCount",
+      "email",
+      "isOutOfStock",
+      "isSentToEmail"
+    );
+  });
 
   const parser = new DOMParser();
   const decodedChar = parser.parseFromString("&horbar;", "text/html").body
@@ -23,13 +32,14 @@ let ReportForm = (props) => {
     minCount && !isOutOfStock ? minCount <= maxCount : true;
 
   const hasErrorEmail =
-    isSentToEmail && !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]+$/i.test(email);
+    isSentToEmail && !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]+$/.test(email);
 
   const hasFieldErrors =
     (!isOutOfStock && !minCount && !maxCount && !email) ||
     (!isOutOfStock &&
       (minCount < 0 || maxCount < 0 || !isHiddenMessageError)) ||
-    hasErrorEmail;
+    hasErrorEmail ||
+    (email && !isSentToEmail);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -42,7 +52,6 @@ let ReportForm = (props) => {
             className={`form-control form-control-md ${
               minCount < 0 && !isOutOfStock && "is-invalid"
             }`}
-            placeholder="min"
             name="minCount"
           />
           <div className="invalid-feedback">Invalid min</div>
@@ -57,7 +66,6 @@ let ReportForm = (props) => {
             className={`form-control form-control-md ${
               maxCount < 0 && !isOutOfStock && "is-invalid"
             }`}
-            placeholder="max"
             name="maxCount"
           />
           <div className="invalid-feedback">Invalid max</div>
@@ -79,7 +87,7 @@ let ReportForm = (props) => {
           name="email"
           placeholder="Email"
         />
-        <div className="invalid-feedback">Invalid email address</div>
+        <div className="invalid-feedback">Invalid format e-mail</div>
       </div>
       <div className="form-check form-check-inline mr-3">
         <Field
@@ -130,16 +138,8 @@ ReportForm = reduxForm({
   form: "reportForm",
 })(ReportForm);
 
-const selector = formValueSelector("reportForm");
-ReportForm = connect((state) => {
-  return selector(
-    state,
-    "minCount",
-    "maxCount",
-    "email",
-    "isOutOfStock",
-    "isSentToEmail"
-  );
-})(ReportForm);
+ReportForm = connect((state) => ({
+  initialValues: state.reportState.formData,
+}))(ReportForm);
 
 export default ReportForm;

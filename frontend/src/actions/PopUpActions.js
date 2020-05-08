@@ -20,3 +20,10 @@ export const addPopUpMessageForSuccessAction = (message) => {
     payload: message,
   };
 };
+
+export const addPopUpMessageForLoadingAction = (message) => {
+  return {
+    type: actionsType.ADD_POP_UP_MESSAGE_FOR_LOADING,
+    payload: message,
+  };
+};

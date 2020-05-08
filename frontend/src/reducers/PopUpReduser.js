@@ -4,6 +4,7 @@ const initialState = {
   isVisible: false,
   messageForFail: "",
   messageForSuccess: "",
+  messageForLoading: "",
 };
 
 const popUpReducer = (state = initialState, action) => {
@@ -19,6 +20,7 @@ const popUpReducer = (state = initialState, action) => {
         ...state,
         messageForFail: action.payload,
         messageForSuccess: "",
+        messageForLoading: "",
       };
 
     case actionsType.ADD_POP_UP_MESSAGE_FOR_SUCCESS:
@@ -26,6 +28,15 @@ const popUpReducer = (state = initialState, action) => {
         ...state,
         messageForSuccess: action.payload,
         messageForFail: "",
+        messageForLoading: "",
+      };
+
+    case actionsType.ADD_POP_UP_MESSAGE_FOR_LOADING:
+      return {
+        ...state,
+        messageForLoading: action.payload,
+        messageForFail: "",
+        messageForSuccess: "",
       };
 
     default:

@@ -7,6 +7,7 @@ import cartReducer from "./CartReducer";
 import errorReducer from "./ErrorReducer";
 import popUpReducer from "./PopUpReduser";
 import { reducer as reduxFormReducer } from "redux-form";
+import reportReducer from "./ReportReducer";
 
 const reducers = combineReducers({
   userState: userReducer,
@@ -16,6 +17,7 @@ const reducers = combineReducers({
   errorState: errorReducer,
   popUpState: popUpReducer,
   form: reduxFormReducer,
+  reportState: reportReducer,
 });
 
 export default reducers;

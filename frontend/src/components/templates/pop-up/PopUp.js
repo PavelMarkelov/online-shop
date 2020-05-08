@@ -4,11 +4,17 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { toggleVisibilityAction } from "../../../actions/PopUpActions";
 
 const PopUp = () => {
-  const { isVisible, failMessage, successMessage } = useSelector(
+  const {
+    isVisible,
+    failMessage,
+    successMessage,
+    loadingMessage,
+  } = useSelector(
     (state) => ({
       isVisible: state.popUpState.isVisible,
       failMessage: state.popUpState.messageForFail,
       successMessage: state.popUpState.messageForSuccess,
+      loadingMessage: state.popUpState.messageForLoading,
     }),
     shallowEqual
   );
@@ -33,22 +39,40 @@ const PopUp = () => {
       onClick={handleClosePopUp}
     >
       <div className="block-popup">
-        {failMessage ? (
+        {failMessage && (
           <div className="alert alert-danger text-center" role="alert">
             {failMessage}
           </div>
-        ) : (
+        )}
+        {successMessage && (
           <div className="alert alert-success" role="alert">
             {successMessage}
           </div>
         )}
-
-        <button
-          type="button"
-          className="mt-2 btn btn-primary btn-sm btn-success w-25"
-        >
-          Close
-        </button>
+        {loadingMessage && (
+          <div className="alert alert-secondary m-0" role="alert">
+            <div className="row">
+              <div className="col-md-6 p-0 mt-1">
+                <strong className="float-right">{loadingMessage}</strong>
+              </div>
+              <div className="col-md-6">
+                <div
+                  className="spinner-border text-info float-right mr-4"
+                  role="status"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {(failMessage || successMessage) && (
+          <button
+            type="button"
+            className="mt-2 btn btn-primary btn-sm btn-success w-25"
+          >
+            Close
+          </button>
+        )}
       </div>
     </div>
   );

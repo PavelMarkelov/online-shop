@@ -4,16 +4,22 @@ const getRequestParams = {
 };
 
 class DataService {
-  static loginRequest(credentials) {
-    const params = {
-      method: "POST",
+  static _postOrPutRequestParams(method, bodyObj) {
+    return {
+      method: method.toUpperCase(),
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify(bodyObj),
       credentials: "include",
     };
-    return fetch(REST_API_URL + "/sessions", params);
+  }
+
+  static loginRequest(credentials) {
+    return fetch(
+      REST_API_URL + "/sessions",
+      this._postOrPutRequestParams("post", credentials)
+    );
   }
 
   static logoutRequest() {
@@ -32,15 +38,10 @@ class DataService {
   }
 
   static editAccountDataRequest(newAccountData) {
-    const params = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(newAccountData),
-      credentials: "include",
-    };
-    return fetch(REST_API_URL + "/clients", params);
+    return fetch(
+      REST_API_URL + "/clients",
+      this._postOrPutRequestParams("put", newAccountData)
+    );
   }
 
   static categoriesListRequest() {
@@ -63,15 +64,10 @@ class DataService {
   }
 
   static addToCartRequest(product) {
-    const params = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(product),
-      credentials: "include",
-    };
-    return fetch(REST_API_URL + "/baskets", params);
+    return fetch(
+      REST_API_URL + "/baskets",
+      this._postOrPutRequestParams("post", product)
+    );
   }
 
   static cartRequest() {
@@ -90,27 +86,24 @@ class DataService {
   }
 
   static changeCartItemQuantity(product) {
-    const params = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(product),
-      credentials: "include",
-    };
-    return fetch(REST_API_URL + "/baskets", params);
+    return fetch(
+      REST_API_URL + "/baskets",
+      this._postOrPutRequestParams("put", product)
+    );
   }
 
   static buyCartRequest(cart) {
-    const params = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(cart),
-      credentials: "include",
-    };
-    return fetch(REST_API_URL + "/purchases/baskets", params);
+    return fetch(
+      REST_API_URL + "/purchases/baskets",
+      this._postOrPutRequestParams("post", cart)
+    );
+  }
+
+  static getReportRequest(formValues) {
+    return fetch(
+      REST_API_URL + "/products/report",
+      this._postOrPutRequestParams("post", formValues)
+    );
   }
 }
 
