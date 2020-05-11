@@ -27,30 +27,27 @@ let ReportForm = (props) => {
   const parser = new DOMParser();
   const decodedChar = parser.parseFromString("&horbar;", "text/html").body
     .textContent;
+  const min = +minCount,
+    max = +maxCount;
 
-  const isHiddenMessageError =
-    minCount && !isOutOfStock ? minCount <= maxCount : true;
+  const isHiddenMessageError = !isOutOfStock ? min <= max : true;
 
   const hasErrorEmail =
     isSentToEmail && !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]+$/.test(email);
 
   const hasFieldErrors =
-    (!isOutOfStock && !minCount && !maxCount && !email) ||
-    (!isOutOfStock &&
-      (minCount < 0 || maxCount < 0 || !isHiddenMessageError)) ||
-    hasErrorEmail ||
-    (email && !isSentToEmail);
+    (!isOutOfStock && (min < 0 || max < 0 || min > max)) || hasErrorEmail;
 
   return (
     <form onSubmit={handleSubmit}>
-      <p className="font-weight-bold mb-2">Price range:</p>
+      <p className="font-weight-bold mb-2">Quantity range:</p>
       <div className="form-row">
         <div className="col-5">
           <Field
             type="number"
             component="input"
             className={`form-control form-control-md ${
-              minCount < 0 && !isOutOfStock && "is-invalid"
+              min < 0 && !isOutOfStock && "is-invalid"
             }`}
             name="minCount"
           />
@@ -64,7 +61,7 @@ let ReportForm = (props) => {
             type="number"
             component="input"
             className={`form-control form-control-md ${
-              maxCount < 0 && !isOutOfStock && "is-invalid"
+              max < 0 && !isOutOfStock && "is-invalid"
             }`}
             name="maxCount"
           />

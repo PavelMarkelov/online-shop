@@ -1,3 +1,5 @@
+import * as actionType from "../actions/ActionsType";
+
 const initialState = {
   formData: {
     minCount: 0,
@@ -6,10 +8,19 @@ const initialState = {
     isOutOfStock: false,
     isSentToEmail: false,
   },
+  products: [],
 };
 
 const reportFormReducer = (state = initialState, action) => {
-  return state;
+  switch (action.type) {
+    case actionType.LOAD_PRODUCTS_FOR_REPORT:
+      return {
+        ...state,
+        products: action.payload,
+      };
+    default:
+      return state;
+  }
 };
 
 export default reportFormReducer;

@@ -8,6 +8,13 @@ import {
 } from "./PopUpActions";
 import * as messages from "../components/templates/pop-up/pop-up-messages";
 
+export const loadProductsAction = (products) => {
+  return {
+    type: actionType.LOAD_PRODUCTS_FOR_REPORT,
+    payload: products,
+  };
+};
+
 export const fetchGetReport = (formValues, isSendToEmail) => {
   return async (dispatch) => {
     if (isSendToEmail) {
@@ -21,6 +28,7 @@ export const fetchGetReport = (formValues, isSendToEmail) => {
         dispatch(toggleVisibilityAction(true));
         return;
       }
+      dispatch(loadProductsAction(await response.json()));
       if (isSendToEmail) {
         dispatch(addPopUpMessageForSuccessAction(messages.SUCCESSFULLY_SENT));
         setTimeout(() => dispatch(toggleVisibilityAction(false)), 2500);
