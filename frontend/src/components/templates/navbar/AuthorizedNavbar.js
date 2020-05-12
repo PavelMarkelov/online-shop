@@ -31,23 +31,35 @@ class AuthorizedNavbar extends Component {
         </Link>
         {role === userRole.CUSTOMER ? (
           <Fragment>
-            <Link className="nav-item nav-link" to="/account/cart">
+            <Link
+              className="nav-item nav-link"
+              to="/account/cart"
+              data-test="cart-link"
+            >
               <img src={cart} alt="cart" width="34" className="p-1" />
               Cart{" "}
               <span className={`badge ${badgeStatus}`}>{this.props.count}</span>
             </Link>
-            <Link className="nav-item nav-link" to="/account">
+            <Link
+              className="nav-item nav-link"
+              to="/account"
+              data-test="account-link"
+            >
               <img src={person} alt="account" width="32" height="32" />
               {this.props.user.firstName}
             </Link>
           </Fragment>
         ) : (
           <Fragment>
-            <Link className="nav-item nav-link" to="/report">
+            <Link
+              className="nav-item nav-link"
+              to="/report"
+              data-test="report-link"
+            >
               <img src={listTask} alt="report" width="32" height="32" />
               Report
             </Link>
-            <div className="nav-item nav-link">
+            <div className="nav-item nav-link" data-test="admin-info">
               <img src={person} alt="admin" width="32" height="32" />
               Admin
             </div>

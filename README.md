@@ -29,10 +29,9 @@
     <li>Terms of reference for server part.docx - backend часть</li>
     <li>Terms of reference for client part.docx - сторона пользовательского интерфейса</li>
 </ul>
-<p>В дополнение к общему функционалу серверной стороны приложения, реализована возможность 
-получения на указанный администратором e-mail, html письма, обрабатываемым шаблонизатором 
-Thymeleaf, с вложением отчета в формате
-excel об остатках товара на складе.</p>
+<p>В дополнение к общему функционалу приложения, реализована возможность 
+получения на указанный администратором e-mail адрес, html письма, обрабатываемым шаблонизатором 
+Thymeleaf, с вложением отчета в формате excel об остатках товара на складе.</p>
 <p>Также функционал клиентской стороны дополнен возможностью отображения сообщений об 
 ошибках ввода пользователя при заполнении форм и возможностью обработки статуса ответа сервера
 с отображением соответствующего сообщения компонентом <code>PopUp</code>.</p>
@@ -97,8 +96,8 @@ Rest - без сохранения состояния. Для этого в ме
 <code>net.thumbtack.onlineshop.exception.GlobalExceptionHandler</code>, который снабжен аннотацией 
 <code>@RestControllerAdvice</code>, предоставленной Spring Framework.</p>
 <p>Такой подход позволяет исключить использование блоков try-catch в методах контроллеров, а использование 
-исключений, расширяющих класс <code>RuntimeException</code>, упрощает сигнатуры методов, пробрасывающих 
-исключения.</p>
+исключений, расширяющих класс <code>RuntimeException</code>, позволяет избежать 
+явного обявления проброса исключения</p>
 
 
 <h2>User interface</h2>
@@ -138,6 +137,13 @@ Rest - без сохранения состояния. Для этого в ме
 
 ![alt text](./screenshots/checkout.png "Checkout")
 
+<h4>Report page</h4>
+
+![alt text](./screenshots/report.png "Report page")
+
+<p>Email letter with report in excel file</p>
+
+![alt text](./screenshots/email-letter.png "Checkout")
 
 <h4>Exception handling</h4>
 ![alt text](./screenshots/exception-handling.png "Error message")

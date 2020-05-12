@@ -45,12 +45,12 @@ const Report = () => {
       </div>
 
       <div className="col-md-9 mt-2 d-flex justify-content-center">
-        <table style={{ width: "85%" }} className="table table-hover">
+        <table style={{ width: "90%" }} className="table table-hover">
           <thead>
             <tr className="table-success">
               <th scope="col">Id</th>
               <th scope="col">Name</th>
-              <th scope="col">Count</th>
+              <th scope="col">Quantity</th>
               <th scope="col" className="px-3">
                 Price
               </th>
@@ -64,7 +64,7 @@ const Report = () => {
               <tr>
                 <th scope="row">0</th>
                 <td>Name</td>
-                <td>Count</td>
+                <td>Quantity</td>
                 <td>Price</td>
                 <td>Categories</td>
               </tr>

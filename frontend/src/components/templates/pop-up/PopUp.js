@@ -65,7 +65,7 @@ const PopUp = () => {
             </div>
           </div>
         )}
-        {(failMessage || successMessage) && (
+        {!loadingMessage && (
           <button
             type="button"
             className="mt-2 btn btn-primary btn-sm btn-success w-25"
