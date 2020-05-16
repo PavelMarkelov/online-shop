@@ -1,10 +1,19 @@
 import React, { useCallback } from "react";
 import ReportForm from "./ReportForm";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchGetReport } from "../../actions/ReportActions";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import {
+  fetchGetReport,
+  fetchDownloadReport,
+} from "../../actions/ReportActions";
 
 const Report = () => {
-  const products = useSelector((state) => state.reportState.products);
+  const { products, isLoading } = useSelector(
+    (state) => ({
+      products: state.reportState.products,
+      isLoading: state.reportState.isLoading,
+    }),
+    shallowEqual
+  );
 
   const dispatch = useDispatch();
 
@@ -19,6 +28,14 @@ const Report = () => {
       }
       requestValues.email = formValues.isSentToEmail ? formValues.email : "";
       dispatch(fetchGetReport(requestValues, formValues.isSentToEmail));
+    },
+    [dispatch]
+  );
+
+  const handleDownloadReport = useCallback(
+    (minCount, maxCount, isOutOfStock) => {
+      isOutOfStock && (minCount = maxCount = 0);
+      dispatch(fetchDownloadReport(minCount, maxCount));
     },
     [dispatch]
   );
@@ -41,7 +58,11 @@ const Report = () => {
   return (
     <div className="row mx-0 mt-4">
       <div className="col-md-3">
-        <ReportForm onSubmit={handleGetReport} />
+        <ReportForm
+          onSubmit={handleGetReport}
+          handleDownloadReport={handleDownloadReport}
+          isLoading={isLoading}
+        />
       </div>
 
       <div className="col-md-9 mt-2 d-flex justify-content-center">

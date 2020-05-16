@@ -9,6 +9,7 @@ const initialState = {
     isSentToEmail: false,
   },
   products: [],
+  isLoading: false,
 };
 
 const reportFormReducer = (state = initialState, action) => {
@@ -17,6 +18,11 @@ const reportFormReducer = (state = initialState, action) => {
       return {
         ...state,
         products: action.payload,
+      };
+    case actionType.LOADING_REPORT_FOR_DOWNLOAD:
+      return {
+        ...state,
+        isLoading: action.payload,
       };
     default:
       return state;

@@ -3,8 +3,6 @@ package net.thumbtack.onlineshop.utils;
 import net.thumbtack.onlineshop.dto.Response.ProductInfoDtoResponse;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,10 +11,10 @@ import java.util.List;
 
 public class ReportInExcelGenerator {
 
-    private final static String[] COLUMNs = {"Id", "Count", "Name", "Price", "Categories"};
+    private final static String[] COLUMNs = {"Id", "Quantity", "Name", "Price", "Categories"};
     private final static String SHEET = "Product report";
 
-    public static InputStreamSource productsToExcel(List<ProductInfoDtoResponse> products)
+    public static byte[] generateData(List<ProductInfoDtoResponse> products)
             throws IOException {
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()
@@ -65,11 +63,10 @@ public class ReportInExcelGenerator {
                 cell.setCellStyle(bodyCellStyle);
                 cell.setCellValue(categories);
             }
-
             for (int col = 0; col < COLUMNs.length; col++)
                 sheet.autoSizeColumn(col);
             workbook.write(out);
-            return new ByteArrayResource(out.toByteArray());
+            return out.toByteArray();
         }
     }
 }

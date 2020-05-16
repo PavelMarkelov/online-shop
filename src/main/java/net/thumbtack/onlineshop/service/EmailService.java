@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -60,8 +61,8 @@ public class EmailService {
 
         try {
             String html = templateEngine.process("email-message", context);
-            InputStreamSource input = ReportInExcelGenerator.productsToExcel(products);
-
+            byte[] data = ReportInExcelGenerator.generateData(products);
+            InputStreamSource input =  new ByteArrayResource(data);
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message,
                     MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,

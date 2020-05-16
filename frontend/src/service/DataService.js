@@ -117,6 +117,14 @@ class DataService {
       this._postOrPutRequestParams("post", formValues)
     );
   }
+
+  static downloadReport(minCount, maxCount) {
+    return fetch(
+      this._REST_API_URL +
+        `/products/report/download?minCount=${minCount}&maxCount=${maxCount}`,
+      this._REQUEST_PARAMS_FOR_GET
+    );
+  }
 }
 
 export default DataService;

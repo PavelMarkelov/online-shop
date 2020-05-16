@@ -8,12 +8,16 @@ import net.thumbtack.onlineshop.exception.GlobalExceptionErrorCode;
 import net.thumbtack.onlineshop.service.EmailService;
 import net.thumbtack.onlineshop.service.PersonService;
 import net.thumbtack.onlineshop.service.ProductService;
+import net.thumbtack.onlineshop.utils.ReportInExcelGenerator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -68,5 +72,22 @@ public class ProductInfoController {
         if (!StringUtils.isEmpty(request.getEmail()))
             emailService.sendMessage(admin, request.getEmail(), products);
         return products;
+    }
+
+    @GetMapping(value = "/report/download")
+    public void downloadReport(@RequestParam int minCount,
+                                              @RequestParam int maxCount,
+                                              Authentication auth,
+                                              HttpServletResponse response
+    ) throws IOException {
+        checkAccessAdmin(auth);
+        response.setHeader("Content-Encoding", "UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=report.xlsx");
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        List<ProductInfoDtoResponse> products = productService.getProductReport(minCount, maxCount);
+
+        try (OutputStream out = response.getOutputStream()) {
+            out.write(ReportInExcelGenerator.generateData(products));
+        }
     }
 }

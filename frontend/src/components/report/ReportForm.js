@@ -3,7 +3,14 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { connect, useSelector } from "react-redux";
 
 let ReportForm = (props) => {
-  const { handleSubmit, pristine, reset, submitting } = props;
+  const {
+    handleSubmit,
+    handleDownloadReport,
+    isLoading,
+    pristine,
+    reset,
+    submitting,
+  } = props;
 
   const selector = formValueSelector("reportForm");
 
@@ -35,8 +42,8 @@ let ReportForm = (props) => {
   const hasErrorEmail =
     isSentToEmail && !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]+$/.test(email);
 
-  const hasFieldErrors =
-    (!isOutOfStock && (min < 0 || max < 0 || min > max)) || hasErrorEmail;
+  const hasRangeError = !isOutOfStock && (min < 0 || max < 0 || min > max);
+  const hasFieldErrors = hasRangeError || hasErrorEmail;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -101,6 +108,7 @@ let ReportForm = (props) => {
           className="form-check-input mt-1"
           component="input"
           name="isSentToEmail"
+          autoComplete="off"
         />
         <label className="form-check-label">Send to email</label>
       </div>
@@ -108,9 +116,8 @@ let ReportForm = (props) => {
         <div className="col-md-6 p-0 text-center">
           <button
             type="submit"
-            className="btn btn-md btn-primary my-3"
+            className="btn btn-md btn-primary mt-3 w-75"
             disabled={pristine || submitting || hasFieldErrors}
-            style={{ width: "80%" }}
           >
             Get report
           </button>
@@ -118,14 +125,35 @@ let ReportForm = (props) => {
         <div className="col-md-6 p-0 text-center">
           <button
             type="button"
-            style={{ width: "80%" }}
-            className="btn btn-md btn-secondary my-3"
+            className="btn btn-md btn-secondary mt-3 w-75"
             disabled={pristine || submitting}
             onClick={reset}
           >
             Reset
           </button>
         </div>
+      </div>
+      <hr />
+      <div className="text-center">
+        <button
+          type="button"
+          className="btn btn-md btn-primary my-3 btn-block"
+          disabled={pristine || submitting || hasRangeError}
+          onClick={() => handleDownloadReport(min, max, isOutOfStock)}
+        >
+          {isLoading ? (
+            <>
+              <span className="mr-3">Downloading...</span>
+              <span
+                className="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              />
+            </>
+          ) : (
+            "Download"
+          )}
+        </button>
       </div>
     </form>
   );
