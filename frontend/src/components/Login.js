@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
@@ -33,15 +33,16 @@ const Login = () => {
   };
 
   const loginForm = { login, password, isRememberMe };
+  const loginFormElem = useRef(null);
 
   function handleSimpleUser(event) {
     event.preventDefault();
-    document.forms["login-form"].reset();
+    loginFormElem.current.reset();
     const credentials = { password: user.password };
-    const target =
-      event.target.tagName === "P" ? event.target.parentNode : event.target;
     credentials.login =
-      target.id === "customer" ? user.customerLogin : user.adminLogin;
+      event.currentTarget.id === "customer"
+        ? user.customerLogin
+        : user.adminLogin;
     submitCredentials(credentials);
   }
 
@@ -61,7 +62,7 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <form name="login-form" onSubmit={handleSubmit}>
+      <form ref={loginFormElem} onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Login</label>
           <input

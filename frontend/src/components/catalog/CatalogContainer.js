@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import CategorySidebar from "./CategorySidebar";
 import FilterSidebar from "./FilterSidebar";
 import { ProductItem } from "./ProductItem";
@@ -55,6 +55,8 @@ const CatalogContainer = () => {
       dispatch(disableFilterAction(cachedProducts)),
   };
 
+  const filtersForm = useRef(null);
+
   const props = useSpring({
     from: { opacity: 0, transition: "all 0.5s ease", visibility: "hidden" },
     to: { opacity: 1, transition: "all 0.5s ease", visibility: "visible" },
@@ -99,12 +101,14 @@ const CatalogContainer = () => {
         <CategorySidebar
           categoriesList={categories}
           productsCategory={productsCategory}
+          filtersFormRef={filtersForm}
         />
         <FilterSidebar
           enableFilter={enableFilter}
           onDisableFilter={handleDisableFilter}
           minPrice={minPrice}
           maxPrice={maxPrice}
+          filtersFormRef={filtersForm}
         />
       </div>
       <div className="col-md-8">

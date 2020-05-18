@@ -6,7 +6,7 @@ const CategorySidebar = (props) => {
     const childrenCategoriesList = event.target.parentNode.querySelector("ul");
     if (childrenCategoriesList)
       childrenCategoriesList.classList.toggle("visible-children-categories");
-    document.forms["filters-form"].reset();
+    props.filtersFormRef.current.reset();
     await props.productsCategory(id);
   };
 
