@@ -23,7 +23,11 @@ const FilterSidebar = (props) => {
     <div className="card sidebar-card my-3">
       <div className="card-body">
         <h5 className="card-title">Filters</h5>
-        <form ref={props.filtersFormRef} onSubmit={handleSubmit}>
+        <form
+          ref={props.filtersFormRef}
+          onSubmit={handleSubmit}
+          name="filters-form"
+        >
           <div className="d-inline font-weight-bold">In stock:</div>
           <div className="d-inline">
             <input

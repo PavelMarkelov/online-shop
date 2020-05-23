@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const ProductItem = (props) => {
   let stockLevel = "none";
   const count = props.product.count;
-  if (count) stockLevel = count < 10 ? "few" : "much";
+  if (count) stockLevel = count < 10 ? "few" : "many";
   const price = props.product.price.toLocaleString("en-US", {
     useGrouping: true,
   });

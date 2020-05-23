@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { fetchAccountEdit, fetchUserAccount } from "../actions/AccountActions";
 import { Link } from "react-router-dom";
@@ -27,20 +27,23 @@ const Account = (props) => {
     return () => accountEditError(null);
   }, []);
 
-  const formBuffer = {
+  const [formValues, setFormValues] = useState({
     ...account,
     oldPassword: password,
     newPassword: password,
-  };
+  });
 
   function handleInputChange(event) {
     const target = event.target;
-    formBuffer[target.name] = target.value;
+    setFormValues({
+      ...formValues,
+      [target.name]: target.value,
+    });
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const hasNoError = await accountEdit(formBuffer);
+    const hasNoError = await accountEdit(formValues);
     if (hasNoError) props.history.push("/catalog");
   }
 
@@ -71,7 +74,7 @@ const Account = (props) => {
             }
             name="firstName"
             placeholder="Your first name"
-            defaultValue={formBuffer.firstName || ""}
+            value={formValues.firstName}
             autoFocus
             onChange={handleInputChange}
           />
@@ -92,7 +95,7 @@ const Account = (props) => {
             }
             name="lastName"
             placeholder="Your last name"
-            defaultValue={formBuffer.lastName || ""}
+            value={formValues.lastName}
             onChange={handleInputChange}
           />
           <div className="invalid-feedback">{errorsFields.get("lastName")}</div>
@@ -110,7 +113,7 @@ const Account = (props) => {
             }
             name="patronymic"
             placeholder="Your patronymic"
-            defaultValue={formBuffer.patronymic || ""}
+            value={formValues.patronymic}
             onChange={handleInputChange}
           />
           <div className="invalid-feedback">
@@ -130,7 +133,7 @@ const Account = (props) => {
             }
             name="email"
             placeholder="Your email"
-            defaultValue={formBuffer.email || ""}
+            value={formValues.email}
             onChange={handleInputChange}
           />
           <div className="invalid-feedback">{errorsFields.get("email")}</div>
@@ -147,7 +150,7 @@ const Account = (props) => {
             }
             name="address"
             placeholder="Your address"
-            defaultValue={formBuffer.address || ""}
+            value={formValues.address}
             onChange={handleInputChange}
             rows="2"
           />
@@ -166,7 +169,7 @@ const Account = (props) => {
             }
             name="phone"
             placeholder="Your phone"
-            defaultValue={formBuffer.phone || ""}
+            value={formValues.phone}
             onChange={handleInputChange}
           />
           <div className="invalid-feedback">{errorsFields.get("phone")}</div>
@@ -184,7 +187,7 @@ const Account = (props) => {
             }
             name="oldPassword"
             placeholder="Old password"
-            defaultValue={formBuffer.oldPassword}
+            value={formValues.oldPassword}
             onChange={handleInputChange}
           />
           <div className="invalid-feedback">
@@ -204,7 +207,7 @@ const Account = (props) => {
             }
             name="newPassword"
             placeholder="New password"
-            defaultValue={formBuffer.newPassword}
+            value={formValues.newPassword}
             onChange={handleInputChange}
           />
           <div className="invalid-feedback">

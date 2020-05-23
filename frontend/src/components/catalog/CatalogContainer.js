@@ -82,16 +82,15 @@ const CatalogContainer = () => {
     disableFilter,
   ]);
 
-  const pricesArray = [];
   const filteredProducts = filters
     ? filterProducts(products, filters)
     : products;
 
   const productsForRender = filteredProducts.map((item) => {
-    pricesArray.push(item.price);
     return <ProductItem key={item.id} product={item} />;
   });
 
+  const pricesArray = filteredProducts.map((item) => item.price);
   const minPrice = min(pricesArray);
   const maxPrice = max(pricesArray);
 

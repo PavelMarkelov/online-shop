@@ -1,4 +1,6 @@
 import React from "react";
+import { ParentCategoryWithChildren } from "./ParentCategoryWithChildren";
+import { ParentCategoryWithoutChildren } from "./ParentCategoryWithoutChildren";
 
 const CategorySidebar = (props) => {
   const handleProductsCategory = async (id, event) => {
@@ -37,19 +39,17 @@ const CategorySidebar = (props) => {
             </button>
           </li>
         ));
-      if (childrenCategories.length)
-        return (
-          <li key={value.id} className="mb-2" data-test="parent">
-            {parentCategory}
-            <ul className="categories-list hidden-children-categories">
-              {childrenCategories}
-            </ul>
-          </li>
-        );
-      return (
-        <li key={value.id} className="mb-2" data-test="parent">
-          {parentCategory}
-        </li>
+      return childrenCategories.length ? (
+        <ParentCategoryWithChildren
+          key={value.id}
+          parentCategory={parentCategory}
+          childrenCategories={childrenCategories}
+        />
+      ) : (
+        <ParentCategoryWithoutChildren
+          key={value.id}
+          parentCategory={parentCategory}
+        />
       );
     }
     return null;
