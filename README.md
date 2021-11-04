@@ -147,4 +147,5 @@ Rest - без сохранения состояния. Для этого в ме
 ![alt text](./screenshots/email-letter.png "Checkout")
 
 <h4>Exception handling</h4>
+
 ![alt text](./screenshots/exception-handling.png "Error message")
